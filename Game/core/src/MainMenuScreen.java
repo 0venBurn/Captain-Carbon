@@ -15,12 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MainMenuScreen implements Screen {
-//  Create reference to game object
-    private OurGame game;
-//    Create a SpriteBatch, BitmapFont, and Stage
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private Stage stage;
+        //  Create reference to game object
+        private OurGame game;
+        //    Create a SpriteBatch, BitmapFont, and Stage
+        private SpriteBatch batch;
+        private BitmapFont font;
+        private Stage stage;
 //    Create TextButtons for play and quit option
     private TextButton playButton;
     private TextButton quitButton;
