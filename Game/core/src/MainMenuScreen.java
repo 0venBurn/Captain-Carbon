@@ -21,6 +21,7 @@ public class MainMenuScreen implements Screen {
         private SpriteBatch batch;
         private BitmapFont font;
         private Stage stage;
+        private Texture background;
 //    Create TextButtons for play and quit option
     private TextButton playButton;
     private TextButton quitButton;
@@ -30,6 +31,7 @@ public class MainMenuScreen implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         stage = new Stage();
+        background = new Texture(Gdx.files.internal("MainMenuBackground.jpg"));
         Gdx.input.setInputProcessor(stage); // Set the stage to process input
 
 
