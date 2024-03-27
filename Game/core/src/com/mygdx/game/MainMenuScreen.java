@@ -35,10 +35,10 @@ public class MainMenuScreen implements Screen {
 
     private void initializeStage() {
         batch = new SpriteBatch();
-        uiViewport =  new StretchViewport(1000,800, new OrthographicCamera());
+        uiViewport =  new FitViewport(1500,900, new OrthographicCamera());
         stage = new Stage(uiViewport, batch);
         Gdx.input.setInputProcessor(stage);
-        backgroundViewport = new StretchViewport(1000 , 800, new OrthographicCamera());
+        backgroundViewport = new FitViewport(1500 , 900, new OrthographicCamera());
     }
 
     private void loadAssets() {

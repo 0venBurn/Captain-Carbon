@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		config.setTitle("Ride Sharer");
 //		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
-		 config.setWindowedMode(1000, 800); // Uncomment this line to switch to windowed mode
+		 config.setWindowedMode(1920, 1280); // Uncomment this line to switch to windowed mode
 
 
 		new Lwjgl3Application(new MyGdxGame(), config);
