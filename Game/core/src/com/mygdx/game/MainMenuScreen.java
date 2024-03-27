@@ -31,8 +31,6 @@ public class MainMenuScreen implements Screen {
         initializeStage();
         loadAssets();
         createUI();
-        TiledMap map = new TmxMapLoader().load(Gdx.files.internal("Map.tmx").path());
-
     }
 
     private void initializeStage() {
