@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -29,6 +31,8 @@ public class MainMenuScreen implements Screen {
         initializeStage();
         loadAssets();
         createUI();
+        TiledMap map = new TmxMapLoader().load(Gdx.files.internal("Map.tmx").path());
+
     }
 
     private void initializeStage() {
@@ -40,6 +44,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void loadAssets() {
+
         AssetManager assetManager = new AssetManager();
         assetManager.load("flat-earth/skin/flat-earth-ui.atlas", TextureAtlas.class);
         assetManager.finishLoading(); // Blocks until all assets are loaded
@@ -54,7 +59,7 @@ public class MainMenuScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.add(playButton).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
+        table.row().pad(20, 0, 20, 0);
         table.add(quitButton).fillX().uniformX();
         stage.addActor(table);
 
