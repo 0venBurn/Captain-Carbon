@@ -21,7 +21,7 @@ public class Player {
     // Time since the player started moving
     private float stateTime;
     // Current direction of the player
-    private Direction curdirection;
+    private Direction currentDirection;
     private static final int frameWidth = 16;
     private static final int frameHeight = 16;
     private static final int framesPerMovement = 3;
