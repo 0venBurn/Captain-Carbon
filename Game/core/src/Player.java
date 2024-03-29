@@ -1,63 +1,125 @@
-// OpenGL texture loader to load the texture from the file
+package com.mygdx.game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-// OpenGL texture region to manage the texture region
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-// OpenGL animation to manage the animation
 import com.badlogic.gdx.graphics.g2d.Animation;
-// OpenGL vector2 to manage the 2D vector
 import com.badlogic.gdx.math.Vector2;
 
 public class Player {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
+
     private Texture spriteSheet;
-    private Animation<TextureRegion> WalkupAnimation;
-    private Animation<TextureRegion> WalkdownAnimation;
-    private Animation<TextureRegion> WalkleftAnimation;
-    private Animation<TextureRegion> WalkrightAnimation;
-    // Current position of the player
-    private Vector2 position;
-    // Time since the player started moving
-    private float stateTime;
-    // Current direction of the player
+    private Animation<TextureRegion> walkLeftAnimation;
+    private Animation<TextureRegion> walkDownAnimation;
+    private Animation<TextureRegion> walkUpAnimation;
+    private Animation<TextureRegion> walkRightAnimation;
+    private Vector2 position;    // Current position of the player
+    private float stateTime;    // Time since the player started moving
     private Direction currentDirection;
     private static final int frameWidth = 16;
     private static final int frameHeight = 16;
     private static final int framesPerMovement = 3;
-    // the character sprite sheet starts at 24 frames in
-    private static final int startFrameIndex = 23;
-    private static final int startX = frameWidth * startFrameIndex;
-        public Player(float x, float y) {
-            // Load the sprite sheet
-            spriteSheet = new Texture("Tilesets/character.png");
+    private boolean isMoving;
+    private static final float playerSpeed = 10.0f; // We might want to change this later
 
-            int leftX = startX;
-            int downX = leftX + frameWidth;
-            int upX = downX + frameWidth;
-            int rightX = upX + frameWidth;
+    public Player(float x, float y) {
+        spriteSheet = new Texture("Tilesets/character.png");
 
-            TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
+        TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
 
-            walkLeftAnimation = createAnimation(frames, leftX, 0);
-            walkDownAnimation = createAnimation(frames, downX, 0);
-            walkUpAnimation = createAnimation(frames, upX, 0);
-            walkRightAnimation = createAnimation(frames, rightX, 0);
+        // 24th to 27th columns for directions
+        walkLeftAnimation = createAnimation(frames, 23);
+        walkDownAnimation = createAnimation(frames, 24);
+        walkUpAnimation = createAnimation(frames, 25);
+        walkRightAnimation = createAnimation(frames, 26);
 
-            // Initialisations
-            position = new Vector2(x, y);
-            stateTime = 0f;
-            curDirection = Direction.DOWN;
+        // Initialize player (x, y) & stateTime to 0
+        position = new Vector2(x, y);
+        stateTime = 0f;
+        currentDirection = Direction.DOWN;
+        isMoving = false;
+    }
 
-            //constructor end
+    // Extracts the animations from the sprite sheet
+    private Animation<TextureRegion> createAnimation(TextureRegion[][] frames, int column) {
+        TextureRegion[] animationFrames = new TextureRegion[framesPerMovement];
+        for (int i = 0; i < framesPerMovement; i++) {
+            animationFrames[i] = frames[i][column];
         }
-        // Extract the animations from the sprite sheet
-        private Animation<TextureRegion> createAnimation(TextureRegion[][] frames, int column, int startY) {
-            TextureRegion[] animationFrames = new TextureRegion[framesPerMovement];
-            for (int i = 0; i < framesPerMovement; i++) {
-                animationFrames[i] = frames[startY + i][column];
-            }
-            return new Animation<TextureRegion>(0.25f, animationFrames);
+        return new Animation<TextureRegion>(0.25f, animationFrames);
+    }
 
+    // Player position based on input
+    public void update(float deltaTime) {
+        isMoving = false;
+        float moveAmount = playerSpeed * deltaTime;
+        Vector2 newPosition = new Vector2(position.x, position.y);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            currentDirection = Direction.UP;
+            newPosition.y += moveAmount;
+            isMoving = true;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            currentDirection = Direction.DOWN;
+            newPosition.y -= moveAmount;
+            isMoving = true;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            currentDirection = Direction.LEFT;
+            newPosition.x -= moveAmount;
+            isMoving = true;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            currentDirection = Direction.RIGHT;
+            newPosition.x += moveAmount;
+            isMoving = true;
+        }
+        if (isMoving && checkBounds(newPosition)) {
+            position = newPosition;
+        }
+        // StateTime starts when moving
+        if (isMoving) {
+            stateTime += deltaTime;
+        } else {
+            stateTime = 0f;
+        }
+    }
+
+    // Have to check if the player is on the screen
+    private boolean checkBounds(Vector2 newPosition) {
+        return newPosition.x >= 0 && newPosition.y >= 0 && newPosition.x <= Gdx.graphics.getWidth() && newPosition.y <= Gdx.graphics.getHeight();
+    }
+
+    public void render(SpriteBatch spriteBatch) {
+        TextureRegion currentFrame = getCurrentFrame();
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        spriteBatch.begin();
+        spriteBatch.draw(currentFrame, position.x, position.y);
+        spriteBatch.end();
+    }
+
+    private TextureRegion getCurrentFrame() {
+        switch (currentDirection) {
+            case UP:
+                return isMoving ? walkUpAnimation.getKeyFrame(stateTime, true) : walkUpAnimation.getKeyFrames()[0];
+            case DOWN:
+                return isMoving ? walkDownAnimation.getKeyFrame(stateTime, true) : walkDownAnimation.getKeyFrames()[0];
+            case LEFT:
+                return isMoving ? walkLeftAnimation.getKeyFrame(stateTime, true) : walkLeftAnimation.getKeyFrames()[0];
+            case RIGHT:
+                return isMoving ? walkRightAnimation.getKeyFrame(stateTime, true) : walkRightAnimation.getKeyFrames()[0];
+            default:
+                return walkDownAnimation.getKeyFrames()[0];
+        }
+    }
+
+    public void dispose() {
+        spriteSheet.dispose();
+    }
 }
-
