@@ -19,6 +19,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	Texture bikeTexture;
 	Texture busTexture;
 	Texture walkTexture;
+	Texture gemTexture;
+	Trip trip; // Instance of com.mygdx.game.Trip class
 
 	Texture img;
 	private static final int BLOCK_SIZE = 32;
@@ -30,6 +32,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	private static final int MODE_BIKE = 1;
 	private static final int MODE_BUS = 2;
 	private int currentMode = MODE_BASIC;
+	private Popup popup;
+
 	@Override
 	public void create () {
 
@@ -38,10 +42,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		walkTexture = new Texture("black_dot.png");
 		bikeTexture = new Texture("bike.png");
 		busTexture = new Texture("bus.png");
+		gemTexture = new Texture("gem.png");
+		popup = new Popup();
 		font = new BitmapFont();
-
+		trip = new Trip();
 	}
-
 
 
 	@Override
@@ -54,12 +59,33 @@ public class MyGdxGame extends ApplicationAdapter {
 		toggleMode();
 		batch.begin();
 		batch.draw(dotTexture, x * BLOCK_SIZE, y * BLOCK_SIZE);
+		// Render the trip source and destination
+		batch.draw(gemTexture, trip.getSourceX(), trip.getSourceY());
+		batch.draw(gemTexture, trip.getDestinationX(), trip.getDestinationY());
 		font.draw(batch, "Time: " + timeCounter,  10, Gdx.graphics.getHeight() - 10);
 		font.draw(batch, "Carbon: " + carbonCounter, 10, Gdx.graphics.getHeight() - 30);
 		font.draw(batch, "currentMode: " + currentMode, 10, Gdx.graphics.getHeight() - 50);
+		// Check if the dotTexture reaches the destination
+
+		int destinationX = trip.getDestinationX();
+		int destinationY = trip.getDestinationY();
+		double distance = Math.sqrt(Math.pow(x - destinationX, 2) + Math.pow(y - destinationY, 2));
+		if (distance <= 5) {
+			popup.setMessage("You reached your destination!");
+		}
 
 		batch.end();
+		popup.render();
 	}
+
+
+
+	private void showPopup() {
+		// Implement your popup logic here
+		// This could be a separate method or a class responsible for showing the popup
+		// For example, you could create a new stage with a dialog box showing the popup message
+	}
+
 
 	private void toggleMode() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
@@ -185,5 +211,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+		walkTexture.dispose();
+		bikeTexture.dispose();
+		busTexture.dispose();
+		font.dispose();
 	}
 }
