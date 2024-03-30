@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -14,7 +15,7 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     @Override
     public void show() {
-        map = new TmxMapLoader().load("map.tmx");
+        map = new TmxMapLoader().load("Map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
 
     }

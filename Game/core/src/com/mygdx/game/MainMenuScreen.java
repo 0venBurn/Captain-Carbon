@@ -26,6 +26,7 @@ public class MainMenuScreen implements Screen {
     private Skin skin;
     private Viewport backgroundViewport;
     private Viewport uiViewport;
+
     public MainMenuScreen(MyGdxGame game) {
         this.game = game;
         initializeStage();
