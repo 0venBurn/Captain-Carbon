@@ -113,7 +113,6 @@ public class MainMenuScreen implements Screen {
 
     }
 
-    // Implement other overridden methods as needed...
 
     @Override
     public void dispose() {
@@ -123,5 +122,4 @@ public class MainMenuScreen implements Screen {
         skin.dispose(); // Don't forget to dispose of the skin
     }
 
-    // Other overridden methods...
 }
