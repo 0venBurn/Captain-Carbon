@@ -1,3 +1,5 @@
+package Screens;
+
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -15,13 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MainMenuScreen implements Screen {
-        //  Create reference to game object
-        private OurGame game;
-        //    Create a SpriteBatch, BitmapFont, and Stage
-        private SpriteBatch batch;
-        private BitmapFont font;
-        private Stage stage;
-        private Texture background;
+//  Create reference to game object
+    private OurGame game;
+//    Create a SpriteBatch, BitmapFont, and Stage
+    private SpriteBatch batch;
+    private BitmapFont font;
+    private Stage stage;
 //    Create TextButtons for play and quit option
     private TextButton playButton;
     private TextButton quitButton;
@@ -31,7 +32,6 @@ public class MainMenuScreen implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont();
         stage = new Stage();
-        background = new Texture(Gdx.files.internal("MainMenuBackground.jpg"));
         Gdx.input.setInputProcessor(stage); // Set the stage to process input
 
 
@@ -60,7 +60,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 //                Change to the game screen
-//                game.setScreen(new GameScreen(game));
+//                game.setScreen(new Screens.GameScreen(game));
             }
         });
 
@@ -89,7 +89,8 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1); // Black Background
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        stage.act(delta); // Update the stage
+        stage.draw(); // Render the stage
         batch.begin();
         font.draw(batch, "Press to Play!", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
         batch.end();
@@ -122,4 +123,7 @@ public class MainMenuScreen implements Screen {
         batch.dispose();
         font.dispose();
     }
+
+
+
 }
