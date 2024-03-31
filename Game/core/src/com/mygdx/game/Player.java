@@ -1,4 +1,5 @@
 package com.mygdx.game;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,7 +26,7 @@ public class Player {
     private static final int frameHeight = 16;
     private static final int framesPerMovement = 3;
     private boolean isMoving;
-    private static final float playerSpeed = 10.0f; // We might want to change this later
+    private static final float playerSpeed = 90.0f; // We might want to change this later
 
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
@@ -62,19 +63,19 @@ public class Player {
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             currentDirection = Direction.UP;
-            newPosition.y += moveAmount;
+            position.y += moveAmount;
             isMoving = true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             currentDirection = Direction.DOWN;
-            newPosition.y -= moveAmount;
+            position.y -= moveAmount;
             isMoving = true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             currentDirection = Direction.LEFT;
-            newPosition.x -= moveAmount;
+            position.x -= moveAmount;
             isMoving = true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             currentDirection = Direction.RIGHT;
-            newPosition.x += moveAmount;
+            position.x += moveAmount;
             isMoving = true;
         }
         if (isMoving && checkBounds(newPosition)) {
@@ -88,6 +89,14 @@ public class Player {
         }
     }
 
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
+    }
+
     // Have to check if the player is on the screen
     private boolean checkBounds(Vector2 newPosition) {
         return newPosition.x >= 0 && newPosition.y >= 0 && newPosition.x <= Gdx.graphics.getWidth() && newPosition.y <= Gdx.graphics.getHeight();
@@ -95,13 +104,7 @@ public class Player {
 
     public void render(SpriteBatch spriteBatch) {
         TextureRegion currentFrame = getCurrentFrame();
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        spriteBatch.begin();
         spriteBatch.draw(currentFrame, position.x, position.y);
-        spriteBatch.end();
     }
 
     private TextureRegion getCurrentFrame() {

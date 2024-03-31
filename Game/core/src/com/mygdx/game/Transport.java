@@ -1,3 +1,5 @@
+package com.mygdx.game;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 
 public class Transport {
     public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -15,7 +18,7 @@ public class Transport {
     private Texture spriteSheet;
     private Vector2 position;
     private float stateTime;
-    private Direction currentDirection = Direction.DOWN;
+    private Direction currentDirection = Direction.UP;
     private boolean isMoving;
     private float speed;
     private Mode mode;
@@ -25,19 +28,23 @@ public class Transport {
     private TextureRegion busFrameRight;
     private TextureRegion busFrameUp;
     private TextureRegion busFrameDown;
-
+    private List<Vector2> waypoints;
+    private int currentWaypointIndex;
+    private boolean waitingAtWaypoint;
     // Bike
     private Animation<TextureRegion> cycleLeftAnimation;
     private Animation<TextureRegion> cycleUpAnimation;
     private Animation<TextureRegion> cycleRightAnimation;
     private Animation<TextureRegion> cycleDownAnimation;
     private Animation<TextureRegion> movementAnimation;
+    private TiledMap map;
 
-    public Transport(Mode mode, float x, float y) {
+    public Transport(Mode mode, float x, float y, TiledMap map) {
         this.mode = mode;
         position = new Vector2(x, y);
         stateTime = 0f;
         isMoving = false;
+        this.map = map;
         configureMode();
     }
 
@@ -59,6 +66,48 @@ public class Transport {
         busFrameLeft = new TextureRegion(spriteSheet, 16, 56, 80, 56);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
         busFrameDown = new TextureRegion(spriteSheet, 104, 0, 40, 72);
+        initializeBusRoute();
+    }
+
+    private void initializeBusRoute() {
+        waypoints = new ArrayList<>();
+
+        // Waypoints here still need to figure these out a bit
+        waypoints.add(new Vector2(108, -44));
+        waypoints.add(new Vector2(110, -150));
+
+        if (waypoints.isEmpty()) {
+            throw new IllegalStateException("No waypoints found");
+        }
+        currentWaypointIndex = 0;
+        waitingAtWaypoint = true;
+    }
+    public void update(float deltaTime) {
+        stateTime += deltaTime;
+        if (mode == Mode.BIKE) {
+            updateBike(deltaTime);
+        } else if (mode == Mode.BUS) {
+            updateBus(deltaTime);
+        }
+    }
+    private void updateBus(float deltaTime) {
+        if (waitingAtWaypoint) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                waitingAtWaypoint = false;
+            }
+        } else {
+            Vector2 currentWaypoint = waypoints.get(currentWaypointIndex);
+            Vector2 direction = new Vector2(currentWaypoint).sub(position).nor();
+            float distance = speed * deltaTime;
+
+            if (position.dst2(currentWaypoint) > distance * distance) {
+                position.mulAdd(direction, distance);
+            } else {
+                position.set(currentWaypoint);
+                waitingAtWaypoint = true;
+                currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.size();
+            }
+        }
     }
 
     private void configureBikeMode() {
@@ -69,18 +118,7 @@ public class Transport {
         cycleUpAnimation = createAnimation(bikeFrames, 2, 0, 7);
         cycleRightAnimation = createAnimation(bikeFrames, 4, 0, 7);
         cycleDownAnimation = createAnimation(bikeFrames, 6, 0, 7);
-        movementAnimation = cycleDownAnimation;
-    }
-
-    public void update(float deltaTime) {
-        switch (mode) {
-            case BIKE:
-                updateBike(deltaTime);
-                break;
-            case BUS:
-                updateBus(deltaTime);
-                break;
-        }
+        movementAnimation = cycleUpAnimation;
     }
 
     private Animation<TextureRegion> createAnimation(TextureRegion[][] frames, int row, int startColumn, int frameCount) {
@@ -90,8 +128,6 @@ public class Transport {
         }
         return new Animation<>(0.1f, animationFrames);
     }
-
-    TODO updateBus
 
     private void updateBike(float deltaTime) {
         Vector2 moveVector = new Vector2();
@@ -120,8 +156,6 @@ public class Transport {
     }
 
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.begin();
-
         TextureRegion currentFrame = null;
         switch (mode) {
             // Bus mode uses individual frames cause we have no animation
@@ -149,9 +183,7 @@ public class Transport {
         if (currentFrame != null) {
             spriteBatch.draw(currentFrame, position.x, position.y);
         }
-        spriteBatch.end();
     }
-
     public void dispose() {
         if (spriteSheet != null) spriteSheet.dispose();
     }
