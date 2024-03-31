@@ -9,7 +9,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.Input;
+
+
 public class MyGdxGame extends Game {
+	private BitmapFont font;
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
@@ -19,18 +25,14 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-
+		font = new BitmapFont();
+		font.getData().setScale(1.5f);
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(800, 600, camera);
 		camera.position.set(1000, 1700, 0);
 		camera.update();
-
 		map = new TmxMapLoader().load("Game/assets/Map.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map);
-
-		// Initialize transport with some default starting position
 		transport = new Transport(Transport.Mode.BUS, 1410, 1500, map);
 		player = new Player(1000, 1700);
 	}
@@ -42,23 +44,62 @@ public class MyGdxGame extends Game {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
-		// Update player position based on input
 		player.update(deltaTime);
 		transport.update(deltaTime);
 
-		// Camera
-		camera.position.set(player.getX(), player.getY(), 0);
+		camera.position.set(player.isOnBus() ? transport.getPosition().x : player.getX(),
+				player.isOnBus() ? transport.getPosition().y : player.getY(), 0);
 		camera.update();
+
 		renderer.setView(camera);
 		renderer.render();
 
-		// Render the player and transport
 		renderer.getBatch().begin();
-		player.render((SpriteBatch) renderer.getBatch());
+		if (!player.isOnBus()) {
+			player.render((SpriteBatch) renderer.getBatch());
+		}
 		transport.render((SpriteBatch) renderer.getBatch());
+
+		// Check if final stop reached
+		if (transport.isFinalStopReached()) {
+			font.draw(renderer.getBatch(), "Final Stop Reached", camera.position.x - 100, camera.position.y);
+		}
+
+		checkPlayerBusInteraction();
 		renderer.getBatch().end();
 	}
 
+
+	private void checkPlayerBusInteraction() {
+		Rectangle playerBounds = player.getBounds();
+		Rectangle transportBounds = transport.getBounds();
+
+		if (playerBounds.overlaps(transportBounds)) {
+			if (!player.isOnBus()) {
+				// Prompt to enter the bus
+				font.draw(renderer.getBatch(), "Press 'E' to enter the bus", player.getX(), player.getY() + 50);
+				if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+					player.setOnBus(true);
+				}
+			} else if (player.isOnBus() && transport.canPlayerDisembark()) {
+				// Prompt to exit the bus only when at a waypoint or final stop
+				font.draw(renderer.getBatch(), "Press 'Q' to exit the bus", transport.getPosition().x, transport.getPosition().y + 50);
+				if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+					player.setOnBus(false);
+					player.setPosition(transport.getPosition().x - 50, transport.getPosition().y);
+				}
+			}
+		}
+
+		if (player.isOnBus() && transport.isFinalStopReached() && transport.canPlayerDisembark()) {
+
+			font.draw(renderer.getBatch(), "Final Stop Reached - Press 'Q' to exit", player.getX() + 30, player.getY() + 30);
+			if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+				player.setOnBus(false);
+				player.setPosition(transport.getPosition().x - 50, transport.getPosition().y);
+			}
+		}
+	}
 
 	@Override
 	public void dispose() {

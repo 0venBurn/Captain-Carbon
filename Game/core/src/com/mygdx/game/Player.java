@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
     public enum Direction {
@@ -27,6 +28,7 @@ public class Player {
     private static final int framesPerMovement = 3;
     private boolean isMoving;
     private static final float playerSpeed = 90.0f; // We might want to change this later
+    private boolean onBus = false;
 
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
@@ -57,35 +59,34 @@ public class Player {
 
     // Player position based on input
     public void update(float deltaTime) {
-        isMoving = false;
-        float moveAmount = playerSpeed * deltaTime;
-        Vector2 newPosition = new Vector2(position.x, position.y);
+        // Only allow movement if the player is not on the bus
+        if (!onBus) {
+            isMoving = false;
+            float moveAmount = playerSpeed * deltaTime;
+            Vector2 newPosition = new Vector2(position.x, position.y);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            currentDirection = Direction.UP;
-            position.y += moveAmount;
-            isMoving = true;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            currentDirection = Direction.DOWN;
-            position.y -= moveAmount;
-            isMoving = true;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            currentDirection = Direction.LEFT;
-            position.x -= moveAmount;
-            isMoving = true;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            currentDirection = Direction.RIGHT;
-            position.x += moveAmount;
-            isMoving = true;
-        }
-        if (isMoving && checkBounds(newPosition)) {
-            position = newPosition;
-        }
-        // StateTime starts when moving
-        if (isMoving) {
-            stateTime += deltaTime;
-        } else {
-            stateTime = 0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                currentDirection = Direction.UP;
+                position.y += moveAmount;
+                isMoving = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                currentDirection = Direction.DOWN;
+                position.y -= moveAmount;
+                isMoving = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                currentDirection = Direction.LEFT;
+                position.x -= moveAmount;
+                isMoving = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                currentDirection = Direction.RIGHT;
+                position.x += moveAmount;
+                isMoving = true;
+            }
+            if (isMoving && checkBounds(newPosition)) {
+                position = newPosition;
+            }
+            // StateTime starts when moving
+            stateTime = isMoving ? stateTime + deltaTime : 0f;
         }
     }
 
@@ -96,6 +97,9 @@ public class Player {
     public float getY() {
         return position.y;
     }
+    public Rectangle getBounds() {
+        return new Rectangle(position.x, position.y, spriteSheet.getWidth(), spriteSheet.getHeight());
+    }
 
     // Have to check if the player is on the screen
     private boolean checkBounds(Vector2 newPosition) {
@@ -103,8 +107,10 @@ public class Player {
     }
 
     public void render(SpriteBatch spriteBatch) {
-        TextureRegion currentFrame = getCurrentFrame();
-        spriteBatch.draw(currentFrame, position.x, position.y);
+        if (!onBus) {
+            TextureRegion currentFrame = getCurrentFrame();
+            spriteBatch.draw(currentFrame, position.x, position.y);
+        }
     }
 
     private TextureRegion getCurrentFrame() {
@@ -120,6 +126,17 @@ public class Player {
             default:
                 return walkDownAnimation.getKeyFrames()[0];
         }
+    }
+    public void setOnBus(boolean onBus) {
+        this.onBus = onBus;
+    }
+
+    public void setPosition(float x, float y) {
+        position.set(x, y);
+    }
+
+    public boolean isOnBus() {
+        return onBus;
     }
 
     public void dispose() {

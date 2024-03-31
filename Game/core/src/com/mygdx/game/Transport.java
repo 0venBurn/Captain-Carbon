@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+
 
 public class Transport {
     public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -38,14 +40,17 @@ public class Transport {
     private Animation<TextureRegion> cycleDownAnimation;
     private Animation<TextureRegion> movementAnimation;
     private TiledMap map;
-
+    private boolean isFinalStopReached = false;
+    private boolean canLeaveBus = false;
     public Transport(Mode mode, float x, float y, TiledMap map) {
         this.mode = mode;
-        position = new Vector2(x, y);
-        stateTime = 0f;
-        isMoving = false;
+        this.position = new Vector2(x, y);
+        this.stateTime = 0f;
+        this.isMoving = false;
         this.map = map;
-        configureMode();
+        this.configureMode();
+        this.waypoints = new ArrayList<>();
+        this.initializeBusRoute();
     }
 
     private void configureMode() {
@@ -73,12 +78,9 @@ public class Transport {
         waypoints = new ArrayList<>();
 
         // Waypoints here still need to figure these out a bit
-        waypoints.add(new Vector2(108, -44));
-        waypoints.add(new Vector2(110, -150));
-
-        if (waypoints.isEmpty()) {
-            throw new IllegalStateException("No waypoints found");
-        }
+        waypoints.add(new Vector2(1410, 1500));
+        waypoints.add(new Vector2(1410, 1800));
+        waypoints.add(new Vector2(1410, 2200));
         currentWaypointIndex = 0;
         waitingAtWaypoint = true;
     }
@@ -91,23 +93,53 @@ public class Transport {
         }
     }
     private void updateBus(float deltaTime) {
-        if (waitingAtWaypoint) {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                waitingAtWaypoint = false;
-            }
-        } else {
-            Vector2 currentWaypoint = waypoints.get(currentWaypointIndex);
-            Vector2 direction = new Vector2(currentWaypoint).sub(position).nor();
+        if (!waitingAtWaypoint) {
+            Vector2 nextWaypoint = waypoints.get(currentWaypointIndex);
+            Vector2 moveVector = new Vector2(nextWaypoint).sub(position).nor();
             float distance = speed * deltaTime;
 
-            if (position.dst2(currentWaypoint) > distance * distance) {
-                position.mulAdd(direction, distance);
+            if (position.dst2(nextWaypoint) > distance * distance) {
+                position.mulAdd(moveVector, distance);
+                canLeaveBus = false;
             } else {
-                position.set(currentWaypoint);
+                position.set(nextWaypoint);
                 waitingAtWaypoint = true;
-                currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.size();
+                canLeaveBus = true;
+
+                // Check if it's the last waypoint
+                if (currentWaypointIndex < waypoints.size() - 1) {
+                    waitingAtWaypoint = true;
+                } else {
+                    waitingAtWaypoint = true;
+                    canLeaveBus = true;
+                    isFinalStopReached = true;
+                }
             }
         }
+
+        // Advance to next waypoint on SPACE press
+        if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
+            waitingAtWaypoint = false;
+            currentWaypointIndex += 1;
+            canLeaveBus = false;
+        }
+
+    }
+
+    public boolean isFinalStopReached() {
+        return isFinalStopReached;
+    }
+
+    public boolean canPlayerDisembark() {
+        return canLeaveBus || isFinalStopReached;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(position.x, position.y, spriteSheet.getWidth() * 0.6f, spriteSheet.getHeight()* 0.6f);
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 
     private void configureBikeMode() {
