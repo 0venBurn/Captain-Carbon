@@ -2,24 +2,26 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 
 public class Player {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
 
-    private Texture spriteSheet;
-    private Animation<TextureRegion> walkLeftAnimation;
-    private Animation<TextureRegion> walkDownAnimation;
-    private Animation<TextureRegion> walkUpAnimation;
-    private Animation<TextureRegion> walkRightAnimation;
+    private final Texture spriteSheet;
+    private final Animation<TextureRegion> walkLeftAnimation;
+    private final Animation<TextureRegion> walkDownAnimation;
+    private final Animation<TextureRegion> walkUpAnimation;
+    private final Animation<TextureRegion> walkRightAnimation;
     private Vector2 position;    // Current position of the player
     private float stateTime;    // Time since the player started moving
     private Direction currentDirection;
@@ -27,7 +29,7 @@ public class Player {
     private static final int frameHeight = 16;
     private static final int framesPerMovement = 3;
     private boolean isMoving;
-    private static final float playerSpeed = 90.0f; // We might want to change this later
+    private static final float playerSpeed = 690.0f; // We will want to change this later
     private boolean onBus = false;
 
     public Player(float x, float y) {
@@ -54,42 +56,58 @@ public class Player {
         for (int i = 0; i < framesPerMovement; i++) {
             animationFrames[i] = frames[i][column];
         }
-        return new Animation<TextureRegion>(0.25f, animationFrames);
+        return new Animation<>(0.25f, animationFrames);
     }
 
     // Player position based on input
-    public void update(float deltaTime) {
-        // Only allow movement if the player is not on the bus
+    public void update(float deltaTime, MapLayer collisionLayer) {
         if (!onBus) {
             isMoving = false;
-            float moveAmount = playerSpeed * deltaTime;
-            Vector2 newPosition = new Vector2(position.x, position.y);
+            Vector2 newPosition = new Vector2(position);
 
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                newPosition.y += playerSpeed * deltaTime;
                 currentDirection = Direction.UP;
-                position.y += moveAmount;
                 isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                newPosition.y -= playerSpeed * deltaTime;
                 currentDirection = Direction.DOWN;
-                position.y -= moveAmount;
                 isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                newPosition.x -= playerSpeed * deltaTime;
                 currentDirection = Direction.LEFT;
-                position.x -= moveAmount;
                 isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                newPosition.x += playerSpeed * deltaTime;
                 currentDirection = Direction.RIGHT;
-                position.x += moveAmount;
                 isMoving = true;
             }
-            if (isMoving && checkBounds(newPosition)) {
-                position = newPosition;
+            if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
+                position.set(newPosition);
             }
-            // StateTime starts when moving
-            stateTime = isMoving ? stateTime + deltaTime : 0f;
+            stateTime = isMoving ? stateTime + deltaTime : 0;
         }
     }
 
+    public boolean canMove(float x, float y, MapLayer collisionLayer) {
+        Rectangle playerRect = new Rectangle(x, y, getWidth() * .010f, getHeight() * .010f);
+        for (MapObject object : collisionLayer.getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                if (playerRect.overlaps(rect)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public float getWidth() {
+        return spriteSheet.getWidth() * .10f;
+    }
+
+    public float getHeight() {
+        return spriteSheet.getHeight() * .10f;
+    }
     public float getX() {
         return position.x;
     }
@@ -98,13 +116,9 @@ public class Player {
         return position.y;
     }
     public Rectangle getBounds() {
-        return new Rectangle(position.x, position.y, spriteSheet.getWidth(), spriteSheet.getHeight());
+        return new Rectangle(position.x, position.y, spriteSheet.getWidth() * .10f, spriteSheet.getHeight() * .10f);
     }
 
-    // Have to check if the player is on the screen
-    private boolean checkBounds(Vector2 newPosition) {
-        return newPosition.x >= 0 && newPosition.y >= 0 && newPosition.x <= Gdx.graphics.getWidth() && newPosition.y <= Gdx.graphics.getHeight();
-    }
 
     public void render(SpriteBatch spriteBatch) {
         if (!onBus) {

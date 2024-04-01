@@ -31,8 +31,8 @@ public class Transport {
     private TextureRegion busFrameUp;
     private TextureRegion busFrameDown;
     private List<Vector2> waypoints;
-    private int currentWaypointIndex;
-    private boolean waitingAtWaypoint;
+    private int currentWaypointIndex = 0;
+    private boolean waitingAtWaypoint = true;
     // Bike
     private Animation<TextureRegion> cycleLeftAnimation;
     private Animation<TextureRegion> cycleUpAnimation;
@@ -42,15 +42,15 @@ public class Transport {
     private TiledMap map;
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
-    public Transport(Mode mode, float x, float y, TiledMap map) {
+    public Transport(Mode mode, Vector2 startPosition, TiledMap map, List<Vector2> waypoints) {
         this.mode = mode;
-        this.position = new Vector2(x, y);
-        this.stateTime = 0f;
-        this.isMoving = false;
+        this.position = startPosition;
         this.map = map;
-        this.configureMode();
-        this.waypoints = new ArrayList<>();
-        this.initializeBusRoute();
+        this.waypoints = waypoints;
+        configureMode();
+    }
+    public void setCurrentDirection(Direction direction) {
+        this.currentDirection = direction;
     }
 
     private void configureMode() {
@@ -66,80 +66,11 @@ public class Transport {
 
     private void configureBusMode() {
         spriteSheet = new Texture("Tilesets/bus.png");
-        speed = 20.0f;
-        busFrameRight = new TextureRegion(spriteSheet, 8, 0, 80, 56);
+        speed = 90.0f;
+        busFrameRight = new TextureRegion(spriteSheet, 8, 0, 79, 48);
         busFrameLeft = new TextureRegion(spriteSheet, 16, 56, 80, 56);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
         busFrameDown = new TextureRegion(spriteSheet, 104, 0, 40, 72);
-        initializeBusRoute();
-    }
-
-    private void initializeBusRoute() {
-        waypoints = new ArrayList<>();
-
-        // Waypoints here still need to figure these out a bit
-        waypoints.add(new Vector2(1410, 1500));
-        waypoints.add(new Vector2(1410, 1800));
-        waypoints.add(new Vector2(1410, 2200));
-        currentWaypointIndex = 0;
-        waitingAtWaypoint = true;
-    }
-    public void update(float deltaTime) {
-        stateTime += deltaTime;
-        if (mode == Mode.BIKE) {
-            updateBike(deltaTime);
-        } else if (mode == Mode.BUS) {
-            updateBus(deltaTime);
-        }
-    }
-    private void updateBus(float deltaTime) {
-        if (!waitingAtWaypoint) {
-            Vector2 nextWaypoint = waypoints.get(currentWaypointIndex);
-            Vector2 moveVector = new Vector2(nextWaypoint).sub(position).nor();
-            float distance = speed * deltaTime;
-
-            if (position.dst2(nextWaypoint) > distance * distance) {
-                position.mulAdd(moveVector, distance);
-                canLeaveBus = false;
-            } else {
-                position.set(nextWaypoint);
-                waitingAtWaypoint = true;
-                canLeaveBus = true;
-
-                // Check if it's the last waypoint
-                if (currentWaypointIndex < waypoints.size() - 1) {
-                    waitingAtWaypoint = true;
-                } else {
-                    waitingAtWaypoint = true;
-                    canLeaveBus = true;
-                    isFinalStopReached = true;
-                }
-            }
-        }
-
-        // Advance to next waypoint on SPACE press
-        if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
-            waitingAtWaypoint = false;
-            currentWaypointIndex += 1;
-            canLeaveBus = false;
-        }
-
-    }
-
-    public boolean isFinalStopReached() {
-        return isFinalStopReached;
-    }
-
-    public boolean canPlayerDisembark() {
-        return canLeaveBus || isFinalStopReached;
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(position.x, position.y, spriteSheet.getWidth() * 0.6f, spriteSheet.getHeight()* 0.6f);
-    }
-
-    public Vector2 getPosition() {
-        return position;
     }
 
     private void configureBikeMode() {
@@ -159,6 +90,47 @@ public class Transport {
             animationFrames[i] = frames[row][startColumn + i];
         }
         return new Animation<>(0.1f, animationFrames);
+    }
+
+    public void update(float deltaTime, boolean isActiveBus) {
+        stateTime += deltaTime;
+        if (mode == Mode.BUS && isActiveBus) {
+            updateBus(deltaTime);
+        } else if (mode == Mode.BIKE) {
+            updateBike(deltaTime);
+        }
+    }
+
+    private void updateBus(float deltaTime) {
+        if (!waitingAtWaypoint && !waypoints.isEmpty()) {
+            Vector2 nextWaypoint = waypoints.get(currentWaypointIndex);
+            Vector2 moveVector = new Vector2(nextWaypoint).sub(position);
+            float distance = speed * deltaTime;
+
+            if (position.dst2(nextWaypoint) > distance * distance) {
+                position.mulAdd(moveVector.nor(), distance);
+                // Determine direction based on movement
+                if (moveVector.x > 0) {
+                    currentDirection = Direction.RIGHT;
+                } else if (moveVector.x < 0) {
+                    currentDirection = Direction.LEFT;
+                }
+                canLeaveBus = false;
+            } else {
+                position.set(nextWaypoint);
+                waitingAtWaypoint = true;
+                canLeaveBus = true;
+                if (currentWaypointIndex == waypoints.size() - 1) {
+                    isFinalStopReached = true;
+                }
+            }
+        }
+
+        if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
+            waitingAtWaypoint = false;
+            currentWaypointIndex++;
+            canLeaveBus = false;
+        }
     }
 
     private void updateBike(float deltaTime) {
@@ -216,6 +188,27 @@ public class Transport {
             spriteBatch.draw(currentFrame, position.x, position.y);
         }
     }
+    // In your Transport class
+    public boolean isFinalStopReached() {
+        return isFinalStopReached;
+    }
+
+    public void setFinalStopReached(boolean isFinalStopReached) {
+        this.isFinalStopReached = isFinalStopReached;
+    }
+
+    public boolean canPlayerDisembark() {
+        return canLeaveBus || isFinalStopReached;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(position.x, position.y, spriteSheet.getWidth() * 0.6f, spriteSheet.getHeight() * 0.6f);
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
     public void dispose() {
         if (spriteSheet != null) spriteSheet.dispose();
     }
