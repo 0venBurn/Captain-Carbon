@@ -8,7 +8,7 @@ import com.badlogic.gdx.Screen;
 
 
 public class GameScreen implements Screen {
-//    instance variables
+    //    instance variables
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     @Override
