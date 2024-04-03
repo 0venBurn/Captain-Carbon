@@ -1,56 +1,71 @@
 package com.mygdx.game;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-import java.util.List;
-import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
-
+import com.badlogic.gdx.math.Vector2;
+import java.util.List;
 
 public class Transport {
     public enum Direction {UP, DOWN, LEFT, RIGHT}
     public enum Mode {BUS, TRAIN, BIKE}
-
     private Texture spriteSheet;
-    private Vector2 position;
+    public Vector2 position;
     private float stateTime;
     private Direction currentDirection = Direction.UP;
-    private boolean isMoving;
     private float speed;
-    private Mode mode;
+    private final Mode mode;
 
     // Bus
     private TextureRegion busFrameLeft;
     private TextureRegion busFrameRight;
     private TextureRegion busFrameUp;
     private TextureRegion busFrameDown;
-    private List<Vector2> waypoints;
+    private final List<Vector2> waypoints;
     private int currentWaypointIndex = 0;
     private boolean waitingAtWaypoint = true;
+
+
     // Bike
     private Animation<TextureRegion> cycleLeftAnimation;
     private Animation<TextureRegion> cycleUpAnimation;
     private Animation<TextureRegion> cycleRightAnimation;
     private Animation<TextureRegion> cycleDownAnimation;
     private Animation<TextureRegion> movementAnimation;
-    private TiledMap map;
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
-    public Transport(Mode mode, Vector2 startPosition, TiledMap map, List<Vector2> waypoints) {
+    private float batteryCharge;
+
+    public Transport(Mode mode, Vector2 startPosition, List<Vector2> waypoints) {
         this.mode = mode;
         this.position = startPosition;
-        this.map = map;
         this.waypoints = waypoints;
+        this.batteryCharge = 100.0f;
         configureMode();
     }
+
     public void setCurrentDirection(Direction direction) {
         this.currentDirection = direction;
+        switch (direction) {
+            case UP:
+                movementAnimation = cycleUpAnimation;
+                break;
+            case DOWN:
+                movementAnimation = cycleDownAnimation;
+                break;
+            case LEFT:
+                movementAnimation = cycleLeftAnimation;
+                break;
+            case RIGHT:
+                movementAnimation = cycleRightAnimation;
+                break;
+        }
     }
 
     private void configureMode() {
@@ -75,31 +90,34 @@ public class Transport {
 
     private void configureBikeMode() {
         spriteSheet = new Texture("Tilesets/bike.png");
-        speed = 15.0f;
+        speed = 500.0f;
         TextureRegion[][] bikeFrames = TextureRegion.split(spriteSheet, 32, 32);
-        cycleLeftAnimation = createAnimation(bikeFrames, 0, 0, 7);
-        cycleUpAnimation = createAnimation(bikeFrames, 2, 0, 7);
-        cycleRightAnimation = createAnimation(bikeFrames, 4, 0, 7);
-        cycleDownAnimation = createAnimation(bikeFrames, 6, 0, 7);
+        cycleLeftAnimation = createAnimation(bikeFrames, 0);
+        cycleUpAnimation = createAnimation(bikeFrames, 2);
+        cycleRightAnimation = createAnimation(bikeFrames, 4);
+        cycleDownAnimation = createAnimation(bikeFrames, 6);
         movementAnimation = cycleUpAnimation;
+        stateTime = 0f;
     }
 
-    private Animation<TextureRegion> createAnimation(TextureRegion[][] frames, int row, int startColumn, int frameCount) {
-        TextureRegion[] animationFrames = new TextureRegion[frameCount];
-        for (int i = 0; i < frameCount; i++) {
-            animationFrames[i] = frames[row][startColumn + i];
-        }
+    private Animation<TextureRegion> createAnimation(TextureRegion[][] frames, int row) {
+        TextureRegion[] animationFrames = new TextureRegion[7];
+        System.arraycopy(frames[row], 0, animationFrames, 0, 7);
         return new Animation<>(0.1f, animationFrames);
     }
 
-    public void update(float deltaTime, boolean isActiveBus) {
+    public void update(float deltaTime, boolean isActiveBus, MapLayer collisionLayer) {
         stateTime += deltaTime;
+
         if (mode == Mode.BUS && isActiveBus) {
             updateBus(deltaTime);
         } else if (mode == Mode.BIKE) {
-            updateBike(deltaTime);
+            updateBike(deltaTime, collisionLayer);
+        } else if (mode == Mode.TRAIN) {
+            //updateTrain();
         }
     }
+
 
     private void updateBus(float deltaTime) {
         if (!waitingAtWaypoint && !waypoints.isEmpty()) {
@@ -125,7 +143,6 @@ public class Transport {
                 }
             }
         }
-
         if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
             waitingAtWaypoint = false;
             currentWaypointIndex++;
@@ -133,30 +150,56 @@ public class Transport {
         }
     }
 
-    private void updateBike(float deltaTime) {
+    private void updateBike(float deltaTime, MapLayer collisionLayer) {
         Vector2 moveVector = new Vector2();
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             moveVector.y += speed * deltaTime;
-            currentDirection = Direction.UP;
-            movementAnimation = cycleUpAnimation;
+            if (currentDirection != Direction.UP) {
+                setCurrentDirection(Direction.UP);
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             moveVector.y -= speed * deltaTime;
-            currentDirection = Direction.DOWN;
-            movementAnimation = cycleDownAnimation;
+            if (currentDirection != Direction.DOWN) {
+                setCurrentDirection(Direction.DOWN);
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             moveVector.x -= speed * deltaTime;
-            currentDirection = Direction.LEFT;
-            movementAnimation = cycleLeftAnimation;
+            if (currentDirection != Direction.LEFT) {
+                setCurrentDirection(Direction.LEFT);
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             moveVector.x += speed * deltaTime;
-            currentDirection = Direction.RIGHT;
-            movementAnimation = cycleRightAnimation;
+            if (currentDirection != Direction.RIGHT) {
+                setCurrentDirection(Direction.RIGHT);
+            }
         }
-        position.add(moveVector);
-        isMoving = !moveVector.isZero();
+
+        // Calculate the new position to move to
+        Vector2 newPosition = position.cpy().add(moveVector);
+        if (this.canMove(newPosition.x, newPosition.y, collisionLayer)) {
+            position.set(newPosition);
+            batteryCharge -= deltaTime * 10;
+        }
+    }
+
+
+    public boolean canMove(float x, float y, MapLayer collisionLayer) {
+        Rectangle transportRect = new Rectangle(x, y, this.getWidth() * .01f, this.getHeight()* .01f);
+
+        // Iterate through all objects in the collision layer to check for collisions
+        for (MapObject object : collisionLayer.getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                if (transportRect.overlaps(rect)) {
+                    // Collision detected
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void render(SpriteBatch spriteBatch) {
@@ -180,21 +223,43 @@ public class Transport {
                 }
                 break;
             case BIKE:
-                // Bike mode uses an animation
-                currentFrame = movementAnimation.getKeyFrame(stateTime, true);
+                currentFrame = getCurrentFrame();
                 break;
         }
         if (currentFrame != null) {
             spriteBatch.draw(currentFrame, position.x, position.y);
         }
     }
-    // In your Transport class
+
+    public TextureRegion getCurrentFrame() {
+        if (mode == Mode.BIKE) {
+            return movementAnimation.getKeyFrame(stateTime, true);
+        }
+        return null;
+    }
+
+    public void setActive(boolean active) {
+    }
+
+    public boolean hasBattery() {
+        return batteryCharge > 0;
+    }
+
+    private float getWidth() {
+        return spriteSheet.getWidth() * 0.6f;
+    }
+    private float getHeight() {
+        return spriteSheet.getHeight() * 0.6f;
+    }
+
+    public void setVisible() {
+    }
+
     public boolean isFinalStopReached() {
         return isFinalStopReached;
     }
-
-    public void setFinalStopReached(boolean isFinalStopReached) {
-        this.isFinalStopReached = isFinalStopReached;
+    public void setPosition(float x, float y) {
+        position.set(x, y);
     }
 
     public boolean canPlayerDisembark() {

@@ -1,5 +1,4 @@
 package com.mygdx.game;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,14 +15,13 @@ public class Player {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
-
     private final Texture spriteSheet;
     private final Animation<TextureRegion> walkLeftAnimation;
-    private final Animation<TextureRegion> walkDownAnimation;
-    private final Animation<TextureRegion> walkUpAnimation;
     private final Animation<TextureRegion> walkRightAnimation;
-    private Vector2 position;    // Current position of the player
-    private float stateTime;    // Time since the player started moving
+    private final Animation<TextureRegion> walkUpAnimation;
+    private final Animation<TextureRegion> walkDownAnimation;
+    private final Vector2 position;
+    private float stateTime;
     private Direction currentDirection;
     private static final int frameWidth = 16;
     private static final int frameHeight = 16;
@@ -31,7 +29,12 @@ public class Player {
     private boolean isMoving;
     private static final float playerSpeed = 690.0f; // We will want to change this later
     private boolean onBus = false;
+    private boolean onBike = false;
+    private Transport currentBike;
+    private Transport mountedBike;
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
 
@@ -65,27 +68,35 @@ public class Player {
             isMoving = false;
             Vector2 newPosition = new Vector2(position);
 
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                newPosition.y += playerSpeed * deltaTime;
-                currentDirection = Direction.UP;
-                isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                newPosition.y -= playerSpeed * deltaTime;
-                currentDirection = Direction.DOWN;
-                isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                newPosition.x -= playerSpeed * deltaTime;
-                currentDirection = Direction.LEFT;
-                isMoving = true;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                newPosition.x += playerSpeed * deltaTime;
-                currentDirection = Direction.RIGHT;
-                isMoving = true;
+            if (onBike && currentBike != null) {
+                currentBike.update(deltaTime, false, collisionLayer);
+                if (!currentBike.hasBattery()) {
+                    dismountBike(); // Dismount if the bike runs out of battery
+                } else {
+                    position.set(currentBike.getPosition());
+                }
+
+            } else {
+                // Movement logic for the player when not on the bike
+                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                    newPosition.y += playerSpeed * deltaTime;
+                    currentDirection = Direction.UP;
+                } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    newPosition.y -= playerSpeed * deltaTime;
+                    currentDirection = Direction.DOWN;
+                } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    newPosition.x -= playerSpeed * deltaTime;
+                    currentDirection = Direction.LEFT;
+                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    newPosition.x += playerSpeed * deltaTime;
+                    currentDirection = Direction.RIGHT;
+                }
+                if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
+                    position.set(newPosition);
+                    isMoving = true;
+                }
             }
-            if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
-                position.set(newPosition);
-            }
-            stateTime = isMoving ? stateTime + deltaTime : 0;
+            stateTime += deltaTime;
         }
     }
 
@@ -100,6 +111,73 @@ public class Player {
             }
         }
         return true;
+    }
+
+
+    public void render(SpriteBatch spriteBatch) {
+        if (!onBus) {
+            TextureRegion currentFrame;
+            if (onBike && currentBike != null) {
+                currentFrame = currentBike.getCurrentFrame();
+            } else {
+                currentFrame = getCurrentFrame();
+            }
+            spriteBatch.draw(currentFrame, position.x, position.y);
+        }
+    }
+
+    private TextureRegion getCurrentFrame() {
+        switch (currentDirection) {
+            case UP:
+                return isMoving ? walkUpAnimation.getKeyFrame(stateTime, true) : walkUpAnimation.getKeyFrames()[0];
+            case DOWN:
+                return isMoving ? walkDownAnimation.getKeyFrame(stateTime, true) : walkDownAnimation.getKeyFrames()[0];
+            case LEFT:
+                return isMoving ? walkLeftAnimation.getKeyFrame(stateTime, true) : walkLeftAnimation.getKeyFrames()[0];
+            case RIGHT:
+                return isMoving ? walkRightAnimation.getKeyFrame(stateTime, true) : walkRightAnimation.getKeyFrames()[0];
+            default:
+                return walkDownAnimation.getKeyFrames()[0];
+        }
+    }
+
+    public void mountBike(Transport bike) {
+        mountedBike = bike;
+        this.onBike = true;
+        this.currentBike = bike;
+        bike.setActive(true);
+        bike.setVisible();
+    }
+    public Transport getMountedBike() {
+        return mountedBike;
+    }
+    public void dismountBike() {
+        if (onBike && currentBike != null) {
+            this.mountedBike = null;
+            this.currentBike.setActive(false);
+            this.currentBike.setVisible();
+            this.currentBike.setPosition(position.x + 10, position.y);
+            this.onBike = false;
+            this.currentBike = null;
+        }
+    }
+    public void setOnBus(boolean onBus) {
+        this.onBus = onBus;
+    }
+    public void setOnBike(boolean onBike) {
+        this.onBike = onBike;
+    }
+
+    public void setPosition(float x, float y) {
+        position.set(x, y);
+    }
+
+    public boolean isOnBus() {
+        return onBus;
+    }
+
+    public void dispose() {
+        spriteSheet.dispose();
     }
     public float getWidth() {
         return spriteSheet.getWidth() * .10f;
@@ -119,41 +197,14 @@ public class Player {
         return new Rectangle(position.x, position.y, spriteSheet.getWidth() * .10f, spriteSheet.getHeight() * .10f);
     }
 
-
-    public void render(SpriteBatch spriteBatch) {
-        if (!onBus) {
-            TextureRegion currentFrame = getCurrentFrame();
-            spriteBatch.draw(currentFrame, position.x, position.y);
-        }
+    public void enterMetro() {
     }
 
-    private TextureRegion getCurrentFrame() {
-        switch (currentDirection) {
-            case UP:
-                return isMoving ? walkUpAnimation.getKeyFrame(stateTime, true) : walkUpAnimation.getKeyFrames()[0];
-            case DOWN:
-                return isMoving ? walkDownAnimation.getKeyFrame(stateTime, true) : walkDownAnimation.getKeyFrames()[0];
-            case LEFT:
-                return isMoving ? walkLeftAnimation.getKeyFrame(stateTime, true) : walkLeftAnimation.getKeyFrames()[0];
-            case RIGHT:
-                return isMoving ? walkRightAnimation.getKeyFrame(stateTime, true) : walkRightAnimation.getKeyFrames()[0];
-            default:
-                return walkDownAnimation.getKeyFrames()[0];
-        }
-    }
-    public void setOnBus(boolean onBus) {
-        this.onBus = onBus;
+    public void exitMetro(Vector2 newPosition) {
+        setPosition(newPosition.x, newPosition.y);
     }
 
-    public void setPosition(float x, float y) {
-        position.set(x, y);
-    }
-
-    public boolean isOnBus() {
-        return onBus;
-    }
-
-    public void dispose() {
-        spriteSheet.dispose();
+    public boolean isOnBike() {
+        return onBike;
     }
 }
