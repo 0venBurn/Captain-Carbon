@@ -112,7 +112,7 @@ public class Transport {
         if (mode == Mode.BUS && isActiveBus) {
             updateBus(deltaTime);
         } else if (mode == Mode.BIKE) {
-            updateBike(deltaTime, collisionLayer);
+            updateBikeMovement(deltaTime, collisionLayer);
         } else if (mode == Mode.TRAIN) {
             //updateTrain();
         }
@@ -150,7 +150,7 @@ public class Transport {
         }
     }
 
-    private void updateBike(float deltaTime, MapLayer collisionLayer) {
+    private void updateBikeMovement(float deltaTime, MapLayer collisionLayer) {
         Vector2 moveVector = new Vector2();
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             moveVector.y += speed * deltaTime;
@@ -186,21 +186,7 @@ public class Transport {
     }
 
 
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle transportRect = new Rectangle(x, y, this.getWidth() * .01f, this.getHeight()* .01f);
 
-        // Iterate through all objects in the collision layer to check for collisions
-        for (MapObject object : collisionLayer.getObjects()) {
-            if (object instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (transportRect.overlaps(rect)) {
-                    // Collision detected
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public void render(SpriteBatch spriteBatch) {
         TextureRegion currentFrame = null;
@@ -223,7 +209,7 @@ public class Transport {
                 }
                 break;
             case BIKE:
-                currentFrame = getCurrentFrame();
+                currentFrame = getCurrentFrameBike();
                 break;
         }
         if (currentFrame != null) {
@@ -231,7 +217,23 @@ public class Transport {
         }
     }
 
-    public TextureRegion getCurrentFrame() {
+    public boolean canMove(float x, float y, MapLayer collisionLayer) {
+        Rectangle transportRect = new Rectangle(x, y, this.getWidth() * .01f, this.getHeight()* .01f);
+
+        // Iterate through all objects in the collision layer to check for collisions
+        for (MapObject object : collisionLayer.getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                if (transportRect.overlaps(rect)) {
+                    // Collision detected
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public TextureRegion getCurrentFrameBike() {
         if (mode == Mode.BIKE) {
             return movementAnimation.getKeyFrame(stateTime, true);
         }

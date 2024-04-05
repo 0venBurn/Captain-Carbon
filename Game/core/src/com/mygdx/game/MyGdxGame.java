@@ -11,3 +11,4 @@ public class MyGdxGame extends Game {
 		this.setScreen(new MainMenuScreen(this));
 	}
 }
+

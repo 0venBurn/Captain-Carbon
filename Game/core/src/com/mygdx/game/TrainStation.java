@@ -41,37 +41,44 @@ public class TrainStation extends Transport {
     }
 
     public void displayStationUI(Stage stage) {
-        Skin skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         Texture texture = new Texture(Gdx.files.internal("miniMap.png"));
+        Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
         Image miniMapImage = new Image(texture);
         miniMapImage.setSize(2000, 800);
         miniMapImage.setPosition(Gdx.graphics.getWidth() / 140f, Gdx.graphics.getHeight() / 9f);
 
         stage.clear();
         uiDisplayed = true;
+
         // Add minimap image
         stage.addActor(miniMapImage);
 
         final float MAP_WIDTH = 9094f;
         final float MAP_HEIGHT = 8063f;
 
+
+        float buttonX = 0;
+        float buttonY = 0;
         for (TrainStation station : trainStations) {
-            TextButton button = new TextButton(station.getName(), skin);
+            Image button = new Image(stationButtonTexture);
 
-            float buttonX = miniMapImage.getX() + station.getPosition().x * (miniMapImage.getWidth() / MAP_WIDTH);
-            float buttonY = miniMapImage.getY() + station.getPosition().y * (miniMapImage.getHeight() / MAP_HEIGHT);
-
-            buttonX -= button.getWidth() / 2;
-            buttonY -= button.getHeight() / 2;
+            if (station.getName().equals("Station A")) {
+                buttonX = 715;
+                buttonY = 350;
+            } else if (station.getName().equals("Station B")) {
+                buttonX = 1450;
+                buttonY = 550;
+            }
 
             button.setPosition(buttonX, buttonY);
-            button.setSize(300, 200);
+            button.setSize(200, 133);
+            System.out.println("Button position for station " + station.getName() + ": X = " + buttonX + ", Y = " + buttonY);
 
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     player.exitMetro(station.getPosition());
-                    player.setPosition(station.getPosition().x, station.getPosition().y);
+                    player.setPosition(station.getPosition().x, station.getPosition().y - 50);
                     stage.clear();
                     uiDisplayed = false;
                 }

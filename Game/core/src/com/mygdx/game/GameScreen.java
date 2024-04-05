@@ -1,9 +1,12 @@
 
 package com.mygdx.game;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,41 +17,40 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-
 public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
-    private BitmapFont font;
-    private TiledMap map;
-    private MapLayer collisionLayer;
-    private OrthogonalTiledMapRenderer renderer;
-    private ArrayList<Transport> transports;
-    private Player player;
+    private final BitmapFont font;
+    private final TiledMap map;
+    private final MapLayer collisionLayer;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final ArrayList<Transport> transports;
+    private final Player player;
     private Transport currentBus = null;
 
-    private ArrayList <Transport> bikes;
+    private final ArrayList <Transport> bikes;
 
-    private ArrayList <TrainStation> trainStations;
+    private final ArrayList <TrainStation> trainStations;
     private Stage stage;
 
-    private Skin skin;
-    private MyGdxGame game;
-    private SpriteBatch batch;
-    private BitmapFont pauseFont;
+    private final Skin skin;
+    private final MyGdxGame game;
+    private final SpriteBatch batch;
+    private final BitmapFont pauseFont;
     private boolean isPaused;
     private Table pauseMenu;
+    private Gem gem;
 
 
     public GameScreen(MyGdxGame game) {
@@ -77,16 +79,10 @@ public class GameScreen implements Screen {
         collisionLayer = map.getLayers().get("Collision");
         renderer = new OrthogonalTiledMapRenderer(map);
         transports = new ArrayList<>();
-        Transport upBus = new Transport(Transport.Mode.BUS, new Vector2(1414, 1500),  Arrays.asList(
+        Transport upBus = new Transport(Transport.Mode.BUS, new Vector2(1414, 1500), Arrays.asList(
                 new Vector2(1414, 1500),
                 new Vector2(1414, 1800),
-                new Vector2(1414, 2200),
-                new Vector2(1414, 3580)
-        ));
-        Transport upBus2 = new Transport(Transport.Mode.BUS, new Vector2(1414, 2000), Arrays.asList(
-                new Vector2(1414, 2400),
-                new Vector2(1414, 2700),
-                new Vector2(1414, 3000)
+                new Vector2(1414, 2360)
         ));
         Transport horizontalBus = new Transport(Transport.Mode.BUS, new Vector2(1300, 2300), Arrays.asList(
                 new Vector2(1800, 2300),
@@ -94,31 +90,27 @@ public class GameScreen implements Screen {
                 new Vector2(2500, 2300)
         ));
 
-        player = new Player(1000, 1700);
-
-// Define each train station and its coordinates
-        trainStations = new ArrayList<>();
-        TrainStation station1 = new TrainStation(new Vector2(1000, 2000), "Station A", trainStations, player);
-        TrainStation station2 = new TrainStation(new Vector2(2500, 2500), "Station B", trainStations, player);
-        TrainStation station3 = new TrainStation(new Vector2(3000, 3000), "Station C", trainStations, player);
-        TrainStation station4 = new TrainStation(new Vector2(3500, 3500), "Station D", trainStations, player);
-        trainStations.add(station1);
-        trainStations.add(station2);
-        trainStations.add(station3);
-        trainStations.add(station4);
         upBus.setCurrentDirection(Transport.Direction.UP);
-        upBus2.setCurrentDirection(Transport.Direction.UP);
-        horizontalBus.setCurrentDirection(Transport.Direction.RIGHT); // Set initial direction to right
-
+        horizontalBus.setCurrentDirection(Transport.Direction.RIGHT);
         transports.add(upBus);
-        transports.add(upBus2);
         transports.add(horizontalBus);
+
+        player = new Player(1000, 1700);
+        spawnGem();
+        // Define each train station and its coordinates
+        trainStations = new ArrayList<>();
+        TrainStation stationA = new TrainStation(new Vector2(2650, 2350), "Station A", trainStations, player);//center map station
+        TrainStation stationB = new TrainStation(new Vector2(4400, 3050), "Station B", trainStations, player);//mid right water station
+        trainStations.add(stationA);
+        trainStations.add(stationB);
+
+
 
 
         bikes = new ArrayList<>();
         // Spawn groups of bikes
-        for (int i = 0; i < 5; i++) {
-            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(2400 + i * 50, 2300), null));
+        for (int i = 0; i < 2; i++) {
+            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(800 + i * 50, 2020), null));
         }
 
         AssetManager assetManager = new AssetManager();
@@ -184,12 +176,41 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float deltaTime = Gdx.graphics.getDeltaTime();
+
         if (!TrainStation.isUiDisplayed()) {
-            player.update(deltaTime, collisionLayer);
+            player.updatePlayerMovement(deltaTime, collisionLayer);
         }
-        // Update the camera's position
-        camera.position.set(player.getX(), player.getY(), 0);
+        updateBuses(deltaTime);
+
+        if (player.isOnBus() && currentBus != null) {
+            camera.position.set(currentBus.getPosition().x, currentBus.getPosition().y, 0);
+        } else {
+            camera.position.set(player.getX(), player.getY(), 0);
+        }
         camera.update();
+        renderer.setView(camera);
+        renderer.render();
+        renderer.getBatch().begin();
+        player.render((SpriteBatch) renderer.getBatch());
+
+        for (Transport transport : transports) {
+            transport.render((SpriteBatch) renderer.getBatch());
+        }
+        for (Transport bike : bikes) {
+            bike.render((SpriteBatch) renderer.getBatch());
+        }
+
+        checkPlayerTransportInteraction((SpriteBatch) renderer.getBatch());
+
+        if (gem != null && gem.isCollected() && player.getBounds().overlaps(gem.getBounds())) {
+            gem.collect();
+        }
+
+        // Render the gem if it's not collected
+        if (gem != null && gem.isCollected()) {
+            gem.render((SpriteBatch) renderer.getBatch());
+        }
+
         // Getting the dimensions of the map in pixels
         int mapWidthInPixels = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
         int mapHeightInPixels = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
@@ -204,32 +225,16 @@ public class GameScreen implements Screen {
         updateBuses(deltaTime);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             togglePause(); {
-            };
-        }
-        if (player.isOnBus() && currentBus != null) {
-            camera.position.set(currentBus.getPosition().x, currentBus.getPosition().y, 0);
-        } else {
-            camera.position.set(player.getX(), player.getY(), 0);
+            }
         }
 
-        camera.update();
-        renderer.setView(camera);
-        renderer.render();
-        renderer.getBatch().begin();
-        player.render((SpriteBatch) renderer.getBatch());
-        for (Transport transport : transports) {
-            transport.render((SpriteBatch) renderer.getBatch());
-        }
-        for (Transport bike : bikes) {
-            bike.render((SpriteBatch) renderer.getBatch());
-        }
-        checkPlayerTransportInteraction((SpriteBatch) renderer.getBatch());
+
+
         renderer.getBatch().end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         camera.update();
         renderer.setView(camera);
-        renderer.render();
         batch.begin();
         batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -350,6 +355,10 @@ public class GameScreen implements Screen {
     public void hide() {
         pauseMenu.setVisible(false);
 
+    }
+    private void spawnGem() {
+        Vector2 gemPosition = new Vector2(4830, 2900); // tutorial spot
+        gem = new Gem(gemPosition);
     }
 
     @Override
