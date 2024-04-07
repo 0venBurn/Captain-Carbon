@@ -25,7 +25,7 @@ public class Player {
     private boolean onBike = false;
     private Transport currentBike;
     private Transport mountedBike;
-
+    public Scoring_System scoringSystem;
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -34,6 +34,9 @@ public class Player {
         position = new Vector2(x, y);
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
+        scoringSystem = new Scoring_System();
+
+
     }
 
     public void updatePlayerMovement(float deltaTime, MapLayer collisionLayer) {
@@ -75,10 +78,13 @@ public class Player {
 
 
     public void render(SpriteBatch spriteBatch) {
+
         if (!onBus) {
             TextureRegion currentFrame;
             if (onBike && currentBike != null) {
                 currentFrame = currentBike.getCurrentFrameBike();
+
+
             } else {
                 currentFrame = animations.getCurrentFramePlayer(currentDirection, isMoving, Gdx.graphics.getDeltaTime());
             }
@@ -99,12 +105,16 @@ public class Player {
         return true;
     }
 
+
+
     public void mountBike(Transport bike) {
         mountedBike = bike;
         this.onBike = true;
         this.currentBike = bike;
         bike.setActive(true);
         bike.setVisible();
+        scoringSystem.incrementBikeCount();
+        // Increment bike count
     }
 
     public Transport getMountedBike() {
@@ -123,6 +133,7 @@ public class Player {
     }
 
     public void setOnBus(boolean onBus) {
+        scoringSystem.incrementBusCount();
         this.onBus = onBus;
     }
 
@@ -135,6 +146,7 @@ public class Player {
     }
 
     public boolean isOnBus() {
+
         return onBus;
     }
 
