@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
     private boolean isPaused;
     private Table pauseMenu;
     private Gem gem;
-
+    public Scoring_System scoringSystem;
 
     public GameScreen(MyGdxGame game) {
         // Initialize camera and viewport
@@ -62,10 +62,10 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         pauseFont = new BitmapFont();
         isPaused = false;
-
         this.game = game;
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
+
 
         Gdx.input.setInputProcessor((stage));
         font.getData().setScale(1.5f);
@@ -89,6 +89,10 @@ public class GameScreen implements Screen {
                 new Vector2(2000, 2300),
                 new Vector2(2500, 2300)
         ));
+        // Begin batch and draw text
+
+
+
 
         upBus.setCurrentDirection(Transport.Direction.UP);
         horizontalBus.setCurrentDirection(Transport.Direction.RIGHT);
@@ -191,6 +195,8 @@ public class GameScreen implements Screen {
         renderer.setView(camera);
         renderer.render();
         renderer.getBatch().begin();
+
+
         player.render((SpriteBatch) renderer.getBatch());
 
         for (Transport transport : transports) {
@@ -236,6 +242,9 @@ public class GameScreen implements Screen {
         camera.update();
         renderer.setView(camera);
         batch.begin();
+        font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
+        font.draw(batch, "Buses: " + player.scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 10);
+
         batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
