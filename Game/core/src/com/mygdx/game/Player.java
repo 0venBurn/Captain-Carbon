@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class Player {
     private final Texture spriteSheet;
     private final Game_Animations animations;
@@ -26,6 +26,8 @@ public class Player {
     private Transport currentBike;
     private Transport mountedBike;
     public Scoring_System scoringSystem;
+    public EducationalPopup popup;
+
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -35,6 +37,7 @@ public class Player {
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
         scoringSystem = new Scoring_System();
+
 
 
     }
@@ -114,6 +117,9 @@ public class Player {
         bike.setActive(true);
         bike.setVisible();
         scoringSystem.incrementBikeCount();
+
+        popup.setContent("This is an educational popup message.");
+
         // Increment bike count
     }
 
