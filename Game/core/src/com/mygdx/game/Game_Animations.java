@@ -42,6 +42,8 @@ public class Game_Animations {
 
 
 
+
+
     private Animation<TextureRegion> createPlayerAnimation(TextureRegion[][] frames, int column) {
         TextureRegion[] animationFrames = new TextureRegion[3];
         for (int i = 0; i < 3; i++) {

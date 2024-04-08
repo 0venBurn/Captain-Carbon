@@ -41,12 +41,15 @@ public class Transport {
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
     private float batteryCharge;
+    private Collision collision   ;
+
 
     public Transport(Mode mode, Vector2 startPosition, List<Vector2> waypoints) {
         this.mode = mode;
         this.position = startPosition;
         this.waypoints = waypoints;
         this.batteryCharge = 100.0f;
+        collision = new Collision();
         configureMode();
     }
 
@@ -67,6 +70,46 @@ public class Transport {
                 break;
         }
     }
+
+
+
+
+
+    public void render(SpriteBatch spriteBatch) {
+        TextureRegion currentFrame = null;
+        switch (mode) {
+            // Bus mode uses individual frames cause we have no animation
+            case BUS:
+                switch (currentDirection) {
+                    case LEFT:
+                        currentFrame = busFrameLeft;
+                        break;
+                    case RIGHT:
+                        currentFrame = busFrameRight;
+                        break;
+                    case UP:
+                        currentFrame = busFrameUp;
+                        break;
+                    case DOWN:
+                        currentFrame = busFrameDown;
+                        break;
+                }
+                break;
+            case BIKE:
+                currentFrame = getCurrentFrameBike();
+                break;
+        }
+        if (currentFrame != null) {
+            spriteBatch.draw(currentFrame, position.x, position.y);
+        }
+    }
+
+
+
+
+
+
+
 
     private void configureMode() {
         switch (mode) {
@@ -151,6 +194,7 @@ public class Transport {
     }
 
     private void updateBikeMovement(float deltaTime, MapLayer collisionLayer) {
+
         Vector2 moveVector = new Vector2();
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             moveVector.y += speed * deltaTime;
@@ -179,7 +223,7 @@ public class Transport {
 
         // Calculate the new position to move to
         Vector2 newPosition = position.cpy().add(moveVector);
-        if (this.canMove(newPosition.x, newPosition.y, collisionLayer)) {
+        if (this.collision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
             position.set(newPosition);
             batteryCharge -= deltaTime * 10;
         }
@@ -188,50 +232,6 @@ public class Transport {
 
 
 
-    public void render(SpriteBatch spriteBatch) {
-        TextureRegion currentFrame = null;
-        switch (mode) {
-            // Bus mode uses individual frames cause we have no animation
-            case BUS:
-                switch (currentDirection) {
-                    case LEFT:
-                        currentFrame = busFrameLeft;
-                        break;
-                    case RIGHT:
-                        currentFrame = busFrameRight;
-                        break;
-                    case UP:
-                        currentFrame = busFrameUp;
-                        break;
-                    case DOWN:
-                        currentFrame = busFrameDown;
-                        break;
-                }
-                break;
-            case BIKE:
-                currentFrame = getCurrentFrameBike();
-                break;
-        }
-        if (currentFrame != null) {
-            spriteBatch.draw(currentFrame, position.x, position.y);
-        }
-    }
-
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle transportRect = new Rectangle(x, y, this.getWidth() * .01f, this.getHeight()* .01f);
-
-        // Iterate through all objects in the collision layer to check for collisions
-        for (MapObject object : collisionLayer.getObjects()) {
-            if (object instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (transportRect.overlaps(rect)) {
-                    // Collision detected
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public TextureRegion getCurrentFrameBike() {
         if (mode == Mode.BIKE) {
@@ -247,12 +247,6 @@ public class Transport {
         return batteryCharge > 0;
     }
 
-    private float getWidth() {
-        return spriteSheet.getWidth() * 0.6f;
-    }
-    private float getHeight() {
-        return spriteSheet.getHeight() * 0.6f;
-    }
 
     public void setVisible() {
     }

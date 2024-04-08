@@ -27,7 +27,7 @@ public class Player {
     private Transport mountedBike;
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
-
+    private Collision collision   ;
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -37,7 +37,7 @@ public class Player {
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
         scoringSystem = new Scoring_System();
-
+        collision = new Collision();
 
 
     }
@@ -68,7 +68,7 @@ public class Player {
                     newPosition.x += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.RIGHT;
                 }
-                if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
+                if (collision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
                     position.set(newPosition);
                     isMoving = true;
                 }
@@ -95,18 +95,7 @@ public class Player {
         }
     }
 
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle playerRect = new Rectangle(x, y, getWidth() * .10f, getHeight() * .10f);
-        for (MapObject object : collisionLayer.getObjects()) {
-            if (object instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (playerRect.overlaps(rect)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+
 
 
 
@@ -154,6 +143,20 @@ public class Player {
         return onBus;
     }
 
+
+    public boolean canMove(float x, float y, MapLayer collisionLayer) {
+        Rectangle playerRect = new Rectangle(x, y, getWidth() * .10f, getHeight() * .10f);
+        for (MapObject object : collisionLayer.getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                if (playerRect.overlaps(rect)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public float getWidth() {
         return spriteSheet.getWidth() * .10f;
     }
@@ -170,13 +173,17 @@ public class Player {
         return position.y;
     }
 
+
+    // Assigning player size
     public Rectangle getBounds() {
         return new Rectangle(position.x, position.y, spriteSheet.getWidth() * .10f, spriteSheet.getHeight() * .10f);
     }
 
+    // if player interacts with Train
     public void enterMetro() {
     }
 
+    // if player
     public void exitMetro(Vector2 newPosition) {
         setPosition(newPosition.x, newPosition.y);
     }

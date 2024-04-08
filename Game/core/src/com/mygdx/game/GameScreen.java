@@ -38,12 +38,9 @@ public class GameScreen implements Screen {
     private final ArrayList<Transport> transports;
     private final Player player;
     private Transport currentBus = null;
-
     private final ArrayList <Transport> bikes;
-
     private final ArrayList <TrainStation> trainStations;
     private Stage stage;
-
     private final Skin skin;
     private final MyGdxGame game;
     private final SpriteBatch batch;
@@ -51,7 +48,6 @@ public class GameScreen implements Screen {
     private boolean isPaused;
     private Table pauseMenu;
     private Gem gem;
-    public Scoring_System scoringSystem;
 
     public GameScreen(MyGdxGame game) {
         // Initialize camera and viewport

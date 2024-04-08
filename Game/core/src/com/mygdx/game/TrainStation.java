@@ -40,6 +40,8 @@ public class TrainStation extends Transport {
         return uiDisplayed;
     }
 
+
+    // Responsible for TrainStation UI
     public void displayStationUI(Stage stage) {
         Texture texture = new Texture(Gdx.files.internal("miniMap.png"));
         Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
