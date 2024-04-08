@@ -223,7 +223,7 @@ public class Transport {
 
         // Calculate the new position to move to
         Vector2 newPosition = position.cpy().add(moveVector);
-        if (this.bikecollision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
+        if (this.bikecollision.canMove(newPosition.x, newPosition.y, collisionLayer,false)) {
             position.set(newPosition);
             batteryCharge -= deltaTime * 10;
         }

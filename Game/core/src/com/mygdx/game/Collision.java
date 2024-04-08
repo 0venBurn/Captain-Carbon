@@ -17,8 +17,9 @@ public class Collision {
             spriteSheet = new Texture("Tilesets/bike.png");
         }
     }
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle entityRect = new Rectangle(x, y, getWidth() * 0.01f, getHeight() * 0.01f);
+    public boolean canMove(float x, float y, MapLayer collisionLayer, boolean isPlayer) {
+        float scaleFactor = isPlayer ? 0.1f : 0.01f;
+        Rectangle entityRect = new Rectangle(x, y, getWidth() * scaleFactor, getHeight() * scaleFactor);
         for (MapObject object : collisionLayer.getObjects()) {
             if (object instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -30,12 +31,13 @@ public class Collision {
         return true;
     }
 
+
     private float getWidth() {
-        return spriteSheet.getWidth() * 0.6f; // Adjust scale factor as needed
+        return spriteSheet.getWidth() * 0.6f;
     }
 
     private float getHeight() {
-        return spriteSheet.getHeight() * 0.6f; // Adjust scale factor as needed
+        return spriteSheet.getHeight() * 0.6f;
     }
 
 
