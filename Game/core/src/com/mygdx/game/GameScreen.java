@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -59,7 +60,8 @@ public class GameScreen implements Screen {
         GameState gameState = GameState.RUNNING;
         camera = new OrthographicCamera();
         viewport = new FitViewport(800, 600, camera);
-        camera.position.set(1000, 1700, 0); // Set initial camera position
+        camera.position.set(1000, 1700, 0);// Set initial camera position
+
         camera.update();
         batch = new SpriteBatch();
         pauseFont = new BitmapFont();
@@ -73,9 +75,7 @@ public class GameScreen implements Screen {
         font.getData().setScale(1.5f);
 
 
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(800, 600, camera);
-        camera.update();
+
         // Load TMX map and create a renderer for it
         map = new TmxMapLoader().load("Game/assets/Map.tmx");
         collisionLayer = map.getLayers().get("Collision");
@@ -124,6 +124,7 @@ public class GameScreen implements Screen {
         assetManager.finishLoading(); // Blocks until all assets are loaded
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
+
         camera.update();
 
         stage = new Stage(new ScreenViewport());
@@ -193,7 +194,7 @@ public class GameScreen implements Screen {
         } else {
             camera.position.set(player.getX(), player.getY(), 0);
         }
-        camera.update();
+        adjustCameraPosition();
         renderer.setView(camera);
         renderer.render();
         renderer.getBatch().begin();
@@ -218,18 +219,7 @@ public class GameScreen implements Screen {
         if (gem != null && gem.isCollected()) {
             gem.render((SpriteBatch) renderer.getBatch());
         }
-
-        // Getting the dimensions of the map in pixels
-        int mapWidthInPixels = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
-        int mapHeightInPixels = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
-
-        // Ensuring the camera's position is within the bounds
-        camera.position.x = Math.max(camera.position.x, camera.viewportWidth / 2);
-        camera.position.y = Math.max(camera.position.y, camera.viewportHeight / 2);
-        camera.position.x = Math.min(camera.position.x, mapWidthInPixels - camera.viewportWidth / 2);
-        camera.position.y = Math.min(camera.position.y, mapHeightInPixels - camera.viewportHeight / 2);
-
-        camera.update();
+        adjustCameraPosition();
         updateBuses(deltaTime);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             togglePause(); {
@@ -241,7 +231,7 @@ public class GameScreen implements Screen {
         renderer.getBatch().end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
-        camera.update();
+        adjustCameraPosition();
         renderer.setView(camera);
         batch.begin();
         font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
@@ -356,6 +346,39 @@ public class GameScreen implements Screen {
 
 
     }
+    private void adjustCameraPosition(){
+
+
+        int tileWidth = map.getProperties().get("tilewidth", Integer.class);
+        int tileHeight = map.getProperties().get("tileheight", Integer.class);
+        int mapWidth = map.getProperties().get("width", Integer.class) * tileWidth;
+        int mapHeight = map.getProperties().get("height", Integer.class) * tileHeight;
+
+        float cameraHalfWidth = camera.viewportWidth / 2f;
+        float cameraHalfHeight = camera.viewportHeight / 2f;
+
+        float minX = cameraHalfWidth;
+        float maxX = mapWidth - cameraHalfWidth;
+        float minY = cameraHalfHeight;
+        float maxY = mapHeight - cameraHalfHeight;
+
+        // Debug print statements
+        System.out.println("minX: " + minX);
+        System.out.println("maxX: " + maxX);
+        System.out.println("minY: " + minY);
+        System.out.println("maxY: " + maxY);
+
+        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
+
+        System.out.println("Camera position: " + camera.position);
+        System.out.println("Camera viewport width: " + camera.viewportWidth);
+        System.out.println("Camera viewport height: " + camera.viewportHeight);
+        System.out.println("Viewport world width: " + viewport.getWorldWidth());
+        System.out.println("Viewport world height: " + viewport.getWorldHeight());
+        camera.update();
+        }
+
 
     @Override
     public void pause() {
