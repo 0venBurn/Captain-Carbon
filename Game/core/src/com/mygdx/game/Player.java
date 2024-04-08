@@ -27,7 +27,7 @@ public class Player {
     private Transport mountedBike;
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
-    private Collision collision   ;
+    private Collision playercollision   ;
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -37,7 +37,7 @@ public class Player {
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
         scoringSystem = new Scoring_System();
-        collision = new Collision();
+        playercollision = new Collision(true);
 
 
     }
@@ -68,7 +68,7 @@ public class Player {
                     newPosition.x += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.RIGHT;
                 }
-                if (collision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
+                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
                     position.set(newPosition);
                     isMoving = true;
                 }
@@ -143,19 +143,6 @@ public class Player {
         return onBus;
     }
 
-
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle playerRect = new Rectangle(x, y, getWidth() * .10f, getHeight() * .10f);
-        for (MapObject object : collisionLayer.getObjects()) {
-            if (object instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (playerRect.overlaps(rect)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public float getWidth() {
         return spriteSheet.getWidth() * .10f;

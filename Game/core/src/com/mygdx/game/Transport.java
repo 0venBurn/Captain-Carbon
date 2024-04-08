@@ -41,7 +41,7 @@ public class Transport {
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
     private float batteryCharge;
-    private Collision collision   ;
+    private Collision bikecollision   ;
 
 
     public Transport(Mode mode, Vector2 startPosition, List<Vector2> waypoints) {
@@ -49,7 +49,7 @@ public class Transport {
         this.position = startPosition;
         this.waypoints = waypoints;
         this.batteryCharge = 100.0f;
-        collision = new Collision();
+        bikecollision = new Collision(false);
         configureMode();
     }
 
@@ -223,7 +223,7 @@ public class Transport {
 
         // Calculate the new position to move to
         Vector2 newPosition = position.cpy().add(moveVector);
-        if (this.collision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
+        if (this.bikecollision.canMove(newPosition.x, newPosition.y, collisionLayer)) {
             position.set(newPosition);
             batteryCharge -= deltaTime * 10;
         }

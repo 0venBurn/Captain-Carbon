@@ -9,17 +9,20 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Collision {
     private Texture spriteSheet;
-    public Vector2 position;
-    public Collision() {
-        // Initialize the sprite sheet
-        spriteSheet = new Texture("Tilesets/bike.png");
+    private Vector2 position;
+    public Collision(boolean isPlayer) {
+        if (isPlayer) {
+            spriteSheet = new Texture("Tilesets/character.png");
+        } else {
+            spriteSheet = new Texture("Tilesets/bike.png");
+        }
     }
     public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle transportRect = new Rectangle(x, y, this.getWidth() * .01f, this.getHeight()* .01f);
+        Rectangle entityRect = new Rectangle(x, y, getWidth() * 0.01f, getHeight() * 0.01f);
         for (MapObject object : collisionLayer.getObjects()) {
             if (object instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (transportRect.overlaps(rect)) {
+                if (entityRect.overlaps(rect)) {
                     return false;
                 }
             }
@@ -28,18 +31,18 @@ public class Collision {
     }
 
     private float getWidth() {
-        return spriteSheet.getWidth() * 0.6f;
+        return spriteSheet.getWidth() * 0.6f; // Adjust scale factor as needed
     }
-
 
     private float getHeight() {
-        return spriteSheet.getHeight() * 0.6f;
+        return spriteSheet.getHeight() * 0.6f; // Adjust scale factor as needed
     }
 
 
 
-    public Rectangle getBounds() {
-        return new Rectangle(position.x, position.y, spriteSheet.getWidth() * 0.6f, spriteSheet.getHeight() * 0.6f);
+    public void dispose() {
+        if (spriteSheet != null) {
+            spriteSheet.dispose();
+        }
     }
-
 }
