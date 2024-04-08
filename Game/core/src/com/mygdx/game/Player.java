@@ -43,6 +43,9 @@ public class Player {
     }
 
     public void updatePlayerMovement(float deltaTime, MapLayer collisionLayer) {
+        if (GameScreen.gameState == GameScreen.GameState.PAUSED){
+            return;
+        }
         if (!onBus) {
             isMoving = false;
             Vector2 newPosition = new Vector2(position);

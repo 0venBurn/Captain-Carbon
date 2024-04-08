@@ -1,6 +1,5 @@
-
+// Import necessary modules
 package com.mygdx.game;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -25,10 +24,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+
+// Set interface for the implementation of a screen and initialise variables
 public class GameScreen implements Screen {
+
+
+    public static GameState gameState;
+    public static com.mygdx.game.GameState GameState;
     private OrthographicCamera camera;
     private Viewport viewport;
     private final BitmapFont font;
@@ -38,12 +42,9 @@ public class GameScreen implements Screen {
     private final ArrayList<Transport> transports;
     private final Player player;
     private Transport currentBus = null;
-
     private final ArrayList <Transport> bikes;
-
     private final ArrayList <TrainStation> trainStations;
     private Stage stage;
-
     private final Skin skin;
     private final MyGdxGame game;
     private final SpriteBatch batch;
@@ -55,6 +56,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(MyGdxGame game) {
         // Initialize camera and viewport
+        GameState gameState = GameState.RUNNING;
         camera = new OrthographicCamera();
         viewport = new FitViewport(800, 600, camera);
         camera.position.set(1000, 1700, 0); // Set initial camera position
@@ -132,7 +134,6 @@ public class GameScreen implements Screen {
 
     private void createPauseMenu(){
         pauseMenu = new Table();
-
         pauseMenu.center();
         pauseMenu.pad(10);
         pauseMenu.setSize(300, 200);
@@ -157,6 +158,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
+                gameState = GameState.RUNNING;
             }
         });
         pauseMenu.add(resumeButton).fillX().uniformX();
@@ -345,6 +347,12 @@ public class GameScreen implements Screen {
     private void togglePause() {
         isPaused = !isPaused;
         pauseMenu.setVisible(isPaused);
+        if (isPaused) {
+            gameState = GameState.PAUSED;
+
+        }else{
+            gameState = GameState.RUNNING;
+        }
 
 
     }
