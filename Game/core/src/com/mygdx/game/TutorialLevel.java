@@ -53,6 +53,7 @@ public class TutorialLevel implements ILevel {
         this.completionListener = listener;
         camera = new OrthographicCamera();
         viewport = new FitViewport(800, 600, camera);
+        viewport.apply();
         camera.update();
 
         font = new BitmapFont();
@@ -126,7 +127,7 @@ public class TutorialLevel implements ILevel {
 
         Gdx.app.log("Render Method", "Start of render method");
         // Clear the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 2, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float deltaTime = Gdx.graphics.getDeltaTime();
 
@@ -141,6 +142,8 @@ public class TutorialLevel implements ILevel {
             camera.position.set(player.getX(), player.getY(), 0);
         }
         adjustCameraPosition();
+        camera.update();
+
         renderer.setView(camera);
         renderer.render();
         renderer.getBatch().begin();
