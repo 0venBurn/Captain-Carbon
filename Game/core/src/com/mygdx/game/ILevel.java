@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public interface ILevel {
 
         void load();
-        void update(float deltaTime);
-        void render(SpriteBatch batch);
+        void update();
+        void render();
         void dispose();
         void show();
         void hide();

@@ -43,7 +43,7 @@ public class Player {
     }
 
     public void updatePlayerMovement(float deltaTime, MapLayer collisionLayer) {
-        if (GameScreen.gameState == GameScreen.GameState.PAUSED){
+        if (GameScreen.gameState == GameState.PAUSED){
             return;
         }
         if (!onBus) {

@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.*;
 
 public class MainMenuScreen implements Screen {
-    private MyGdxGame game;
+    private final MyGdxGame game;
     private Stage stage;
     private Texture backgroundTexture;
     private SpriteBatch batch;

@@ -9,14 +9,17 @@ public class LevelTwo implements ILevel{
     }
 
     @Override
-    public void update(float deltaTime) {
+    public void update() {
 
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render() {
 
     }
+
+
+
 
     @Override
     public void dispose() {

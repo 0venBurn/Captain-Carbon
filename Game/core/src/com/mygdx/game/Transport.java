@@ -107,7 +107,7 @@ public class Transport {
     }
 
     public void update(float deltaTime, boolean isActiveBus, MapLayer collisionLayer) {
-        if (GameScreen.gameState == GameScreen.GameState.PAUSED){
+        if (GameScreen.gameState == GameState.PAUSED){
             return;
         }
         stateTime += deltaTime;
