@@ -127,7 +127,7 @@ public class TutorialLevel implements ILevel {
 
         Gdx.app.log("Render Method", "Start of render method");
         // Clear the screen
-        Gdx.gl.glClearColor(0, 2, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float deltaTime = Gdx.graphics.getDeltaTime();
 
