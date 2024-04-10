@@ -53,10 +53,6 @@ public class TrainStation extends Transport {
         // Add minimap image
         stage.addActor(miniMapImage);
 
-        final float MAP_WIDTH = 9094f;
-        final float MAP_HEIGHT = 8063f;
-
-
         float buttonX = 0;
         float buttonY = 0;
         for (TrainStation station : trainStations) {
@@ -78,9 +74,10 @@ public class TrainStation extends Transport {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     player.exitMetro(station.getPosition());
-                    player.setPosition(station.getPosition().x, station.getPosition().y - 50);
+                    player.setPosition(station.getPosition().x, station.getPosition().y - 100);
                     stage.clear();
                     uiDisplayed = false;
+                    Gdx.input.setInputProcessor(null);
                 }
             });
 

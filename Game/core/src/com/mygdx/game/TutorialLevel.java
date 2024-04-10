@@ -65,15 +65,15 @@ public class TutorialLevel implements ILevel {
         collisionLayer = map.getLayers().get("Collision");
         renderer = new OrthogonalTiledMapRenderer(map);
         transports = new ArrayList<>();
-        Transport upBus = new Transport(Transport.Mode.BUS, new Vector2(1414, 1500), Arrays.asList(
-                new Vector2(1414, 1500),
-                new Vector2(1414, 1800),
-                new Vector2(1414, 2360)
+        Transport upBus = new Transport(Transport.Mode.BUS, new Vector2(900, 50), Arrays.asList(
+                new Vector2(900, 100),
+                new Vector2(900, 375),
+                new Vector2(900, 900)
         ));
-        Transport horizontalBus = new Transport(Transport.Mode.BUS, new Vector2(1300, 2300), Arrays.asList(
-                new Vector2(1800, 2300),
-                new Vector2(2000, 2300),
-                new Vector2(2500, 2300)
+        Transport horizontalBus = new Transport(Transport.Mode.BUS, new Vector2(810, 850), Arrays.asList(
+                new Vector2(810, 850),
+                new Vector2(1600, 850),
+                new Vector2(2030, 850)
         ));
         // Begin batch and draw text
 
@@ -85,19 +85,19 @@ public class TutorialLevel implements ILevel {
         transports.add(upBus);
         transports.add(horizontalBus);
 
-        player = new Player(1000, 1700);
+        player = new Player(250, 150);
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();
-        TrainStation stationA = new TrainStation(new Vector2(2650, 2350), "Station A", trainStations, player);//center map station
-        TrainStation stationB = new TrainStation(new Vector2(4400, 3050), "Station B", trainStations, player);//mid right water station
+        TrainStation stationA = new TrainStation(new Vector2(2140, 920), "Station A", trainStations, player);//center map station
+        TrainStation stationB = new TrainStation(new Vector2(3820, 1630), "Station B", trainStations, player);//mid right water station
         trainStations.add(stationA);
         trainStations.add(stationB);
 
         bikes = new ArrayList<>();
         // Spawn groups of bikes
         for (int i = 0; i < 2; i++) {
-            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(800 + i * 50, 2020), null));
+            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(230 + i * 50, 570), null));
         }
 
         AssetManager assetManager = new AssetManager();
@@ -105,7 +105,6 @@ public class TutorialLevel implements ILevel {
         assetManager.finishLoading(); // Blocks until all assets are loaded
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-
         camera.update();
 
         stage = new Stage(new ScreenViewport());
@@ -185,6 +184,7 @@ public class TutorialLevel implements ILevel {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         Gdx.app.log("Render Method", "End of render method");
+
 
 
 
@@ -292,6 +292,7 @@ public class TutorialLevel implements ILevel {
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         player.enterMetro();
                         station.displayStationUI(stage);
+                        Gdx.input.setInputProcessor(stage);
                     }
                 }
             }
@@ -331,17 +332,12 @@ public class TutorialLevel implements ILevel {
         camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
         camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
 
-        System.out.println("Camera position: " + camera.position);
-        System.out.println("Camera viewport width: " + camera.viewportWidth);
-        System.out.println("Camera viewport height: " + camera.viewportHeight);
-        System.out.println("Viewport world width: " + viewport.getWorldWidth());
-        System.out.println("Viewport world height: " + viewport.getWorldHeight());
         camera.update();
     }
 
     @Override
     public void spawnGem() {
-        Vector2 gemPosition = new Vector2(4830, 2900); // tutorial spot
+        Vector2 gemPosition = new Vector2(4327, 1450); // tutorial spot
         gem = new Gem(gemPosition);
 
     }

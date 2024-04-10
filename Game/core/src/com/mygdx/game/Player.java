@@ -120,9 +120,6 @@ public class Player {
         bike.setActive(true);
         bike.setVisible();
         scoringSystem.incrementBikeCount();
-
-        popup.setContent("This is an educational popup message.");
-
         // Increment bike count
     }
 

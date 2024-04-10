@@ -144,6 +144,7 @@ public class GameScreen implements Screen {
         pauseMenu.setVisible(isPaused);
         if (isPaused) {
             gameState = com.mygdx.game.GameState.PAUSED;
+            Gdx.input.setInputProcessor(stage);
 
         }else{
             gameState = com.mygdx.game.GameState.RUNNING;
