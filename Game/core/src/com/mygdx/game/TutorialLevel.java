@@ -238,7 +238,7 @@ public class TutorialLevel implements ILevel {
             // Check for boarding the bus
             if (playerBounds.overlaps(transportBounds) && !player.isOnBus() && !transport.isFinalStopReached()) {
                 font.draw(spriteBatch, "Press 'E' to enter the bus", player.getX(), player.getY() + 50);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E) && GameScreen.gameState != GameState.PAUSED) {
                     player.setOnBus(true);
                     currentBus = transport; // Set the current bus to this transport
                     camera.position.set(transport.getPosition().x, transport.getPosition().y, 0); // Ensure the camera follows this bus
@@ -253,7 +253,7 @@ public class TutorialLevel implements ILevel {
             // Check for leaving the bus
             if (player.isOnBus() && transport == currentBus && transport.canPlayerDisembark()) {
                 font.draw(spriteBatch, "Press 'Q' to exit the bus", transport.getPosition().x, transport.getPosition().y + 50);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && GameScreen.gameState != GameState.PAUSED)  {
                     player.setOnBus(false);
                     player.setPosition(transport.getPosition().x - 50, transport.getPosition().y);
                     currentBus = null;
