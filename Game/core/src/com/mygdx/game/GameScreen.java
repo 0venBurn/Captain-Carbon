@@ -61,7 +61,7 @@ public class GameScreen implements Screen {
         this.game = game;
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
-        scoringSystem = new Scoring_System();
+        scoringSystem = Scoring_System.getInstance();
 
 
         Gdx.input.setInputProcessor((stage));
@@ -244,6 +244,7 @@ public class GameScreen implements Screen {
         font.draw(batch, "dist travlled: " + player.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 50);
         font.draw(batch, "bike dist travlled: " + player.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 70);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 30);
+        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 10);
 
         batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -266,7 +267,6 @@ public class GameScreen implements Screen {
                 font.draw(spriteBatch, "Press 'E' to enter the bus", player.getX(), player.getY() + 50);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                     player.setOnBus(true);
-                    scoringSystem.incrementBusCount();
 
                     currentBus = transport; // Set the current bus to this transport
                     camera.position.set(transport.getPosition().x, transport.getPosition().y, 0); // Ensure the camera follows this bus

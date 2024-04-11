@@ -42,6 +42,7 @@ public class Transport {
     private boolean canLeaveBus = false;
     private float batteryCharge;
     private Collision bikecollision   ;
+    public Scoring_System scoringSystem;
 
     private float totalBusDistanceTraveled = 0.0f;
 
@@ -53,6 +54,8 @@ public class Transport {
         this.batteryCharge = 100.0f;
         bikecollision = new Collision(false);
         configureMode();
+        scoringSystem = Scoring_System.getInstance();
+
     }
 
     public void setCurrentDirection(Direction direction) {
@@ -191,6 +194,7 @@ public class Transport {
             }
         }
         if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
+            scoringSystem.incrementBusCount();
 
             waitingAtWaypoint = false;
             currentWaypointIndex++;

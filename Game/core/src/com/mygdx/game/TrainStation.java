@@ -18,12 +18,15 @@ public class TrainStation extends Transport {
     private final Player player;
     public static boolean uiDisplayed = false;
 
+    public Scoring_System scoringSystem;
 
     public TrainStation(Vector2 position, String name, ArrayList<TrainStation> trainStations, Player player) {
         super(Mode.TRAIN, position, null);
         this.name = name;
         this.trainStations = trainStations;
         this.player = player;
+        scoringSystem = Scoring_System.getInstance();
+
     }
 
     public Rectangle getBounds() {
@@ -81,6 +84,8 @@ public class TrainStation extends Transport {
                 public void clicked(InputEvent event, float x, float y) {
                     player.exitMetro(station.getPosition());
                     player.setPosition(station.getPosition().x, station.getPosition().y - 50);
+                    scoringSystem.incrementTrainCount();
+
                     stage.clear();
                     uiDisplayed = false;
                 }
