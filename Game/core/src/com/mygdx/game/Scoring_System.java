@@ -7,13 +7,12 @@ public class Scoring_System {
     private int trainCount;
     private float totalBikeDistanceTraveled = 0.0f;
     private float totalPlayerDistanceTraveled = 0.0f;
-
     private static Scoring_System instance;
+
 
     private Scoring_System() {
         this.totalPlayerDistanceTraveled = 0;
         this.totalBikeDistanceTraveled = 0;
-
     }
 
     public static Scoring_System getInstance() {
@@ -38,6 +37,7 @@ public class Scoring_System {
     public int getBusCount() {
         return busCount;
     }
+
     public int getTrainCount() {
         return trainCount;
     }
@@ -45,6 +45,7 @@ public class Scoring_System {
     public void setTotalPlayerDistanceTraveled(float totalPlayerDistanceTraveled) {
         this.totalPlayerDistanceTraveled = totalPlayerDistanceTraveled;
     }
+
     public void setTotalBikeDistanceTraveled(float totalBikeDistanceTraveled) {
         this.totalBikeDistanceTraveled = totalBikeDistanceTraveled;
     }
@@ -52,10 +53,10 @@ public class Scoring_System {
     public float getTotalBikeDistanceTraveled() {
         return this.totalBikeDistanceTraveled;
     }
+
     public float getTotalPlayerDistanceTraveled() {
         return this.totalPlayerDistanceTraveled;
     }
-
 
     public void outputToFile(String fileName) {
         try {
@@ -68,3 +69,4 @@ public class Scoring_System {
         }
     }
 }
+

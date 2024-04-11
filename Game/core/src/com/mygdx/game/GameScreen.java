@@ -239,8 +239,7 @@ public class GameScreen implements Screen {
         camera.update();
         renderer.setView(camera);
         batch.begin();
-        //font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
-        //font.draw(batch, "Buses: " + player.scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 10);
+
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 50);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 70);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 30);
