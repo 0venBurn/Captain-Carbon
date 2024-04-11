@@ -5,11 +5,14 @@ import java.io.IOException;
 public class Scoring_System {
     private int busCount;
     private int trainCount;
+    private float totalBikeDistanceTraveled = 0.0f;
+    private float totalPlayerDistanceTraveled = 0.0f;
 
     private static Scoring_System instance;
 
     private Scoring_System() {
-        this.busCount = 0;
+        this.totalPlayerDistanceTraveled = 0;
+        this.totalBikeDistanceTraveled = 0;
 
     }
 
@@ -39,7 +42,19 @@ public class Scoring_System {
         return trainCount;
     }
 
+    public void setTotalPlayerDistanceTraveled(float totalPlayerDistanceTraveled) {
+        this.totalPlayerDistanceTraveled = totalPlayerDistanceTraveled;
+    }
+    public void setTotalBikeDistanceTraveled(float totalBikeDistanceTraveled) {
+        this.totalBikeDistanceTraveled = totalBikeDistanceTraveled;
+    }
 
+    public float getTotalBikeDistanceTraveled() {
+        return this.totalBikeDistanceTraveled;
+    }
+    public float getTotalPlayerDistanceTraveled() {
+        return this.totalPlayerDistanceTraveled;
+    }
 
 
     public void outputToFile(String fileName) {

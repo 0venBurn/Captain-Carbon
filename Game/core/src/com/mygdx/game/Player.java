@@ -23,7 +23,9 @@ public class Player {
     private Transport currentBike;
     private float totalPlayerDistanceTraveled = 0.0f;
     private float totalBikeDistanceTraveled = 0.0f;
+
     private Transport mountedBike;
+    public Scoring_System scoringSystem;
 
     public EducationalPopup popup;
     private Collision playercollision   ;
@@ -36,6 +38,7 @@ public class Player {
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
         playercollision = new Collision(true);
+        scoringSystem = Scoring_System.getInstance();
 
 
     }
@@ -54,6 +57,7 @@ public class Player {
                 } else {
                     position.set(currentBike.getPosition());
                     totalBikeDistanceTraveled += oldPosition.dst(position);
+                    scoringSystem.setTotalBikeDistanceTraveled(totalBikeDistanceTraveled);
                 }
             } else {
                 if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -72,18 +76,16 @@ public class Player {
                 if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer, true)) {
                     position.set(newPosition);
                     isMoving = true;
-                    totalPlayerDistanceTraveled += oldPosition.dst(newPosition);
+
+                    totalPlayerDistanceTraveled+= oldPosition.dst(newPosition);
+                    scoringSystem.setTotalPlayerDistanceTraveled(totalPlayerDistanceTraveled);
+
                 }
             }
         }
     }
 
-    public float getTotalPlayerDistanceTraveled() {
-        return totalPlayerDistanceTraveled;
-    }
-    public float getTotalBikeDistanceTraveled() {
-        return totalBikeDistanceTraveled;
-    }
+
 
 
     public void render(SpriteBatch spriteBatch) {
@@ -133,12 +135,10 @@ public class Player {
 
     public void setOnBus(boolean onBus) {
         this.onBus = onBus;
-      //  scoringSystem.incrementBusCount();
     }
 
     public void setOnBike(boolean onBike) {
         this.onBike = onBike;
-     //   scoringSystem.incrementBikeCount();
     }
 
     public void setPosition(float x, float y) {
