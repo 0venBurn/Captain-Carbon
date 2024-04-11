@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class Player {
@@ -16,7 +14,6 @@ public class Player {
     private final Game_Animations animations;
     private final Vector2 position;
     private Game_Animations.Direction currentDirection;
-
     private static final int frameWidth = 16;
     private static final int frameHeight = 16;
     private boolean isMoving;
@@ -24,8 +21,10 @@ public class Player {
     private boolean onBus = false;
     private boolean onBike = false;
     private Transport currentBike;
+    private float totalPlayerDistanceTraveled = 0.0f;
+    private float totalBikeDistanceTraveled = 0.0f;
     private Transport mountedBike;
-    public Scoring_System scoringSystem;
+
     public EducationalPopup popup;
     private Collision playercollision   ;
     public Player(float x, float y) {
@@ -36,15 +35,16 @@ public class Player {
         position = new Vector2(x, y);
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
-        scoringSystem = new Scoring_System();
         playercollision = new Collision(true);
 
 
     }
 
+
     public void updatePlayerMovement(float deltaTime, MapLayer collisionLayer) {
         if (!onBus) {
             isMoving = false;
+            Vector2 oldPosition = new Vector2(position);
             Vector2 newPosition = new Vector2(position);
 
             if (onBike && currentBike != null) {
@@ -53,6 +53,7 @@ public class Player {
                     dismountBike(); // Dismount if the bike runs out of battery
                 } else {
                     position.set(currentBike.getPosition());
+                    totalBikeDistanceTraveled += oldPosition.dst(position);
                 }
             } else {
                 if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -68,16 +69,21 @@ public class Player {
                     newPosition.x += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.RIGHT;
                 }
-                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer,true)) {
+                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer, true)) {
                     position.set(newPosition);
                     isMoving = true;
+                    totalPlayerDistanceTraveled += oldPosition.dst(newPosition);
                 }
             }
         }
     }
 
-
-
+    public float getTotalPlayerDistanceTraveled() {
+        return totalPlayerDistanceTraveled;
+    }
+    public float getTotalBikeDistanceTraveled() {
+        return totalBikeDistanceTraveled;
+    }
 
 
     public void render(SpriteBatch spriteBatch) {
@@ -105,7 +111,7 @@ public class Player {
         this.currentBike = bike;
         bike.setActive(true);
         bike.setVisible();
-        scoringSystem.incrementBikeCount();
+
 
         // Increment bike count
     }
@@ -126,12 +132,13 @@ public class Player {
     }
 
     public void setOnBus(boolean onBus) {
-        scoringSystem.incrementBusCount();
         this.onBus = onBus;
+      //  scoringSystem.incrementBusCount();
     }
 
     public void setOnBike(boolean onBike) {
         this.onBike = onBike;
+     //   scoringSystem.incrementBikeCount();
     }
 
     public void setPosition(float x, float y) {

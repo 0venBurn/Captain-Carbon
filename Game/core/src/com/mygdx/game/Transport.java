@@ -43,6 +43,8 @@ public class Transport {
     private float batteryCharge;
     private Collision bikecollision   ;
 
+    private float totalBusDistanceTraveled = 0.0f;
+
 
     public Transport(Mode mode, Vector2 startPosition, List<Vector2> waypoints) {
         this.mode = mode;
@@ -115,6 +117,7 @@ public class Transport {
         switch (mode) {
             case BUS:
                 configureBusMode();
+
                 break;
             case BIKE:
                 configureBikeMode();
@@ -167,6 +170,7 @@ public class Transport {
             Vector2 nextWaypoint = waypoints.get(currentWaypointIndex);
             Vector2 moveVector = new Vector2(nextWaypoint).sub(position);
             float distance = speed * deltaTime;
+            totalBusDistanceTraveled += nextWaypoint.dst(moveVector);
 
             if (position.dst2(nextWaypoint) > distance * distance) {
                 position.mulAdd(moveVector.nor(), distance);
@@ -187,10 +191,15 @@ public class Transport {
             }
         }
         if (waitingAtWaypoint && Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentWaypointIndex < waypoints.size() - 1) {
+
             waitingAtWaypoint = false;
             currentWaypointIndex++;
             canLeaveBus = false;
         }
+    }
+
+    public float getTotalBusDistanceTraveled() {
+        return totalBusDistanceTraveled;
     }
 
     private void updateBikeMovement(float deltaTime, MapLayer collisionLayer) {
@@ -228,6 +237,7 @@ public class Transport {
             batteryCharge -= deltaTime * 10;
         }
     }
+
 
 
 

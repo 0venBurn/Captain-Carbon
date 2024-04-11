@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
     private boolean isPaused;
     private Table pauseMenu;
     private Gem gem;
-
+    public Scoring_System scoringSystem;
     public GameScreen(MyGdxGame game) {
         // Initialize camera and viewport
         camera = new OrthographicCamera();
@@ -61,6 +61,7 @@ public class GameScreen implements Screen {
         this.game = game;
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
+        scoringSystem = new Scoring_System();
 
 
         Gdx.input.setInputProcessor((stage));
@@ -94,7 +95,6 @@ public class GameScreen implements Screen {
         horizontalBus.setCurrentDirection(Transport.Direction.RIGHT);
         transports.add(upBus);
         transports.add(horizontalBus);
-
         player = new Player(1000, 1700);
         spawnGem();
         // Define each train station and its coordinates
@@ -226,6 +226,7 @@ public class GameScreen implements Screen {
         camera.update();
         updateBuses(deltaTime);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
             togglePause(); {
             }
         }
@@ -238,8 +239,11 @@ public class GameScreen implements Screen {
         camera.update();
         renderer.setView(camera);
         batch.begin();
-        font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
-        font.draw(batch, "Buses: " + player.scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 10);
+        //font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
+        //font.draw(batch, "Buses: " + player.scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 10);
+        font.draw(batch, "dist travlled: " + player.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 50);
+        font.draw(batch, "bike dist travlled: " + player.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 70);
+        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 30);
 
         batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -262,6 +266,8 @@ public class GameScreen implements Screen {
                 font.draw(spriteBatch, "Press 'E' to enter the bus", player.getX(), player.getY() + 50);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                     player.setOnBus(true);
+                    scoringSystem.incrementBusCount();
+
                     currentBus = transport; // Set the current bus to this transport
                     camera.position.set(transport.getPosition().x, transport.getPosition().y, 0); // Ensure the camera follows this bus
                 }
@@ -327,6 +333,7 @@ public class GameScreen implements Screen {
     private void updateBuses(float deltaTime) {
         for (Transport transport : transports) {
             boolean isActiveBus = transport == currentBus;
+
             transport.update(deltaTime, isActiveBus, collisionLayer);
         }
     }
