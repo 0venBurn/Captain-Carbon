@@ -5,6 +5,17 @@ import java.io.IOException;
 public class Scoring_System {
     private int busCount;
     private int trainCount;
+    private int CARBON_EMISSION_WALK  = 1;
+    private int CARBON_EMISSION_BIKE  = 2;
+    private int CARBON_EMISSION_BUS  = 3;
+
+    private int CARBON_EMISSION_TRAIN  = 4;
+
+    private int SPEED_WALK  = 1;
+    private int SPEED_BIKE  = 2;
+    private int SPEED_BUS  = 3;
+
+    private int SPEED_TRAIN  = 4;
     private float totalBikeDistanceTraveled = 0.0f;
     private float totalPlayerDistanceTraveled = 0.0f;
     private static Scoring_System instance;
@@ -26,6 +37,31 @@ public class Scoring_System {
         return instance;
     }
 
+    public float calculateTotalCarbonEmissions() {
+        float totalEmissions = 0;
+        float busEmissions = busCount * CARBON_EMISSION_BUS * 5;
+        float trainEmissions = trainCount * CARBON_EMISSION_TRAIN * 10;
+        float bikeEmissions = totalBikeDistanceTraveled * CARBON_EMISSION_BIKE;
+        float walkEmissions = (totalPlayerDistanceTraveled - totalBikeDistanceTraveled) * CARBON_EMISSION_WALK;
+
+        totalEmissions = busEmissions + trainEmissions + bikeEmissions + walkEmissions;
+        return totalEmissions;
+    }
+
+    public float calculateTotalTime() {
+        float totalTime = 0;
+        float busTime = (busCount * 500) / SPEED_BUS;
+        float trainTime = (trainCount * 1000) / SPEED_TRAIN;
+        float bikeTime = totalBikeDistanceTraveled / SPEED_BIKE;
+        float walkDistance = totalPlayerDistanceTraveled - totalBikeDistanceTraveled;
+        float walkTime = walkDistance / SPEED_WALK;
+
+        totalTime = busTime + trainTime + bikeTime + walkTime;
+        return totalTime;
+    }
+
+
+
     public void incrementBusCount() {
         busCount++;
     }
@@ -33,6 +69,13 @@ public class Scoring_System {
     public void incrementTrainCount() {
         trainCount++;
     }
+    public float getScore() {
+        float totalEmissions = calculateTotalCarbonEmissions();
+        float totalTime = calculateTotalTime();
+        float score = totalTime + totalEmissions;
+        return score;
+    }
+
 
     public int getBusCount() {
         return busCount;
