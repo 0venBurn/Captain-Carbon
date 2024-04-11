@@ -42,7 +42,7 @@ public class Scoring_System {
         float busEmissions = busCount * CARBON_EMISSION_BUS * 5;
         float trainEmissions = trainCount * CARBON_EMISSION_TRAIN * 10;
         float bikeEmissions = totalBikeDistanceTraveled * CARBON_EMISSION_BIKE;
-        float walkEmissions = (totalPlayerDistanceTraveled) * CARBON_EMISSION_WALK;
+        float walkEmissions = totalPlayerDistanceTraveled * CARBON_EMISSION_WALK;
 
         totalEmissions = busEmissions + trainEmissions + bikeEmissions + walkEmissions;
         return totalEmissions;
@@ -50,8 +50,8 @@ public class Scoring_System {
 
     public float calculateTotalTime() {
         float totalTime = 0;
-        float busTime = (busCount * 500) / SPEED_BUS;
-        float trainTime = (trainCount * 1000) / SPEED_TRAIN;
+        float busTime = (busCount * 5000) / SPEED_BUS;
+        float trainTime = (trainCount * 10000) / SPEED_TRAIN;
         float bikeTime = totalBikeDistanceTraveled / SPEED_BIKE;
         float walkDistance = totalPlayerDistanceTraveled;
         float walkTime = walkDistance / SPEED_WALK;
