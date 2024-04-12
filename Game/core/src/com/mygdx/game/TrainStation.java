@@ -87,11 +87,13 @@ public class TrainStation extends Transport {
                     scoringSystem.incrementTrainCount();
 
                     stage.clear();
+
                     uiDisplayed = false;
                 }
             });
 
             stage.addActor(button);
+
         }
     }
 }

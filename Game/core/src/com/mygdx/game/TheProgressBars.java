@@ -32,12 +32,11 @@ public class TheProgressBars {
     public void setBarColor(Stage stage){
         Color knobColor;
         float value = this.getProgressBar().getValue();
-
-        if (value >= 80) {
+        if (value >= 0.8* progressBar.getMaxValue()) {
             knobColor = Color.GREEN;
-        } else if (value >= 60) {
+        } else if (value >= 60*progressBar.getMaxValue()) {
             knobColor = Color.ORANGE;
-        } else if (value >= 40) {
+        } else if (value >= 40*progressBar.getMaxValue()) {
             knobColor = Color.YELLOW;
         } else {
             knobColor = Color.RED;

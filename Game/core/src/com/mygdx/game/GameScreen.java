@@ -273,7 +273,8 @@ public class GameScreen implements Screen {
         co2Bar.setValue(co2BarValue);
         timeBarValue = 20000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
-
+        timeBar.render(stage);
+        co2Bar.render(stage);
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 100);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
