@@ -26,8 +26,7 @@ public class GameScreen implements Screen {
     private final MyGdxGame game;
     private boolean isPaused;
     private Table pauseMenu;
-    private Gem gem;
-    public Scoring_System scoringSystem;
+
     private Skin skin;
     private ILevel currentLevel;
     private OrthographicCamera camera;

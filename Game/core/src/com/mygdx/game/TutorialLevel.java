@@ -64,6 +64,7 @@ public class TutorialLevel implements ILevel {
         font = new BitmapFont();
 
         stage = new Stage(new ScreenViewport());
+
         Gdx.input.setInputProcessor(stage);
         font.getData().setScale(1.5f);
         map = new TmxMapLoader().load("Game/assets/Map.tmx");
@@ -112,13 +113,12 @@ public class TutorialLevel implements ILevel {
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         camera.update();
 
-        stage = new Stage(new ScreenViewport());
+
 
         batch = new SpriteBatch();
 
 
         timeBar = new TheProgressBars(skin, stage);
-        timeBar.create(stage);
         timeBarFont = new BitmapFont();
 
         co2Bar = new TheProgressBars(skin, stage);
