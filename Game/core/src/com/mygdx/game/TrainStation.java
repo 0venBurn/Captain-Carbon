@@ -18,12 +18,15 @@ public class TrainStation extends Transport {
     private final Player player;
     public static boolean uiDisplayed = false;
 
+    public Scoring_System scoringSystem;
 
     public TrainStation(Vector2 position, String name, ArrayList<TrainStation> trainStations, Player player) {
         super(Mode.TRAIN, position, null);
         this.name = name;
         this.trainStations = trainStations;
         this.player = player;
+        scoringSystem = Scoring_System.getInstance();
+
     }
 
     public Rectangle getBounds() {
@@ -40,6 +43,8 @@ public class TrainStation extends Transport {
         return uiDisplayed;
     }
 
+
+    // Responsible for TrainStation UI
     public void displayStationUI(Stage stage) {
         Texture texture = new Texture(Gdx.files.internal("miniMap.png"));
         Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
@@ -52,6 +57,10 @@ public class TrainStation extends Transport {
 
         // Add minimap image
         stage.addActor(miniMapImage);
+
+        final float MAP_WIDTH = 9094f;
+        final float MAP_HEIGHT = 8063f;
+
 
         float buttonX = 0;
         float buttonY = 0;
@@ -74,14 +83,18 @@ public class TrainStation extends Transport {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     player.exitMetro(station.getPosition());
+                    scoringSystem.incrementTrainCount();
+
                     player.setPosition(station.getPosition().x, station.getPosition().y - 100);
                     stage.clear();
+
                     uiDisplayed = false;
                     Gdx.input.setInputProcessor(null);
                 }
             });
 
             stage.addActor(button);
+
         }
     }
 }

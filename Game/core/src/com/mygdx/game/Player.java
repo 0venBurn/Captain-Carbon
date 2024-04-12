@@ -24,10 +24,13 @@ public class Player {
     private boolean onBus = false;
     private boolean onBike = false;
     private Transport currentBike;
+    private float totalPlayerDistanceTraveled = 0.0f;
+    private float totalBikeDistanceTraveled = 0.0f;
+
     private Transport mountedBike;
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
-
+    private Collision playercollision   ;
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -36,8 +39,8 @@ public class Player {
         position = new Vector2(x, y);
         currentDirection = Game_Animations.Direction.DOWN;
         isMoving = false;
-        scoringSystem = new Scoring_System();
-
+        playercollision = new Collision(true);
+        scoringSystem = Scoring_System.getInstance();
 
 
     }
@@ -48,6 +51,7 @@ public class Player {
         }
         if (!onBus) {
             isMoving = false;
+            Vector2 oldPosition = new Vector2(position);
             Vector2 newPosition = new Vector2(position);
 
             if (onBike && currentBike != null) {
@@ -56,6 +60,8 @@ public class Player {
                     dismountBike(); // Dismount if the bike runs out of battery
                 } else {
                     position.set(currentBike.getPosition());
+                    totalBikeDistanceTraveled += oldPosition.dst(position);
+                    scoringSystem.setTotalBikeDistanceTraveled(totalBikeDistanceTraveled);
                 }
             } else {
                 if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -74,6 +80,10 @@ public class Player {
                 if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
                     position.set(newPosition);
                     isMoving = true;
+
+                    totalPlayerDistanceTraveled+= oldPosition.dst(newPosition);
+                    scoringSystem.setTotalPlayerDistanceTraveled(totalPlayerDistanceTraveled);
+
                 }
             }
         }
@@ -98,18 +108,7 @@ public class Player {
         }
     }
 
-    public boolean canMove(float x, float y, MapLayer collisionLayer) {
-        Rectangle playerRect = new Rectangle(x, y, getWidth() * .10f, getHeight() * .10f);
-        for (MapObject object : collisionLayer.getObjects()) {
-            if (object instanceof RectangleMapObject) {
-                Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                if (playerRect.overlaps(rect)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+
 
 
 
@@ -119,7 +118,8 @@ public class Player {
         this.currentBike = bike;
         bike.setActive(true);
         bike.setVisible();
-        scoringSystem.incrementBikeCount();
+
+
         // Increment bike count
     }
 
@@ -139,7 +139,6 @@ public class Player {
     }
 
     public void setOnBus(boolean onBus) {
-        scoringSystem.incrementBusCount();
         this.onBus = onBus;
     }
 
