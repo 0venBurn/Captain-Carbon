@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Scoring_System {
     private int busCount;
     private int trainCount;
-    private int CARBON_EMISSION_WALK  = 1;
+    private int CARBON_EMISSION_WALK  = 0;
     private int CARBON_EMISSION_BIKE  = 2;
     private int CARBON_EMISSION_BUS  = 3;
 
@@ -41,8 +41,8 @@ public class Scoring_System {
         float totalEmissions = 0;
         float busEmissions = busCount * CARBON_EMISSION_BUS * 5;
         float trainEmissions = trainCount * CARBON_EMISSION_TRAIN * 10;
-        float bikeEmissions = totalBikeDistanceTraveled * CARBON_EMISSION_BIKE;
-        float walkEmissions = totalPlayerDistanceTraveled * CARBON_EMISSION_WALK;
+        float bikeEmissions = totalBikeDistanceTraveled/100 * CARBON_EMISSION_BIKE;
+        float walkEmissions = totalPlayerDistanceTraveled/100 * CARBON_EMISSION_WALK;
 
         totalEmissions = busEmissions + trainEmissions + bikeEmissions + walkEmissions;
         return totalEmissions;
@@ -50,11 +50,10 @@ public class Scoring_System {
 
     public float calculateTotalTime() {
         float totalTime = 0;
-        float busTime = (busCount * 5000) / SPEED_BUS;
-        float trainTime = (trainCount * 10000) / SPEED_TRAIN;
-        float bikeTime = totalBikeDistanceTraveled / SPEED_BIKE;
-        float walkDistance = totalPlayerDistanceTraveled;
-        float walkTime = walkDistance / SPEED_WALK;
+        float busTime = (busCount * 500) / SPEED_BUS*100;
+        float trainTime = (trainCount * 1000) / SPEED_TRAIN*100;
+        float bikeTime = totalBikeDistanceTraveled / SPEED_BIKE*100;
+        float walkTime = totalPlayerDistanceTraveled / 100;
 
         totalTime = busTime + trainTime + bikeTime + walkTime;
         return totalTime;

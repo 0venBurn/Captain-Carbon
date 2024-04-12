@@ -25,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,9 +47,18 @@ public class GameScreen implements Screen {
     private final MyGdxGame game;
     private final SpriteBatch batch;
     private final BitmapFont pauseFont;
+
+    private BitmapFont timeBarFont;
+    private BitmapFont co2BarFont;
     private boolean isPaused;
     private Table pauseMenu;
     private Gem gem;
+    private TheProgressBars timeBar;
+    private TheProgressBars co2Bar;
+    private float co2BarValue;
+    private float timeBarValue;
+
+
     public Scoring_System scoringSystem;
     public GameScreen(MyGdxGame game) {
         // Initialize camera and viewport
@@ -121,10 +132,27 @@ public class GameScreen implements Screen {
         camera.update();
 
         stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
 
         createPauseMenu();
 
+        timeBar = new TheProgressBars(skin, stage);
+        timeBar.create(stage);
+        timeBarFont = new BitmapFont();
+
+        co2Bar = new TheProgressBars(skin, stage);
+
+        co2Bar.getProgressBar().setY(timeBar.getProgressBar().getY() - timeBar.getProgressBar().getHeight() - 10);
+        co2BarFont = new BitmapFont();
+
+
+
+        stage.addActor(timeBar.getProgressBar());
+        stage.addActor(co2Bar.getProgressBar());
+
     }
+
+
 
     private void createPauseMenu(){
         pauseMenu = new Table();
@@ -240,11 +268,20 @@ public class GameScreen implements Screen {
         renderer.setView(camera);
         batch.begin();
 
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 50);
-        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 70);
-        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 30);
-        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 10);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 90);
+
+        co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
+        co2Bar.setValue(co2BarValue);
+        timeBarValue = 20000 - scoringSystem.calculateTotalTime();
+        timeBar.setValue(timeBarValue);
+
+        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 100);
+        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
+        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
+        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
+        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
+        font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
+        font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
+
 
         batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
