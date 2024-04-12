@@ -77,7 +77,7 @@ public class Player {
                     newPosition.x += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.RIGHT;
                 }
-                if (canMove(newPosition.x, newPosition.y, collisionLayer)) {
+                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer,true)) {
                     position.set(newPosition);
                     isMoving = true;
 

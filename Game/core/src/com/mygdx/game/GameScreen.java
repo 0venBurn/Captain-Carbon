@@ -1,21 +1,11 @@
-
+// Import necessary modules
 package com.mygdx.game;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 // Set interface for the implementation of a screen and initialise variables
@@ -33,32 +22,11 @@ public class GameScreen implements Screen {
     private final LevelManager levelManager;
     public static GameState gameState;
     private Viewport viewport;
-    private final BitmapFont font;
-    private final TiledMap map;
-    private final MapLayer collisionLayer;
-    private final OrthogonalTiledMapRenderer renderer;
-    private final ArrayList<Transport> transports;
-    private final Player player;
-    private Transport currentBus = null;
-    private final ArrayList <Transport> bikes;
-    private final ArrayList <TrainStation> trainStations;
     private Stage stage;
-    private final Skin skin;
     private final MyGdxGame game;
-    private final SpriteBatch batch;
-    private final BitmapFont pauseFont;
-
-    private BitmapFont timeBarFont;
-    private BitmapFont co2BarFont;
     private boolean isPaused;
     private Table pauseMenu;
     private Gem gem;
-    private TheProgressBars timeBar;
-    private TheProgressBars co2Bar;
-    private float co2BarValue;
-    private float timeBarValue;
-
-
     public Scoring_System scoringSystem;
     private Skin skin;
     private ILevel currentLevel;
@@ -70,7 +38,7 @@ public class GameScreen implements Screen {
         levelManager = new LevelManager(game);
         levelManager.loadCurrentLevel();
         GameState gameState = com.mygdx.game.GameState.RUNNING;
-      // Set initial camera position
+        // Set initial camera position
         camera = new OrthographicCamera();
         viewport = new FitViewport(800, 600, camera);
         stage = new Stage();
@@ -80,29 +48,16 @@ public class GameScreen implements Screen {
 
         // Delegate rendering to the current level
 
-        stage = new Stage(new ScreenViewport());
+
 
         createPauseMenu();
 
-        timeBar = new TheProgressBars(skin, stage);
-        timeBar.create(stage);
-        timeBarFont = new BitmapFont();
-
-        co2Bar = new TheProgressBars(skin, stage);
-
-        co2Bar.getProgressBar().setY(timeBar.getProgressBar().getY() - timeBar.getProgressBar().getHeight() - 10);
-        co2BarFont = new BitmapFont();
-
-
-
-        stage.addActor(timeBar.getProgressBar());
-        stage.addActor(co2Bar.getProgressBar());
-
     }
+
+
 
     private void createPauseMenu(){
         pauseMenu = new Table();
-
         pauseMenu.center();
         pauseMenu.pad(10);
         pauseMenu.setSize(300, 200);
@@ -134,6 +89,7 @@ public class GameScreen implements Screen {
         pauseMenu.row().pad(20, 0, 20, 0);
         pauseMenu.add(exitButton).fillX().uniformX();
 
+
         stage.addActor(pauseMenu);
     }
 
@@ -157,34 +113,6 @@ public class GameScreen implements Screen {
             Gdx.app.log("Game State", "Game paused: " + isPaused);
         }
 
-
-
-        renderer.getBatch().end();
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-        camera.update();
-        renderer.setView(camera);
-        batch.begin();
-
-
-        co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
-        co2Bar.setValue(co2BarValue);
-        timeBarValue = 20000 - scoringSystem.calculateTotalTime();
-        timeBar.setValue(timeBarValue);
-        timeBar.render(stage);
-        co2Bar.render(stage);
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 100);
-        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
-        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
-        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
-        font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
-        font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
-
-
-        batch.end();
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
 
         if (isPaused) {
             renderPauseMenu();
@@ -224,6 +152,7 @@ public class GameScreen implements Screen {
 
 
     }
+
 
     @Override
     public void pause() {
