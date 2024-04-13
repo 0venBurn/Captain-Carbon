@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -8,21 +7,7 @@ public class Game_Animations {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
-    private  Animation<TextureRegion> walkLeftAnimation;
-    private  Animation<TextureRegion> walkRightAnimation;
-    private  Animation<TextureRegion> walkUpAnimation;
-    private  Animation<TextureRegion> walkDownAnimation;
-    private Texture spriteSheet;
-
-    private Animation<TextureRegion> cycleLeftAnimation;
-    private Animation<TextureRegion> cycleUpAnimation;
-    private Animation<TextureRegion> cycleRightAnimation;
-    private Animation<TextureRegion> cycleDownAnimation;
-    private Animation<TextureRegion> movementAnimation;
-    private float speed;
-
-    private final float frameWidth = 16;
-    private final float frameHeight = 16;
+    private  Animation<TextureRegion> walkLeftAnimation,walkRightAnimation,walkUpAnimation,walkDownAnimation;
 
     private Direction currentDirection;
     private float stateTime;
@@ -37,11 +22,6 @@ public class Game_Animations {
         currentDirection = Direction.DOWN;
         stateTime = 0f;
     }
-
-
-
-
-
 
 
     private Animation<TextureRegion> createPlayerAnimation(TextureRegion[][] frames, int column) {
