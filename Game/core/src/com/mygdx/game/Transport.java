@@ -23,21 +23,14 @@ public class Transport {
     private final Mode mode;
 
     // Bus
-    private TextureRegion busFrameLeft;
-    private TextureRegion busFrameRight;
-    private TextureRegion busFrameUp;
-    private TextureRegion busFrameDown;
+    private TextureRegion busFrameLeft, busFrameRight,busFrameUp,busFrameDown;
     private final List<Vector2> waypoints;
     private int currentWaypointIndex = 0;
     private boolean waitingAtWaypoint = true;
 
 
     // Bike
-    private Animation<TextureRegion> cycleLeftAnimation;
-    private Animation<TextureRegion> cycleUpAnimation;
-    private Animation<TextureRegion> cycleRightAnimation;
-    private Animation<TextureRegion> cycleDownAnimation;
-    private Animation<TextureRegion> movementAnimation;
+    private Animation<TextureRegion> cycleLeftAnimation,cycleUpAnimation,cycleRightAnimation,cycleDownAnimation,movementAnimation;
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
     private float batteryCharge;

@@ -35,23 +35,18 @@ public class TutorialLevel implements ILevel {
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
     private Transport currentBus = null;
-    private ArrayList<Transport> transports;
-    private ArrayList <Transport> bikes;
+    private ArrayList<Transport> transports,bikes;
     private ArrayList <TrainStation> trainStations;
     private Stage stage;
     private Skin skin;
     private final SpriteBatch batch;
     private BitmapFont pauseFont;
-    private boolean isPaused;
-    private Table pauseMenu;
     private Gem gem;
-    private BitmapFont timeBarFont;
-    private BitmapFont co2BarFont;
+    private BitmapFont co2BarFont,timeBarFont;
     public Scoring_System scoringSystem;
-    private TheProgressBars timeBar;
-    private TheProgressBars co2Bar;
-    private float co2BarValue;
-    private float timeBarValue;
+    private TheProgressBars timeBar, co2Bar;
+    private float co2BarValue,timeBarValue;
+
 
 
     public TutorialLevel(LevelCompletionListener listener) {
@@ -120,6 +115,7 @@ public class TutorialLevel implements ILevel {
 
         timeBar = new TheProgressBars(skin, stage);
         timeBarFont = new BitmapFont();
+
 
         co2Bar = new TheProgressBars(skin, stage);
 
@@ -198,25 +194,24 @@ public class TutorialLevel implements ILevel {
         stage.draw();
         adjustCameraPosition();
         renderer.setView(camera);
+
         batch.begin();
-
-
         co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
         timeBarValue = 20000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render(stage);
         co2Bar.render(stage);
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 100);
+        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
         font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
         font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
         font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
         font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
-
-
         batch.end();
+
+
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         Gdx.app.log("Render Method", "End of render method");
@@ -298,6 +293,7 @@ public class TutorialLevel implements ILevel {
             }
         }
 
+
         // Interaction with bikes
         for (Transport bike : bikes) {
             Rectangle bikeBounds = bike.getBounds();
@@ -329,6 +325,7 @@ public class TutorialLevel implements ILevel {
                         player.enterMetro();
                         station.displayStationUI(stage);
                         Gdx.input.setInputProcessor(stage);
+
                     }
                 }
             }

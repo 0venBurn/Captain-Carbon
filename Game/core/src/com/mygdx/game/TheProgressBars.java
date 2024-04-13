@@ -24,12 +24,7 @@ public class TheProgressBars {
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }
 
-//    public void setBarColor(Color color1, Color color2) {
-//        this.getProgressBar().getStyle().background = createColorDrawable(color1);
-//        this.getProgressBar().getStyle().knobBefore = createColorDrawable(color2);
-//    }
-
-    public void setBarColor(Stage stage){
+    public void setBarColor(){
         Color knobColor;
         float value = this.getProgressBar().getValue();
         if (value >= 0.8* progressBar.getMaxValue()) {
@@ -76,6 +71,6 @@ public class TheProgressBars {
 
     public void render(Stage stage) {
         setValue(progressBar.getValue() - 0.01f);
-        setBarColor(stage);
+        setBarColor();
     }
 }

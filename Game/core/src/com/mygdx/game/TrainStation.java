@@ -40,27 +40,22 @@ public class TrainStation extends Transport {
         return uiDisplayed;
     }
 
-    public void displayStationUI(Stage stage) {
+    public void  displayStationUI(Stage stage) {
         Texture texture = new Texture(Gdx.files.internal("miniMap.png"));
-        Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
         Image miniMapImage = new Image(texture);
         miniMapImage.setSize(2000, 800);
         miniMapImage.setPosition(Gdx.graphics.getWidth() / 140f, Gdx.graphics.getHeight() / 9f);
-
         stage.clear();
         uiDisplayed = true;
 
         // Add minimap image
         stage.addActor(miniMapImage);
 
-        final float MAP_WIDTH = 9094f;
-        final float MAP_HEIGHT = 8063f;
-
-
-        float buttonX = 0;
-        float buttonY = 0;
+        Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
         for (TrainStation station : trainStations) {
             Image button = new Image(stationButtonTexture);
+            float buttonX = 0;
+            float buttonY = 0;
 
             if (station.getName().equals("Station A")) {
                 buttonX = 715;
@@ -72,19 +67,28 @@ public class TrainStation extends Transport {
 
             button.setPosition(buttonX, buttonY);
             button.setSize(200, 133);
-            System.out.println("Button position for station " + station.getName() + ": X = " + buttonX + ", Y = " + buttonY);
 
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+
                     player.exitMetro(station.getPosition());
+
+
                     player.setPosition(station.getPosition().x, station.getPosition().y - 50);
+                    scoringSystem.incrementTrainCount();
                     stage.clear();
+
                     uiDisplayed = false;
+
+
                 }
             });
 
             stage.addActor(button);
         }
+
+
     }
+
 }

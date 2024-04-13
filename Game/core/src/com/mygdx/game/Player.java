@@ -17,12 +17,10 @@ public class Player {
     private final Vector2 position;
     private Game_Animations.Direction currentDirection;
 
-    private static final int frameWidth = 16;
-    private static final int frameHeight = 16;
+    private static final int frameWidth = 16, frameHeight = 16;
     private boolean isMoving;
     private static final float playerSpeed = 690.0f;
-    private boolean onBus = false;
-    private boolean onBike = false;
+    private boolean onBus = false,onBike = false;
     private Transport currentBike;
     private float totalPlayerDistanceTraveled = 0.0f;
     private float totalBikeDistanceTraveled = 0.0f;
