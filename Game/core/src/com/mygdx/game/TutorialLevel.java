@@ -113,11 +113,11 @@ public class TutorialLevel implements ILevel {
         batch = new SpriteBatch();
 
 
-        timeBar = new TheProgressBars(skin, stage);
+        timeBar = new TheProgressBars(skin);
         timeBarFont = new BitmapFont();
 
 
-        co2Bar = new TheProgressBars(skin, stage);
+        co2Bar = new TheProgressBars(skin);
 
         co2Bar.getProgressBar().setY(timeBar.getProgressBar().getY() - timeBar.getProgressBar().getHeight() - 10);
         co2BarFont = new BitmapFont();
@@ -200,8 +200,8 @@ public class TutorialLevel implements ILevel {
         co2Bar.setValue(co2BarValue);
         timeBarValue = 20000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
-        timeBar.render(stage);
-        co2Bar.render(stage);
+        timeBar.render();
+        co2Bar.render();
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
@@ -326,7 +326,10 @@ public class TutorialLevel implements ILevel {
                         station.displayStationUI(stage);
                         Gdx.input.setInputProcessor(stage);
 
+
                     }
+                    stage.addActor(timeBar.getProgressBar());
+                    stage.addActor(co2Bar.getProgressBar());
                 }
             }
         }

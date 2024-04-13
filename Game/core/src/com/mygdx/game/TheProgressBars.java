@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TheProgressBars {
     private ProgressBar progressBar;
 
-    public TheProgressBars(Skin skin, Stage stage) {
+    public TheProgressBars(Skin skin) {
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
         progressBar = new ProgressBar(0, 20000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
@@ -69,7 +69,7 @@ public class TheProgressBars {
         stage.addActor(progressBar);
     }
 
-    public void render(Stage stage) {
+    public void render() {
         setValue(progressBar.getValue() - 0.01f);
         setBarColor();
     }
