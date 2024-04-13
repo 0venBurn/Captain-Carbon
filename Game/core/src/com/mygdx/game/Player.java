@@ -41,7 +41,7 @@ public class Player {
         isMoving = false;
         playercollision = new Collision(true);
         scoringSystem = Scoring_System.getInstance();
-
+        popup = new EducationalPopup();
 
     }
 
@@ -106,6 +106,10 @@ public class Player {
             }
             spriteBatch.draw(currentFrame, position.x, position.y);
         }
+
+        if (popup.isVisible()) {
+            popup.draw(spriteBatch);
+        }
     }
 
 
@@ -118,6 +122,7 @@ public class Player {
         this.currentBike = bike;
         bike.setActive(true);
         bike.setVisible();
+        popup.show("On bike", 3);
 
 
         // Increment bike count
@@ -135,6 +140,7 @@ public class Player {
             this.currentBike.setPosition(position.x + 10, position.y);
             this.onBike = false;
             this.currentBike = null;
+            popup.show("Off bike", 3);
         }
     }
 
@@ -180,6 +186,7 @@ public class Player {
 
     public void exitMetro(Vector2 newPosition) {
         setPosition(newPosition.x, newPosition.y);
+        popup.show("Off metro", 3);
     }
 
     public boolean isOnBike() {
