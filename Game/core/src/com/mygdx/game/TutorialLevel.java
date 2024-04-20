@@ -195,9 +195,9 @@ public class TutorialLevel implements ILevel {
         adjustCameraPosition();
         renderer.setView(camera);
         batch.begin();
-        co2BarValue = 5000 - scoringSystem.calculateTotalCarbonEmissions();
+        co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 5000 - scoringSystem.calculateTotalTime();
+        timeBarValue = 6000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
