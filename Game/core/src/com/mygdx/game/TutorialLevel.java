@@ -203,7 +203,13 @@ public class TutorialLevel implements ILevel {
         co2Bar.render();
         font.draw(batch, "Time Bar " , 10, Gdx.graphics.getHeight() - 40);
         font.draw(batch, "Co2 Bar " , 10, Gdx.graphics.getHeight() - 90);
-
+        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
+        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
+        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
+        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
+        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
+        font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
+        font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
         batch.end();
 
 
