@@ -7,6 +7,7 @@ buildscript {
         google()
     }
     dependencies {
+
         classpath 'org.docstr:gwt-gradle-plugin:1.1.29'
         classpath 'org.gretty:gretty:3.1.0'
         classpath 'com.android.tools.build:gradle:8.1.2'
@@ -14,6 +15,8 @@ buildscript {
         classpath 'org.openjfx:javafx-graphics:17.0.1'
         classpath 'org.openjfx:javafx-fxml:17.0.1'
         classpath 'org.openjfx:javafx-controls:17.0.1'
+        
+
     }
 }
 
@@ -22,7 +25,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "My GDX Game"
+        appName = "Test Env"
         gdxVersion = '1.12.1'
         roboVMVersion = '2.3.20'
         box2DLightsVersion = '1.5'
@@ -49,6 +52,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
@@ -96,6 +100,9 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
         api "com.google.jsinterop:jsinterop-annotations:2.0.2:sources"
 
+
+        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        
     }
 }
 
@@ -104,6 +111,10 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion" // Add FreeType to core for use in all platforms
+
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        
     }
 }
