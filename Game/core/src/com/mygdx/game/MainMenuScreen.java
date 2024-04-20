@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class MainMenuScreen implements Screen {
     private final MyGdxGame game;
@@ -26,12 +29,22 @@ public class MainMenuScreen implements Screen {
     private Skin skin;
     private Viewport backgroundViewport;
     private Viewport uiViewport;
+    private final BitmapFont font;
+    private String scoreDisplay;
+    private BitmapFont bigFont;
+
+    public Scoring_System scoringSystem;
 
     public MainMenuScreen(MyGdxGame game) {
         this.game = game;
         initializeStage();
         loadAssets();
         createUI();
+        font = new BitmapFont();
+        scoringSystem = Scoring_System.getInstance();
+
+        scoreDisplay = scoringSystem.readScoreFromFile("scores.txt");
+
     }
 
     private void initializeStage() {
@@ -49,6 +62,13 @@ public class MainMenuScreen implements Screen {
         assetManager.finishLoading(); // Blocks until all assets are loaded
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         backgroundTexture = new Texture(Gdx.files.internal("MainMenuBackground.png"));
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = 40;
+        bigFont = generator.generateFont(parameter);
+        generator.dispose();
+
     }
 
     private void createUI() {
@@ -85,12 +105,24 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         backgroundViewport.apply();
         batch.setProjectionMatrix(backgroundViewport.getCamera().combined);
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); batch.end();
+        batch.draw(backgroundTexture, 0, 0, backgroundViewport.getWorldWidth(), backgroundViewport.getWorldHeight());
+        batch.end();
+
+        uiViewport.apply();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
+
+        batch.setProjectionMatrix(uiViewport.getCamera().combined);
+        batch.begin();
+
+        float xPosition = uiViewport.getWorldWidth()-1200 ;
+        float yPosition = uiViewport.getWorldHeight() - 50;
+        bigFont.draw(batch, "HighScore: " +  scoreDisplay, xPosition, yPosition);
+        batch.end();
     }
 
     @Override
@@ -120,7 +152,9 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
         backgroundTexture.dispose();
         batch.dispose();
-        skin.dispose(); // Don't forget to dispose of the skin
+        skin.dispose();
+        font.dispose();
     }
+
 
 }

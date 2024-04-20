@@ -48,7 +48,6 @@ public class TutorialLevel implements ILevel {
     private float co2BarValue,timeBarValue;
 
 
-
     public TutorialLevel(LevelCompletionListener listener) {
         this.completionListener = listener;
         camera = new OrthographicCamera();
@@ -195,7 +194,6 @@ public class TutorialLevel implements ILevel {
         stage.draw();
         adjustCameraPosition();
         renderer.setView(camera);
-
         batch.begin();
         co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);

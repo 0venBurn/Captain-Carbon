@@ -1,6 +1,9 @@
 package com.mygdx.game;
+import com.badlogic.gdx.Gdx;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import com.badlogic.gdx.files.FileHandle;
 
 public class Scoring_System {
     private int busCount, trainCount;
@@ -98,16 +101,23 @@ public class Scoring_System {
     public void outputToFile(String fileName) {
         try {
             FileWriter writer = new FileWriter(fileName);
-            writer.write("Modes of Transport Used:\n");
-            writer.write("Buses: " + busCount + "\n");
-            writer.write("Trains: " + trainCount + "\n");
-            writer.write("Total Bike Distance Traveled: " + totalBikeDistanceTraveled + "\n");
-            writer.write("Total Player Distance Traveled: " + totalPlayerDistanceTraveled + "\n");
-            writer.write("Total Score: " + getScore() + "\n");
+            writer.write( getScore() + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
+    public String readScoreFromFile(String fileName) {
+        FileHandle file = Gdx.files.internal(fileName);
+        if (file.exists()) {
+            return file.readString();
+        } else {
+            return "No score available";
+        }
+    }
+
 }
 
