@@ -98,13 +98,22 @@ public class Scoring_System {
         this.endOfLevel = endOfLevel;
     }
 
+
     public void outputToFile(String fileName) {
-        try {
-            FileWriter writer = new FileWriter(fileName);
-            writer.write( getScore() + "\n");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        float currentScore = getScore();
+        FileHandle file = Gdx.files.local(fileName);
+        float existingScore = -1;
+
+        if (file.exists() && !file.readString().isEmpty()) {
+            try {
+                existingScore = Float.parseFloat(file.readString().trim());
+            } catch (NumberFormatException e) {
+                System.err.println("Error parsing existing score from file: " + e.getMessage());
+            }
+        }
+
+        if (currentScore > existingScore) {
+            file.writeString(Float.toString(currentScore), false);
         }
     }
 
@@ -115,7 +124,7 @@ public class Scoring_System {
         if (file.exists()) {
             return file.readString();
         } else {
-            return "No score available";
+            return "None";
         }
     }
 
