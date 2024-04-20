@@ -26,7 +26,13 @@ public class Scoring_System {
         }
         return instance;
     }
-
+    public void reset() {
+        busCount = 0;
+        trainCount = 0;
+        totalBikeDistanceTraveled = 0.0f;
+        totalPlayerDistanceTraveled = 0.0f;
+        endOfLevel = false;
+    }
     public float calculateTotalCarbonEmissions() {
         float busEmissions = busCount * CARBON_EMISSION_BUS ;
         float trainEmissions = trainCount * CARBON_EMISSION_TRAIN ;
