@@ -100,6 +100,10 @@ public class Scoring_System {
             FileWriter writer = new FileWriter(fileName);
             writer.write("Modes of Transport Used:\n");
             writer.write("Buses: " + busCount + "\n");
+            writer.write("Trains: " + trainCount + "\n");
+            writer.write("Total Bike Distance Traveled: " + totalBikeDistanceTraveled + "\n");
+            writer.write("Total Player Distance Traveled: " + totalPlayerDistanceTraveled + "\n");
+            writer.write("Total Score: " + getScore() + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

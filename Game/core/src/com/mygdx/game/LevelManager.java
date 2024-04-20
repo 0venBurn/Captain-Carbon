@@ -1,22 +1,23 @@
 package com.mygdx.game;
 
+
 public class LevelManager implements LevelCompletionListener {
     private MyGdxGame game;
-    private int  currentLevelIndex;
+    private int currentLevelIndex;
     public Scoring_System scoringSystem;
 
     private ILevel[] levels;
 
-    public LevelManager(MyGdxGame game){
+    public LevelManager(MyGdxGame game) {
         scoringSystem = Scoring_System.getInstance();
 
         this.game = game;
-        levels = new ILevel[] {new TutorialLevel(this)};
+        levels = new ILevel[]{new TutorialLevel(this)};
         currentLevelIndex = 0;
         loadCurrentLevel();
     }
 
-    public void loadCurrentLevel(){
+    public void loadCurrentLevel() {
         levels[currentLevelIndex].load();
     }
 
@@ -27,16 +28,22 @@ public class LevelManager implements LevelCompletionListener {
         return null;
     }
 
-    public void onLevelCompleted(){
+    public void onLevelCompleted() {
         currentLevelIndex++;
-        if (currentLevelIndex < levels.length){
+        if (currentLevelIndex < levels.length) {
             loadCurrentLevel();
-        }else{
+        } else {
             game.setScreen(new MainMenuScreen(game));
         }
     }
-    public void onLevelFailed(){
-        game.setScreen(new MainMenuScreen(game));
-    }
 
+    public void onLevelFailed() {
+        game.setScreen(new MainMenuScreen(game));
+        scoringSystem.outputToFile("scores.txt");
+        scoringSystem.reset();
+
+
+
+
+    }
 }
