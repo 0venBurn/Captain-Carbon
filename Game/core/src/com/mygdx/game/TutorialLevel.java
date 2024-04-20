@@ -48,7 +48,6 @@ public class TutorialLevel implements ILevel {
     private float co2BarValue,timeBarValue;
 
 
-
     public TutorialLevel(LevelCompletionListener listener) {
         this.completionListener = listener;
         camera = new OrthographicCamera();
@@ -141,6 +140,7 @@ public class TutorialLevel implements ILevel {
 
     @Override
     public void render() {
+        checkEndCondition();
 
         Gdx.app.log("Render Method", "Start of render method");
         // Clear the screen
@@ -194,21 +194,16 @@ public class TutorialLevel implements ILevel {
         stage.draw();
         adjustCameraPosition();
         renderer.setView(camera);
-
         batch.begin();
-        co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
+        co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 20000 - scoringSystem.calculateTotalTime();
+        timeBarValue = 6000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
-        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
-        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
-        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
-        font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
-        font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
+        font.draw(batch, "Time Bar " , 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, "Co2 Bar " , 10, Gdx.graphics.getHeight() - 90);
+
         batch.end();
 
 
@@ -377,6 +372,16 @@ public class TutorialLevel implements ILevel {
         gem = new Gem(gemPosition);
 
     }
+    public void checkEndCondition() {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 || gem != null && player.getBounds().overlaps(gem.getBounds())) {
+            completionListener.onLevelFailed();
+            timeBar.setValue(0);
+            co2Bar.setValue(0);
+        }
+
+
+    }
+
 
 
 }

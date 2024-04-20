@@ -14,13 +14,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TheProgressBars {
     private ProgressBar progressBar;
 
+
     public TheProgressBars(Skin skin) {
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
-        progressBar = new ProgressBar(0, 20000, 1, false, progressBarStyle);
+        progressBar = new ProgressBar(0, 6000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
         progressBar.setHeight(50);
-        progressBar.setValue(20000);
-        progressBar.setX(50);
+        progressBar.setValue(5000);
+        progressBar.setX(0);
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }
 
@@ -68,6 +69,7 @@ public class TheProgressBars {
     public void create(Stage stage) {
         stage.addActor(progressBar);
     }
+
 
     public void render() {
         setValue(progressBar.getValue() - 0.01f);
