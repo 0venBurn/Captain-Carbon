@@ -44,7 +44,7 @@ public class Transport {
         this.mode = mode;
         this.position = startPosition;
         this.waypoints = waypoints;
-        this.batteryCharge = 100.0f;
+        this.batteryCharge = 150.0f;
         bikecollision = new Collision(false);
         configureMode();
         scoringSystem = Scoring_System.getInstance();
@@ -123,7 +123,7 @@ public class Transport {
 
     private void configureBusMode() {
         spriteSheet = new Texture("Tilesets/bus.png");
-        speed = 90.0f;
+        speed = 70.0f;
         busFrameRight = new TextureRegion(spriteSheet, 8, 0, 79, 48);
         busFrameLeft = new TextureRegion(spriteSheet, 16, 56, 80, 56);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
@@ -132,7 +132,7 @@ public class Transport {
 
     private void configureBikeMode() {
         spriteSheet = new Texture("Tilesets/bike.png");
-        speed = 500.0f;
+        speed = 60.0f;
         TextureRegion[][] bikeFrames = TextureRegion.split(spriteSheet, 32, 32);
         cycleLeftAnimation = createAnimation(bikeFrames, 0);
         cycleUpAnimation = createAnimation(bikeFrames, 2);
