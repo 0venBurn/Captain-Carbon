@@ -195,14 +195,14 @@ public class TutorialLevel implements ILevel {
         adjustCameraPosition();
         renderer.setView(camera);
         batch.begin();
-        co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
+        co2BarValue = 5000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 6000 - scoringSystem.calculateTotalTime();
+        timeBarValue = 5000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
-        font.draw(batch, "Time Bar " , 10, Gdx.graphics.getHeight() - 40);
-        font.draw(batch, "Co2 Bar " , 10, Gdx.graphics.getHeight() - 90);
+        font.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 90);
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
