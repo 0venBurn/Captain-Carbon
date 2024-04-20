@@ -7,8 +7,8 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class Scoring_System {
     private int busCount, trainCount;
-    private int CARBON_EMISSION_WALK  = 0, CARBON_EMISSION_BIKE  = 10, CARBON_EMISSION_BUS  = 2500, CARBON_EMISSION_TRAIN  = 5000;
-    private int SPEED_WALK  = 1, SPEED_BIKE  = 5,SPEED_BUS  = 10,SPEED_TRAIN  = 20;
+    private int CARBON_EMISSION_WALK  = 0, CARBON_EMISSION_BIKE  = 130, CARBON_EMISSION_BUS  = 500, CARBON_EMISSION_TRAIN  = 1800;
+    private int SPEED_WALK  = 1, SPEED_BIKE  = 5,SPEED_BUS  = 25,SPEED_TRAIN  = 40;
     private float totalBikeDistanceTraveled = 0.0f, totalPlayerDistanceTraveled = 0.0f;
     private static Scoring_System instance;
     private boolean endOfLevel = false;
@@ -46,7 +46,7 @@ public class Scoring_System {
     }
 
     public float calculateTotalTime() {
-        float busTime = (busCount * 500) / (SPEED_BUS);
+        float busTime = (busCount * 1000) / (SPEED_BUS);
         float trainTime = (trainCount * 1000) / (SPEED_TRAIN);
         float bikeTime = (totalBikeDistanceTraveled) / (SPEED_BIKE);
         float walkTime = (totalPlayerDistanceTraveled)/(SPEED_WALK) ;
@@ -66,7 +66,7 @@ public class Scoring_System {
     public float getScore() {
         float totalEmissions = calculateTotalCarbonEmissions();
         float totalTime = calculateTotalTime();
-        float score = totalTime + totalEmissions;
+        float score = 100000 / (1 + totalTime + totalEmissions);
         return score;
     }
 

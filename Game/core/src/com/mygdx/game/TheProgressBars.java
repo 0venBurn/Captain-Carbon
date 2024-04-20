@@ -17,10 +17,10 @@ public class TheProgressBars {
 
     public TheProgressBars(Skin skin) {
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
-        progressBar = new ProgressBar(0, 20000, 1, false, progressBarStyle);
+        progressBar = new ProgressBar(0, 5000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
         progressBar.setHeight(50);
-        progressBar.setValue(20000);
+        progressBar.setValue(5000);
         progressBar.setX(50);
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }

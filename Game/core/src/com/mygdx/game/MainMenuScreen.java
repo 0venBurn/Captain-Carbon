@@ -29,7 +29,7 @@ public class MainMenuScreen implements Screen {
     private Skin skin;
     private Viewport backgroundViewport;
     private Viewport uiViewport;
-    private final BitmapFont font;
+
     private String scoreDisplay;
     private BitmapFont bigFont;
 
@@ -40,9 +40,7 @@ public class MainMenuScreen implements Screen {
         initializeStage();
         loadAssets();
         createUI();
-        font = new BitmapFont();
         scoringSystem = Scoring_System.getInstance();
-
         scoreDisplay = scoringSystem.readScoreFromFile("scores.txt");
 
     }
@@ -63,11 +61,12 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         backgroundTexture = new Texture(Gdx.files.internal("MainMenuBackground.png"));
 
+        // stuff for scoreboard font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 40;
         bigFont = generator.generateFont(parameter);
-        generator.dispose();
+
 
     }
 
@@ -153,7 +152,8 @@ public class MainMenuScreen implements Screen {
         backgroundTexture.dispose();
         batch.dispose();
         skin.dispose();
-        font.dispose();
+        bigFont.dispose();
+
     }
 
 

@@ -195,9 +195,9 @@ public class TutorialLevel implements ILevel {
         adjustCameraPosition();
         renderer.setView(camera);
         batch.begin();
-        co2BarValue = 20000 - scoringSystem.calculateTotalCarbonEmissions();
+        co2BarValue = 5000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 20000 - scoringSystem.calculateTotalTime();
+        timeBarValue = 5000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
@@ -377,11 +377,13 @@ public class TutorialLevel implements ILevel {
 
     }
     public void checkEndCondition() {
-        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0) {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 || gem != null && player.getBounds().overlaps(gem.getBounds())) {
             completionListener.onLevelFailed();
             timeBar.setValue(0);
             co2Bar.setValue(0);
         }
+
+
     }
 
 

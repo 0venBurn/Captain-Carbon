@@ -38,8 +38,8 @@ public class LevelManager implements LevelCompletionListener {
     }
 
     public void onLevelFailed() {
-        game.setScreen(new MainMenuScreen(game));
         scoringSystem.outputToFile("scores.txt");
+        game.setScreen(new MainMenuScreen(game));
         scoringSystem.reset();
 
 
