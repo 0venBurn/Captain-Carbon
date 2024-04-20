@@ -8,10 +8,12 @@ public class Scoring_System {
     private int SPEED_WALK  = 1, SPEED_BIKE  = 5,SPEED_BUS  = 10,SPEED_TRAIN  = 20;
     private float totalBikeDistanceTraveled = 0.0f, totalPlayerDistanceTraveled = 0.0f;
     private static Scoring_System instance;
+    private boolean endOfLevel = false;
 
     private Scoring_System() {
         this.totalPlayerDistanceTraveled = 0;
         this.totalBikeDistanceTraveled = 0;
+
     }
 
     public static Scoring_System getInstance() {
@@ -80,6 +82,11 @@ public class Scoring_System {
     }
     public float getTotalPlayerDistanceTraveled() {
         return this.totalPlayerDistanceTraveled;
+    }
+
+    // will need this for writing to file maybe unless i do in level manager class
+    public void setEndOfLevel(boolean endOfLevel) {
+        this.endOfLevel = endOfLevel;
     }
 
     public void outputToFile(String fileName) {

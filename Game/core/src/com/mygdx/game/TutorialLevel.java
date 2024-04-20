@@ -141,6 +141,7 @@ public class TutorialLevel implements ILevel {
 
     @Override
     public void render() {
+        checkEndCondition();
 
         Gdx.app.log("Render Method", "Start of render method");
         // Clear the screen
@@ -377,6 +378,12 @@ public class TutorialLevel implements ILevel {
         gem = new Gem(gemPosition);
 
     }
+    public void checkEndCondition() {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0) {
+            completionListener.onLevelFailed();
+        }
+    }
+
 
 
 }

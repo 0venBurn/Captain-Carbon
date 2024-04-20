@@ -13,8 +13,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TheProgressBars {
     private ProgressBar progressBar;
+    private Scoring_System scoringSystem;
 
     public TheProgressBars(Skin skin) {
+        this.scoringSystem = scoringSystem; // Initialize scoring system reference
+
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
         progressBar = new ProgressBar(0, 20000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
@@ -68,6 +71,7 @@ public class TheProgressBars {
     public void create(Stage stage) {
         stage.addActor(progressBar);
     }
+
 
     public void render() {
         setValue(progressBar.getValue() - 0.01f);

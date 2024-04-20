@@ -3,9 +3,13 @@ package com.mygdx.game;
 public class LevelManager implements LevelCompletionListener {
     private MyGdxGame game;
     private int  currentLevelIndex;
+    public Scoring_System scoringSystem;
+
     private ILevel[] levels;
 
     public LevelManager(MyGdxGame game){
+        scoringSystem = Scoring_System.getInstance();
+
         this.game = game;
         levels = new ILevel[] {new TutorialLevel(this)};
         currentLevelIndex = 0;
@@ -31,4 +35,8 @@ public class LevelManager implements LevelCompletionListener {
             game.setScreen(new MainMenuScreen(game));
         }
     }
+    public void onLevelFailed(){
+        game.setScreen(new MainMenuScreen(game));
+    }
+
 }
