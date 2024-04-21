@@ -91,6 +91,7 @@ public class TutorialLevel implements ILevel {
         transports.add(horizontalBus);
 
         player = new Player(250, 150);
+        player.setPopupCamera(camera);
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();
