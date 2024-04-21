@@ -30,6 +30,8 @@ public class LevelManager implements LevelCompletionListener {
     public void onLevelCompleted() {
         currentLevelIndex++;
         if (currentLevelIndex < levels.length) {
+            scoringSystem.outputToFile("scores.txt");
+            scoringSystem.reset();
             loadCurrentLevel();
         } else {
             game.setScreen(new MainMenuScreen(game));
