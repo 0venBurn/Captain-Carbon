@@ -23,21 +23,14 @@ public class Transport {
     private final Mode mode;
 
     // Bus
-    private TextureRegion busFrameLeft;
-    private TextureRegion busFrameRight;
-    private TextureRegion busFrameUp;
-    private TextureRegion busFrameDown;
+    private TextureRegion busFrameLeft, busFrameRight,busFrameUp,busFrameDown;
     private final List<Vector2> waypoints;
     private int currentWaypointIndex = 0;
     private boolean waitingAtWaypoint = true;
 
 
     // Bike
-    private Animation<TextureRegion> cycleLeftAnimation;
-    private Animation<TextureRegion> cycleUpAnimation;
-    private Animation<TextureRegion> cycleRightAnimation;
-    private Animation<TextureRegion> cycleDownAnimation;
-    private Animation<TextureRegion> movementAnimation;
+    private Animation<TextureRegion> cycleLeftAnimation,cycleUpAnimation,cycleRightAnimation,cycleDownAnimation,movementAnimation;
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
     private float batteryCharge;
@@ -51,7 +44,7 @@ public class Transport {
         this.mode = mode;
         this.position = startPosition;
         this.waypoints = waypoints;
-        this.batteryCharge = 100.0f;
+        this.batteryCharge = 150.0f;
         bikecollision = new Collision(false);
         configureMode();
         scoringSystem = Scoring_System.getInstance();
@@ -130,16 +123,16 @@ public class Transport {
 
     private void configureBusMode() {
         spriteSheet = new Texture("Tilesets/bus.png");
-        speed = 90.0f;
+        speed = 70.0f;
         busFrameRight = new TextureRegion(spriteSheet, 8, 0, 79, 48);
-        busFrameLeft = new TextureRegion(spriteSheet, 16, 56, 80, 56);
+        busFrameLeft = new TextureRegion(spriteSheet, 8, 56, 79, 50);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
-        busFrameDown = new TextureRegion(spriteSheet, 104, 0, 40, 72);
+        busFrameDown = new TextureRegion(spriteSheet, 95, 0, 40, 72);
     }
 
     private void configureBikeMode() {
         spriteSheet = new Texture("Tilesets/bike.png");
-        speed = 500.0f;
+        speed = 60.0f;
         TextureRegion[][] bikeFrames = TextureRegion.split(spriteSheet, 32, 32);
         cycleLeftAnimation = createAnimation(bikeFrames, 0);
         cycleUpAnimation = createAnimation(bikeFrames, 2);

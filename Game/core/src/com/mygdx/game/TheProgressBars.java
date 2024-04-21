@@ -14,29 +14,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TheProgressBars {
     private ProgressBar progressBar;
 
-    public TheProgressBars(Skin skin, Stage stage) {
+
+    public TheProgressBars(Skin skin) {
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
-        progressBar = new ProgressBar(0, 20000, 1, false, progressBarStyle);
+        progressBar = new ProgressBar(0, 6000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
         progressBar.setHeight(50);
-        progressBar.setValue(20000);
-        progressBar.setX(50);
+        progressBar.setValue(6000);
+        progressBar.setX(0);
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }
 
-//    public void setBarColor(Color color1, Color color2) {
-//        this.getProgressBar().getStyle().background = createColorDrawable(color1);
-//        this.getProgressBar().getStyle().knobBefore = createColorDrawable(color2);
-//    }
-
-    public void setBarColor(Stage stage){
+    public void setBarColor(){
         Color knobColor;
         float value = this.getProgressBar().getValue();
         if (value >= 0.8* progressBar.getMaxValue()) {
             knobColor = Color.GREEN;
-        } else if (value >= 60*progressBar.getMaxValue()) {
+        } else if (value >= 0.6*progressBar.getMaxValue()) {
             knobColor = Color.ORANGE;
-        } else if (value >= 40*progressBar.getMaxValue()) {
+        } else if (value >= 0.4*progressBar.getMaxValue()) {
             knobColor = Color.YELLOW;
         } else {
             knobColor = Color.RED;
@@ -74,8 +70,9 @@ public class TheProgressBars {
         stage.addActor(progressBar);
     }
 
-    public void render(Stage stage) {
+
+    public void render() {
         setValue(progressBar.getValue() - 0.01f);
-        setBarColor(stage);
+        setBarColor();
     }
 }
