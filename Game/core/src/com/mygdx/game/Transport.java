@@ -125,7 +125,7 @@ public class Transport {
         spriteSheet = new Texture("Tilesets/bus.png");
         speed = 70.0f;
         busFrameRight = new TextureRegion(spriteSheet, 8, 0, 79, 48);
-        busFrameLeft = new TextureRegion(spriteSheet, 16, 56, 80, 56);
+        busFrameLeft = new TextureRegion(spriteSheet, 8, 56, 79, 50);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
         busFrameDown = new TextureRegion(spriteSheet, 104, 0, 40, 72);
     }

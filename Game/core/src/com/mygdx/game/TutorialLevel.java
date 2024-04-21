@@ -125,7 +125,7 @@ public class TutorialLevel implements ILevel {
     public void render() {
         checkEndCondition();
 
-        Gdx.app.log("Render Method", "Start of render method");
+
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -148,10 +148,10 @@ public class TutorialLevel implements ILevel {
         renderer.render();
         renderer.getBatch().begin();
 
-        Gdx.app.log("Rendering", "Rendering player");
+
         player.render((SpriteBatch) renderer.getBatch());
 
-        Gdx.app.log("Rendering", "Rendering transports");
+
         for (Transport transport : transports) {
             transport.render((SpriteBatch) renderer.getBatch());
         }
@@ -268,10 +268,6 @@ public class TutorialLevel implements ILevel {
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
-        Gdx.app.log("Render Method", "End of render method");
-
-
-
 
     }
 
@@ -414,11 +410,7 @@ public class TutorialLevel implements ILevel {
         float minY = cameraHalfHeight;
         float maxY = mapHeight - cameraHalfHeight;
 
-        // Debug print statements
-        System.out.println("minX: " + minX);
-        System.out.println("maxX: " + maxX);
-        System.out.println("minY: " + minY);
-        System.out.println("maxY: " + maxY);
+
 
         camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
         camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
@@ -446,9 +438,3 @@ public class TutorialLevel implements ILevel {
 
 }
 
-
-//    public void checkEndCondition() {
-//        if (/* level completion condition */) {
-//            completionListener.onLevelCompleted();
-//        }
-//    }
