@@ -32,17 +32,17 @@ public class LevelOne implements ILevel {
     private OrthogonalTiledMapRenderer renderer;
     private Player player;
     private Transport currentBus = null;
-    private ArrayList<Transport> transports,bikes;
-    private ArrayList <TrainStation> trainStations;
+    private ArrayList<Transport> transports, bikes;
+    private ArrayList<TrainStation> trainStations;
     private Stage stage;
     private Skin skin;
     private final SpriteBatch batch;
     private BitmapFont pauseFont;
     private Gem gem;
-    private BitmapFont co2BarFont,timeBarFont;
+    private BitmapFont co2BarFont, timeBarFont;
     public Scoring_System scoringSystem;
     private TheProgressBars timeBar, co2Bar;
-    private float co2BarValue,timeBarValue;
+    private float co2BarValue, timeBarValue;
 
 
     public LevelOne(LevelCompletionListener listener) {
@@ -182,7 +182,7 @@ public class LevelOne implements ILevel {
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
-        font.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, "Time Bar", 10, Gdx.graphics.getHeight() - 40);
         font.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 90);
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
@@ -350,14 +350,14 @@ public class LevelOne implements ILevel {
 
     }
 
-
     public void checkEndCondition() {
-        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 || gem != null && player.getBounds().overlaps(gem.getBounds())) {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0) {
             completionListener.onLevelFailed();
-            timeBar.setValue(0);
-            co2Bar.setValue(0);
+
+
+        } else if (gem != null && player.getBounds().overlaps(gem.getBounds())) {
+            completionListener.onLevelCompleted();
+
         }
-
-
     }
 }

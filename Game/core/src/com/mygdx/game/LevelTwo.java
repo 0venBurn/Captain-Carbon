@@ -354,14 +354,17 @@ public class LevelTwo implements ILevel {
 
     }
 
-
     public void checkEndCondition() {
-        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 || gem != null && player.getBounds().overlaps(gem.getBounds())) {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 ) {
             completionListener.onLevelFailed();
-            timeBar.setValue(0);
-            co2Bar.setValue(0);
+
+
+        }
+        else if (gem != null && player.getBounds().overlaps(gem.getBounds())){
+            completionListener.onLevelCompleted();
+
         }
 
 
-    }
-}
+
+    }}
