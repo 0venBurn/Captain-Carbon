@@ -67,8 +67,9 @@ public class TutorialLevel implements ILevel {
         collisionLayer = map.getLayers().get("Collision");
         renderer = new OrthogonalTiledMapRenderer(map);
         transports = new ArrayList<>(BusStopLocations.defineBusLocations(BusStopLocations.Level.TUTORIAL));
-
+      
         player = new Player(100, 150);
+        player.setPopupCamera(camera);
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();

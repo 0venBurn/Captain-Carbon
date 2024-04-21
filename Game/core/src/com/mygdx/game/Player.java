@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,6 +12,9 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import static com.mygdx.game.EducationalPopup.TransportMode;
+
 public class Player {
     private final Texture spriteSheet;
     private final Game_Animations animations;
@@ -39,7 +43,7 @@ public class Player {
         isMoving = false;
         playercollision = new Collision(true);
         scoringSystem = Scoring_System.getInstance();
-
+        popup = new EducationalPopup();
 
     }
 
@@ -92,6 +96,12 @@ public class Player {
         }
     }
 
+  
+    public void setPopupCamera(OrthographicCamera camera) {
+        this.popup.setCamera(camera);
+    }
+
+  
     public void render(SpriteBatch spriteBatch) {
         TextureRegion currentFrame;
         if (!onBus) {
@@ -102,6 +112,8 @@ public class Player {
             }
             spriteBatch.draw(currentFrame, position.x, position.y);
         }
+        // all the popup drawing logic is encapsulated here
+        popup.draw(spriteBatch);
     }
 
 
@@ -114,8 +126,6 @@ public class Player {
         this.currentBike = bike;
         bike.setActive(true);
         bike.setVisible();
-
-
         // Increment bike count
     }
 
@@ -131,11 +141,15 @@ public class Player {
             this.currentBike.setPosition(position.x + 10, position.y);
             this.onBike = false;
             this.currentBike = null;
+            popup.show(TransportMode.BIKE, 3);
         }
     }
 
     public void setOnBus(boolean onBus) {
         this.onBus = onBus;
+        if (!this.onBus) {
+            popup.show(TransportMode.BUS, 3);
+        }
     }
 
     public void setOnBike(boolean onBike) {
@@ -176,6 +190,7 @@ public class Player {
 
     public void exitMetro(Vector2 newPosition) {
         setPosition(newPosition.x, newPosition.y);
+        popup.show(TransportMode.METRO, 3);
     }
 
     public boolean isOnBike() {
