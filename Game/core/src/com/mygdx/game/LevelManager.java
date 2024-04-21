@@ -12,7 +12,7 @@ public class LevelManager implements LevelCompletionListener {
         scoringSystem = Scoring_System.getInstance();
         this.game = game;
         levels = new ILevel[]{new TutorialLevel(this), new LevelOne(this), new LevelTwo(this)};
-        currentLevelIndex = 1;
+        currentLevelIndex = 2;
         loadCurrentLevel();
     }
 

@@ -61,27 +61,31 @@ public class LevelTwo implements ILevel {
         collisionLayer = map.getLayers().get("Collision");
         renderer = new OrthogonalTiledMapRenderer(map);
         //Buses
-        transports = new ArrayList<>(BusStopLocations.defineBusLocations(BusStopLocations.Level.LEVEL_ONE));
+        transports = new ArrayList<>(BusStopLocations.defineBusLocations(BusStopLocations.Level.LEVEL_TWO));
 
-        player = new Player(7000, 500);
+        player = new Player(2290, 2750);
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();
         TrainStation stationA = new TrainStation(new Vector2(2140, 920), "Station A", trainStations, player);//center map station
         TrainStation stationB = new TrainStation(new Vector2(3820, 1630), "Station B", trainStations, player);//mid right water station
-        TrainStation stationC = new TrainStation(new Vector2(100, 1630), "Station C", trainStations, player);//mid left water station
+        TrainStation stationD = new TrainStation(new Vector2(1300, 1630), "Station D", trainStations, player);// left water station
         trainStations.add(stationA);
         trainStations.add(stationB);
-        trainStations.add(stationC);
+        trainStations.add(stationD);
 
         bikes = new ArrayList<>();
         // Spawn groups of bikes
-        for (int i = 0; i < 1; i++) {
-            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(3760 + i * 50, 250), null));
+        for (int i = 0; i < 4; i++) {
+            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(2290 + i * 50, 2540), null));
         }
 
-        bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(160, 1530), null));
+        bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(3900, 2700), null));
+        bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(4190, 1530), null));
 
+        for (int i = 0; i < 3; i++) {
+            bikes.add(new Transport(Transport.Mode.BIKE, new Vector2(2320 + i * 50, 860), null));
+        }
 
         AssetManager assetManager = new AssetManager();
         assetManager.load("flat-earth/skin/flat-earth-ui.atlas", TextureAtlas.class);
@@ -182,6 +186,8 @@ public class LevelTwo implements ILevel {
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
+        font.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 90);
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
@@ -342,7 +348,7 @@ public class LevelTwo implements ILevel {
 
     @Override
     public void spawnGem() {
-        Vector2 gemPosition = new Vector2(450, 1900);
+        Vector2 gemPosition = new Vector2(2373, 80);
         gem = new Gem(gemPosition);
 
     }

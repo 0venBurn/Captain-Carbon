@@ -25,6 +25,13 @@ public class BusStopLocations {
             case LEVEL_ONE:
                 busLocations.add(createBus(new Vector2(3660, 750), Arrays.asList(new Vector2(3540, 750), new Vector2(2500, 750), new Vector2(1390, 750), new Vector2(230, 750)), Transport.Direction.LEFT));
                 break;
+            case LEVEL_TWO:
+                busLocations.add(createBus(new Vector2(2540, 2700), Arrays.asList(new Vector2(2970, 2700), new Vector2(3950, 2700)), Transport.Direction.RIGHT));
+                busLocations.add(createBus(new Vector2(4350, 2040), Arrays.asList(new Vector2(4350, 1600), new Vector2(4350, 1430), new Vector2(4350, 750), new Vector2(3650, 750), new Vector2(2500, 750)), Transport.Direction.DOWN));
+                busLocations.add(createBus(new Vector2(1145, 2430), Arrays.asList(new Vector2(1145, 2430), new Vector2(1145, 1510), new Vector2(1145, 850), new Vector2(1600, 850), new Vector2(2030, 850)), Transport.Direction.DOWN));
+
+
+                break;
         }
         return busLocations;
     }

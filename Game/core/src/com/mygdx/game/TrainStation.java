@@ -66,6 +66,9 @@ public class TrainStation extends Transport {
             } else if (station.getName().equals("Station C")) {
                 buttonX = 2;
                 buttonY = 540;
+            } else if (station.getName().equals("Station D")) {
+                buttonX = 400;
+                buttonY = 530;
             }
 
             button.setPosition(buttonX, buttonY);

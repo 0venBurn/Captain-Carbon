@@ -127,7 +127,7 @@ public class Transport {
         busFrameRight = new TextureRegion(spriteSheet, 8, 0, 79, 48);
         busFrameLeft = new TextureRegion(spriteSheet, 8, 56, 79, 50);
         busFrameUp = new TextureRegion(spriteSheet, 96, 72, 40, 72);
-        busFrameDown = new TextureRegion(spriteSheet, 104, 0, 40, 72);
+        busFrameDown = new TextureRegion(spriteSheet, 95, 0, 40, 72);
     }
 
     private void configureBikeMode() {
