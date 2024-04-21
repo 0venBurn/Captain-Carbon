@@ -20,7 +20,7 @@ public class TheProgressBars {
         progressBar = new ProgressBar(0, 6000, 1, false, progressBarStyle);
         progressBar.setWidth(500);
         progressBar.setHeight(50);
-        progressBar.setValue(5000);
+        progressBar.setValue(6000);
         progressBar.setX(0);
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }

@@ -305,9 +305,10 @@ public class LevelOne implements ILevel {
 
 
                     }
-                    stage.addActor(timeBar.getProgressBar());
-                    stage.addActor(co2Bar.getProgressBar());
+
                 }
+                stage.addActor(timeBar.getProgressBar());
+                stage.addActor(co2Bar.getProgressBar());
             }
         }
     }

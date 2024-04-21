@@ -19,7 +19,7 @@ public class Player {
 
     private static final int frameWidth = 16, frameHeight = 16;
     private boolean isMoving;
-    private static final float playerSpeed = 60.0f;
+    private static final float playerSpeed = 600.0f;
     private boolean onBus = false,onBike = false;
     private Transport currentBike;
     private float totalPlayerDistanceTraveled = 0.0f;

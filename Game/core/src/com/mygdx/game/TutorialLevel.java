@@ -379,9 +379,10 @@ public class TutorialLevel implements ILevel {
 
 
                     }
-                    stage.addActor(timeBar.getProgressBar());
-                    stage.addActor(co2Bar.getProgressBar());
+
                 }
+                stage.addActor(timeBar.getProgressBar());
+                stage.addActor(co2Bar.getProgressBar());
             }
         }
     }
@@ -425,10 +426,14 @@ public class TutorialLevel implements ILevel {
 
     }
     public void checkEndCondition() {
-        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 || gem != null && player.getBounds().overlaps(gem.getBounds())) {
+        if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 ) {
+            completionListener.onLevelFailed();
+
+
+        }
+        else if (gem != null && player.getBounds().overlaps(gem.getBounds())){
             completionListener.onLevelCompleted();
-            timeBar.setValue(0);
-            co2Bar.setValue(0);
+
         }
 
 

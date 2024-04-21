@@ -31,15 +31,17 @@ public class LevelManager implements LevelCompletionListener {
         currentLevelIndex++;
         if (currentLevelIndex < levels.length) {
             scoringSystem.outputToFile("scores.txt");
-            scoringSystem.reset();
             loadCurrentLevel();
+            scoringSystem.reset();
+
         } else {
+            scoringSystem.outputToFile("scores.txt");
             game.setScreen(new MainMenuScreen(game));
+            scoringSystem.reset();
         }
     }
 
     public void onLevelFailed() {
-        scoringSystem.outputToFile("scores.txt");
         game.setScreen(new MainMenuScreen(game));
         scoringSystem.reset();
 
