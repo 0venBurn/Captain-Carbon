@@ -27,6 +27,7 @@ public class Player {
     private Transport mountedBike;
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
+    private TrainStation currentStation;
 
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
@@ -141,6 +142,14 @@ public class Player {
     public void setOnBus(boolean onBus) {
         scoringSystem.incrementBusCount();
         this.onBus = onBus;
+    }
+
+    public void setCurrentStation(TrainStation station) {
+        this.currentStation = station;
+    }
+
+    public TrainStation getCurrentStation() {
+        return currentStation;
     }
 
     public void setOnBike(boolean onBike) {

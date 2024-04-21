@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public interface ILevel {
 
@@ -17,4 +18,7 @@ public interface ILevel {
         void updateBuses(float deltaTime);
         void spawnGem();
 
+        Player getPlayer();
+        int getMapWidth();
+        int getMapHeight();
     }

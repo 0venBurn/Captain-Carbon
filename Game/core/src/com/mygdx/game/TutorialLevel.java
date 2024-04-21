@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Arrays;
+import com.badlogic.gdx.graphics.Color;
 
 
 
@@ -46,7 +48,11 @@ public class TutorialLevel implements ILevel {
     private Table pauseMenu;
     private Gem gem;
     public Scoring_System scoringSystem;
-
+    private OrthographicCamera minimapCamera;
+    private Viewport minimapViewport;
+    private ShapeRenderer shapeRenderer;
+    private float minimapFraction;
+    private Minimap minimap;
 
 
     public TutorialLevel(LevelCompletionListener listener) {
@@ -75,6 +81,9 @@ public class TutorialLevel implements ILevel {
                 new Vector2(1600, 850),
                 new Vector2(2030, 850)
         ));
+
+        minimap = new Minimap();
+
         // Begin batch and draw text
 
 
@@ -118,6 +127,15 @@ public class TutorialLevel implements ILevel {
     @Override
     public void update() {
 
+    }
+    @Override
+    public int getMapWidth() {
+        return map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
+    }
+
+    @Override
+    public int getMapHeight() {
+        return map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
     }
 
 
@@ -186,6 +204,13 @@ public class TutorialLevel implements ILevel {
         Gdx.app.log("Render Method", "End of render method");
 
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (Minimap.MinimapDisplayed) {
+                minimap.HideMinimap(stage); // Hide the minimap
+            } else {
+                minimap.DisplayMinimap(stage, player); // Display the minimap
+            }
+        }
 
 
     }
@@ -199,6 +224,11 @@ public class TutorialLevel implements ILevel {
         pauseFont.dispose();
         batch.dispose();
 
+    }
+
+    @Override
+    public Player getPlayer(){
+        return player;
     }
 
     @Override
@@ -290,6 +320,7 @@ public class TutorialLevel implements ILevel {
                 if (playerBounds.overlaps(stationBounds)) {
                     font.draw(spriteBatch, "Press 'E' to interact with the station", player.getX(), player.getY() + 50);
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                        player.setCurrentStation(station);
                         player.enterMetro();
                         station.displayStationUI(stage);
                         Gdx.input.setInputProcessor(stage);
@@ -324,10 +355,10 @@ public class TutorialLevel implements ILevel {
         float maxY = mapHeight - cameraHalfHeight;
 
         // Debug print statements
-        System.out.println("minX: " + minX);
-        System.out.println("maxX: " + maxX);
-        System.out.println("minY: " + minY);
-        System.out.println("maxY: " + maxY);
+//        System.out.println("minX: " + minX);
+//        System.out.println("maxX: " + maxX);
+//        System.out.println("minY: " + minY);
+//        System.out.println("maxY: " + maxY);
 
         camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
         camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
@@ -340,6 +371,10 @@ public class TutorialLevel implements ILevel {
         Vector2 gemPosition = new Vector2(4327, 1450); // tutorial spot
         gem = new Gem(gemPosition);
 
+    }
+
+    public Vector2 getGemPosition() {
+        return gem.getPosition();
     }
 
 

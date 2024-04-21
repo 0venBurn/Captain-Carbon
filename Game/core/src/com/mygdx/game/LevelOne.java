@@ -3,6 +3,34 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class LevelOne implements ILevel{
+
+    private Player player;
+
+    public LevelOne() {
+        player = new Player(250, 150);
+    }
+
+    @Override
+    public int getMapWidth() {
+        // Replace with the actual width of your map for LevelOne
+        return 0;
+    }
+
+    @Override
+    public int getMapHeight() {
+        // Replace with the actual height of your map for LevelOne
+        return 0;
+    }
+
+
+
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+
+
     @Override
     public void load() {
 

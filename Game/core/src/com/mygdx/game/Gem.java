@@ -28,4 +28,8 @@ public class Gem {
     public void collect() {
         isCollected = true;
     }
+
+    public Vector2 getPosition() {
+        return position;
+    }
 }

@@ -53,8 +53,23 @@ public class TrainStation extends Transport {
         // Add minimap image
         stage.addActor(miniMapImage);
 
+        TrainStation currentStation = player.getCurrentStation();
+        Vector2 currentStationPosition = currentStation.getPosition();
+
+
+        Texture playerMarker = new Texture(Gdx.files.internal("head.png"));
+        Image playerMarkerImage = new Image(playerMarker);
+        playerMarkerImage.setSize(50, 50);
+        //playerMarkerImage.setPosition(Gdx.graphics.getWidth() / 140f, Gdx.graphics.getHeight() / 9f);
+
+        stage.addActor(playerMarkerImage);
+
         float buttonX = 0;
         float buttonY = 0;
+        float playerMarkerX = 0;
+        float playerMarkerY = 0;
+
+
         for (TrainStation station : trainStations) {
             Image button = new Image(stationButtonTexture);
 
@@ -66,9 +81,19 @@ public class TrainStation extends Transport {
                 buttonY = 550;
             }
 
+            if (currentStation.getName().equals("Station A")) {
+                playerMarkerX = 790;
+                playerMarkerY = 300;
+            } else if (currentStation.getName().equals("Station B")) {
+                playerMarkerX = 1525;
+                playerMarkerY = 500;
+            }
+
+            playerMarkerImage.setPosition(playerMarkerX, playerMarkerY);
+
             button.setPosition(buttonX, buttonY);
             button.setSize(200, 133);
-            System.out.println("Button position for station " + station.getName() + ": X = " + buttonX + ", Y = " + buttonY);
+//            System.out.println("Button position for station " + station.getName() + ": X = " + buttonX + ", Y = " + buttonY);
 
             button.addListener(new ClickListener() {
                 @Override
@@ -77,6 +102,7 @@ public class TrainStation extends Transport {
                     player.setPosition(station.getPosition().x, station.getPosition().y - 100);
                     stage.clear();
                     uiDisplayed = false;
+                    GameScreen.isMinimapVisible = true;
                     Gdx.input.setInputProcessor(null);
                 }
             });
