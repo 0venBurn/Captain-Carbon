@@ -19,7 +19,7 @@ public class Player {
 
     private static final int frameWidth = 16, frameHeight = 16;
     private boolean isMoving;
-    private static final float playerSpeed = 690.0f;
+    private static final float playerSpeed = 60.0f;
     private boolean onBus = false,onBike = false;
     private Transport currentBike;
     private float totalPlayerDistanceTraveled = 0.0f;
@@ -44,14 +44,13 @@ public class Player {
     }
 
     public void updatePlayerMovement(float deltaTime, MapLayer collisionLayer) {
-        if (GameScreen.gameState == GameState.PAUSED){
+        if (GameScreen.gameState == GameState.PAUSED) {
             return;
         }
-        if (!onBus) {
-            isMoving = false;
-            Vector2 oldPosition = new Vector2(position);
-            Vector2 newPosition = new Vector2(position);
+        Vector2 oldPosition = new Vector2(position);
+        Vector2 newPosition = new Vector2(position);
 
+        if (!onBus) {
             if (onBike && currentBike != null) {
                 currentBike.update(deltaTime, false, collisionLayer);
                 if (!currentBike.hasBattery()) {
@@ -62,43 +61,42 @@ public class Player {
                     scoringSystem.setTotalBikeDistanceTraveled(totalBikeDistanceTraveled);
                 }
             } else {
+                isMoving = false;
                 if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                     newPosition.y += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.UP;
-                } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    isMoving = true;
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                     newPosition.y -= playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.DOWN;
-                } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    isMoving = true;
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                     newPosition.x -= playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.LEFT;
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    isMoving = true;
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                     newPosition.x += playerSpeed * deltaTime;
                     currentDirection = Game_Animations.Direction.RIGHT;
-                }
-                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer,true)) {
-                    position.set(newPosition);
                     isMoving = true;
+                }
 
-                    totalPlayerDistanceTraveled+= oldPosition.dst(newPosition);
+                if (playercollision.canMove(newPosition.x, newPosition.y, collisionLayer, true)) {
+                    position.set(newPosition);
+                    totalPlayerDistanceTraveled += oldPosition.dst(newPosition);
                     scoringSystem.setTotalPlayerDistanceTraveled(totalPlayerDistanceTraveled);
-
                 }
             }
         }
     }
 
-
-
-
-
     public void render(SpriteBatch spriteBatch) {
-
+        TextureRegion currentFrame;
         if (!onBus) {
-            TextureRegion currentFrame;
             if (onBike && currentBike != null) {
                 currentFrame = currentBike.getCurrentFrameBike();
-
-
             } else {
                 currentFrame = animations.getCurrentFramePlayer(currentDirection, isMoving, Gdx.graphics.getDeltaTime());
             }
