@@ -1,19 +1,18 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class TheProgressBars {
     private ProgressBar progressBar;
-
 
     public TheProgressBars(Skin skin) {
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("default-horizontal", ProgressBar.ProgressBarStyle.class);
@@ -25,33 +24,44 @@ public class TheProgressBars {
         progressBar.setY(Gdx.graphics.getHeight() - progressBar.getHeight() - 50);
     }
 
-    public void setBarColor(){
-        Color knobColor;
+    public void setBarColor() {
         float value = this.getProgressBar().getValue();
-        if (value >= 0.8* progressBar.getMaxValue()) {
-            knobColor = Color.GREEN;
-        } else if (value >= 0.6*progressBar.getMaxValue()) {
-            knobColor = Color.YELLOW;
-        } else if (value >= 0.4*progressBar.getMaxValue()) {
-            knobColor = Color.ORANGE;
-        } else {
-            knobColor = Color.RED;
-        }
+        float progress = value / this.getProgressBar().getMaxValue();
         ProgressBar.ProgressBarStyle newStyle = new ProgressBar.ProgressBarStyle();
-        newStyle.background = createColorDrawable(Color.WHITE, 500, 50);
-        newStyle.knobBefore = createColorDrawable(knobColor, 500, 50);
+        newStyle.background = createDrawableWithOutline(Color.DARK_GRAY, 500, 40, Color.BLACK);
+        newStyle.knobBefore = createDrawableWithOutline(getColorForValue(progress), 500, 40, Color.BLACK);
 
         this.getProgressBar().setStyle(newStyle);
-
     }
 
-    private Drawable createColorDrawable(Color color, int width, int height) {
-        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
+    private Drawable createDrawableWithOutline(Color color, int width, int height, Color outlineColor) {
+        int outlineWidth = 2;
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setColor(outlineColor);
         pixmap.fill();
-        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+
+        Pixmap innerPixmap = new Pixmap(width - 2 * outlineWidth, height - 2 * outlineWidth, Pixmap.Format.RGBA8888);
+        innerPixmap.setColor(color);
+        innerPixmap.fill();
+
+        pixmap.drawPixmap(innerPixmap, outlineWidth, outlineWidth);
+        Texture texture = new Texture(pixmap);
+        innerPixmap.dispose();
         pixmap.dispose();
-        return drawable;
+
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+    private Color getColorForValue(float progress) {
+        if (progress >= 0.7) {
+            return Color.GREEN;
+        } else if (progress >= 0.5) {
+            return Color.YELLOW;
+        } else if (progress >= 0.3) {
+            return Color.ORANGE;
+        } else {
+            return Color.RED;
+        }
     }
 
     public ProgressBar getProgressBar() {
@@ -69,7 +79,6 @@ public class TheProgressBars {
     public void create(Stage stage) {
         stage.addActor(progressBar);
     }
-
 
     public void render() {
         setValue(progressBar.getValue() - 0.01f);

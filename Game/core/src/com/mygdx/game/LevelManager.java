@@ -27,8 +27,11 @@ public class LevelManager implements LevelCompletionListener {
     public ILevel getCurrentLevel() {
         if (currentLevelIndex >= 0 && currentLevelIndex < levels.length) {
             return levels[currentLevelIndex];
+        } else {
+            game.setScreen(new MainMenuScreen(game));
+            return new DummyLevel();
         }
-        return null;
+
     }
 
     public void onLevelCompleted() {
