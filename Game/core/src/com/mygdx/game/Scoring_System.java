@@ -110,9 +110,9 @@ public class Scoring_System {
         try {
             FileWriter writer = new FileWriter(file.file(), true);
             writer.write("Level," + currentLevelIndex + "\n");
-            writer.write("Bike," + (totalBikeDistanceTraveled / 100000 * CARBON_EMISSION_BIKE) / 10 + "kg CO2e" + "\n");
-            writer.write("Train," + (trainCount * CARBON_EMISSION_TRAIN) / 10 + "kg CO2e" + "\n");
-            writer.write("Bus," + (busCount * CARBON_EMISSION_BUS) / 10 + "kg CO2e" + "\n");
+            writer.write("Bike," + (totalBikeDistanceTraveled / 100000 * CARBON_EMISSION_BIKE) / 10 + "g CO2e" + "\n");
+            writer.write("Train," + (trainCount * CARBON_EMISSION_TRAIN) / 10 + "g CO2e" + "\n");
+            writer.write("Bus," + (busCount * CARBON_EMISSION_BUS) / 10 + "g CO2e" + "\n");
             writer.write("Score," + (getScore()) + "\n\n");
 
             writer.close();
