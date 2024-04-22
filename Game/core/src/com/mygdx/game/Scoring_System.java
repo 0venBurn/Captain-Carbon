@@ -125,6 +125,7 @@ public class Scoring_System {
     public String readScoreFromFile(String fileName) {
         FileHandle file = Gdx.files.local(fileName);
         float maxScore = Float.MIN_VALUE;
+        String maxScoreString = "None";
 
         if (file.exists()) {
             String[] lines = file.readString().split("\\r?\\n");
@@ -137,6 +138,7 @@ public class Scoring_System {
                         float score = Float.parseFloat(matcher.group(1));
                         if (score > maxScore) {
                             maxScore = score;
+                            maxScoreString = String.valueOf(maxScore);
                         }
                     } catch (NumberFormatException e) {
                         System.err.println("Error parsing score: " + e.getMessage());
@@ -144,6 +146,6 @@ public class Scoring_System {
                 }
             }
         }
-        return String.valueOf(maxScore);
+        return maxScoreString;
     }
 }
