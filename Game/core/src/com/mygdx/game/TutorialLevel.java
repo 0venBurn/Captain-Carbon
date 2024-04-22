@@ -274,16 +274,11 @@ public class TutorialLevel implements ILevel {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
 
-
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-//                minimap.DisplayMinimap(stage, player); // Display the minimap
-//            }
-//
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             if (Minimap.MinimapDisplayed) {
                 minimap.HideMinimap(stage); // Hide the minimap
             } else {
-                minimap.DisplayMinimap(stage, player, getGemPosition()); // Display the minimap
+                minimap.DisplayMinimap(stage, player, getGemPosition(), 0);
             }
         }
 

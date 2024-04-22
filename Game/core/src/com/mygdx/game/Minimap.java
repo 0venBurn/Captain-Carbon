@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class Minimap {
     private Player player;
     private Vector2 gemPosition;
+    private float levelIndex;
     public static boolean MinimapDisplayed = false;
     public static boolean isMinimapDisplayed() {
         return MinimapDisplayed;
@@ -29,13 +30,30 @@ public class Minimap {
     private Image gemMarkerImage;
     private ArrayList<Image> busStationMarkers = new ArrayList<>();
 
-    public void DisplayMinimap(Stage stage, Player player, Vector2 gemPosition) {
+    public void DisplayMinimap(Stage stage, Player player, Vector2 gemPosition, float levelIndex)  {
         this.player = player;
         this.gemPosition = gemPosition;
-        Texture miniMaptexture = new Texture(Gdx.files.internal("miniMap.png"));
+        this.levelIndex = levelIndex;
+
+        Texture miniMaptexture;
+
+        if (levelIndex == 0) {
+            miniMaptexture = new Texture(Gdx.files.internal("busmap1.jpg"));
+
+        } else if (levelIndex == 1) {
+            miniMaptexture = new Texture(Gdx.files.internal("busmap2.jpg"));
+        } else {
+            miniMaptexture = new Texture(Gdx.files.internal("busmap3.jpg"));
+        }
+
         Image miniMap = new Image(miniMaptexture);
-        miniMap.setSize(2000, 800);
-        miniMap.setPosition(Gdx.graphics.getWidth() / 140f, Gdx.graphics.getHeight() / 9f);
+        miniMap.setSize(1800, 800);
+        //miniMap.setPosition(Gdx.graphics.getWidth() / 140f, Gdx.graphics.getHeight() / 9f);
+
+        miniMap.setPosition(
+                (Gdx.graphics.getWidth() - miniMap.getWidth()) / 2,
+                (Gdx.graphics.getHeight() - miniMap.getHeight()) / 2
+        );
 
         stage.clear();
         MinimapDisplayed = true;
@@ -61,41 +79,37 @@ public class Minimap {
     }
 
 
-    public void addBusStationMarker(float x, float y) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLUE);
-        pixmap.fillCircle(0, 0, 10);
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-
-        Image marker = new Image(texture);
-        marker.setSize(10, 10);
-        busStationMarkers.add(marker);
-
-    }
-
 
     public void updateMinimap(Stage stage) {
 
-//        float playerX = (float) (player.getX() / 3.0);
-//        float playerY = (float) (player.getY() / 4.0);
-
         if (playerMarkerImage != null && player != null) {
+            float playerX = (float) (player.getX() / 2.8);
+            float playerY = (float) (player.getY() / 4.0);
             playerMarkerImage.setPosition(
-                    Gdx.graphics.getWidth() / 140f + player.getX() / 3,
-                    Gdx.graphics.getHeight() / 9f + player.getY() / 4);
+                    Gdx.graphics.getWidth() / 140f + playerX,
+                    Gdx.graphics.getHeight() / 9f + playerY);
         }
         if (gemMarkerImage != null && gemPosition != null) {
+            float gemX = (float) (gemPosition.x / 2.8);
+            float gemY = (float) (gemPosition.y / 4.0);
             gemMarkerImage.setPosition(
-                    Gdx.graphics.getWidth() / 140f + gemPosition.x / 3,
-                    Gdx.graphics.getHeight() / 9f + gemPosition.y / 4);
+                    Gdx.graphics.getWidth() / 140f + gemX,
+                    Gdx.graphics.getHeight() / 9f + gemY);
             stage.addActor(gemMarkerImage);
         }
 
+//        if (playerMarkerImage != null && player != null) {
+//            playerMarkerImage.setPosition(
+//                    Gdx.graphics.getWidth() / 140f + player.getX() / 3,
+//                    Gdx.graphics.getHeight() / 9f + player.getY() / 4);
+//        }
+//        if (gemMarkerImage != null && gemPosition != null) {
+//            gemMarkerImage.setPosition(
+//                    Gdx.graphics.getWidth() / 140f + gemPosition.x / 3,
+//                    Gdx.graphics.getHeight() / 9f + gemPosition.y / 4);
+//            stage.addActor(gemMarkerImage);
+//        }
 
-        for (Image marker : busStationMarkers) {
-            stage.addActor(marker);
-        }
     }
 
     public void HideMinimap(Stage stage) {

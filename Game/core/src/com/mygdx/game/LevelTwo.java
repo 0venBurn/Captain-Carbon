@@ -214,7 +214,7 @@ public class LevelTwo implements ILevel {
             if (Minimap.MinimapDisplayed) {
                 minimap.HideMinimap(stage); // Hide the minimap
             } else {
-                minimap.DisplayMinimap(stage, player, getGemPosition()); // Display the minimap
+                minimap.DisplayMinimap(stage, player, getGemPosition(), 2);
             }
         }
 

@@ -54,6 +54,15 @@ public class GameScreen implements Screen {
         minimap = new Minimap();
         minimapStage = new Stage();
 
+        String levelName = null;
+        if (levelManager.getCurrentLevel() instanceof TutorialLevel) {
+            levelName = "TutorialLevel";
+        } else if (levelManager.getCurrentLevel() instanceof LevelOne) {
+            levelName = "LevelOne";
+        } else if (levelManager.getCurrentLevel() instanceof LevelTwo) {
+            levelName = "LevelTwo";
+        }
+
 
 
         createPauseMenu();
@@ -113,24 +122,21 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         levelManager.getCurrentLevel().render();
-//
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-//            if (Minimap.MinimapDisplayed) {
-//                minimap.HideMinimap(stage); // Hide the minimap
-//            } else {
-//                minimap.DisplayMinimap(stage, player); // Display the minimap
-//            }
-//        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             if (Minimap.MinimapDisplayed) {
                 minimap.HideMinimap(minimapStage); // Hide the minimap
             } else {
-                minimap.DisplayMinimap(minimapStage, player, levelManager.getCurrentLevel().getGemPosition()); // Display the minimap
+                minimap.DisplayMinimap(
+                        minimapStage,
+                        player,
+                        levelManager.getCurrentLevel().getGemPosition(),
+                        levelManager.getCurrentLevelIndex());
             }
         }
 
-        System.out.println(levelManager.getCurrentLevel().getGemPosition());
+        System.out.println(levelManager.getCurrentLevelIndex());
+
 
 
 

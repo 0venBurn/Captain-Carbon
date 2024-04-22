@@ -16,6 +16,10 @@ public class LevelManager implements LevelCompletionListener {
         loadCurrentLevel();
     }
 
+    public int getCurrentLevelIndex() {
+        return currentLevelIndex;
+    }
+
     public void loadCurrentLevel() {
         levels[currentLevelIndex].load();
     }

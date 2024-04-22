@@ -208,9 +208,9 @@ public class LevelOne implements ILevel {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             if (Minimap.MinimapDisplayed) {
-                minimap.HideMinimap(stage); // Hide the minimap
+                minimap.HideMinimap(stage);
             } else {
-                minimap.DisplayMinimap(stage, player, getGemPosition()); // Display the minimap
+                minimap.DisplayMinimap(stage, player, getGemPosition(), 1);
             }
         }
 
