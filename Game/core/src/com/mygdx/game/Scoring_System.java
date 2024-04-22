@@ -66,7 +66,7 @@ public class Scoring_System {
     public float getScore() {
         float totalEmissions = calculateTotalCarbonEmissions();
         float totalTime = calculateTotalTime();
-        float score = 100000 / (1 + totalTime + totalEmissions);
+        float score = 100000 / (1 + (totalTime/4) + totalEmissions);
         return score;
     }
 
