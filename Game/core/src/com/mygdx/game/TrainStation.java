@@ -91,11 +91,11 @@ public class TrainStation extends Transport {
                 playerMarkerX = 1525;
                 playerMarkerY = 500;
             } else if (currentStation.getName().equals("Station C")) {
-                playerMarkerX = 2;
-                playerMarkerY = 540;
+                playerMarkerX = 78;
+                playerMarkerY = 490;
             } else if (currentStation.getName().equals("Station D")) {
-                playerMarkerX = 400;
-                playerMarkerY = 530;
+                playerMarkerX = 475;
+                playerMarkerY = 480;
             }
 
             playerMarkerImage.setPosition(playerMarkerX, playerMarkerY);

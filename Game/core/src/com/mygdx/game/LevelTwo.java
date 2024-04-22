@@ -318,6 +318,7 @@ public class LevelTwo implements ILevel {
                 if (playerBounds.overlaps(stationBounds)) {
                     font.draw(spriteBatch, "Press 'E' to interact with the station", player.getX(), player.getY() + 50);
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                        player.setCurrentStation(station);
                         player.enterMetro();
                         station.displayStationUI(stage);
                         Gdx.input.setInputProcessor(stage);
