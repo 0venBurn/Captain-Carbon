@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -44,6 +45,7 @@ public class LevelTwo implements ILevel {
     private TheProgressBars timeBar, co2Bar;
     private float co2BarValue,timeBarValue;
     private Minimap minimap;
+    private BitmapFont bigFont;
 
 
     public LevelTwo(LevelCompletionListener listener) {
@@ -97,21 +99,17 @@ public class LevelTwo implements ILevel {
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         camera.update();
-
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 25;
+        bigFont = generator.generateFont(parameter);
 
         batch = new SpriteBatch();
 
 
         timeBar = new TheProgressBars(skin);
-        timeBarFont = new BitmapFont();
-
-
         co2Bar = new TheProgressBars(skin);
-
-        co2Bar.getProgressBar().setY(timeBar.getProgressBar().getY() - timeBar.getProgressBar().getHeight() - 10);
-        co2BarFont = new BitmapFont();
-
-
+        co2Bar.getProgressBar().setY(timeBar.getProgressBar().getY() - timeBar.getProgressBar().getHeight() - 30);
         stage.addActor(timeBar.getProgressBar());
         stage.addActor(co2Bar.getProgressBar());
 
@@ -195,8 +193,8 @@ public class LevelTwo implements ILevel {
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
-        font.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 40);
-        font.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 90);
+        bigFont.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 20);
+        bigFont.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 100);
         font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
         font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
         font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
