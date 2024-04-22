@@ -10,9 +10,8 @@ public class LevelManager implements LevelCompletionListener {
 
     public LevelManager(MyGdxGame game) {
         scoringSystem = Scoring_System.getInstance();
-
         this.game = game;
-        levels = new ILevel[]{new TutorialLevel(this)};
+        levels = new ILevel[]{new TutorialLevel(this), new LevelOne(this), new LevelTwo(this)};
         currentLevelIndex = 0;
         loadCurrentLevel();
     }
@@ -31,20 +30,20 @@ public class LevelManager implements LevelCompletionListener {
     public void onLevelCompleted() {
         currentLevelIndex++;
         if (currentLevelIndex < levels.length) {
+            scoringSystem.outputToFile("scores.txt");
             loadCurrentLevel();
+            scoringSystem.reset();
+
         } else {
+            scoringSystem.outputToFile("scores.txt");
             game.setScreen(new MainMenuScreen(game));
+            scoringSystem.reset();
         }
     }
 
     public void onLevelFailed() {
-        scoringSystem.outputToFile("scores.txt");
         game.setScreen(new MainMenuScreen(game));
         scoringSystem.reset();
-
-
-
-
 
     }
 }
