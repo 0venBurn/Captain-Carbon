@@ -317,15 +317,15 @@
 	"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 		"default": {
 			"font": "font",
-			"fontColor": "color"
+			"fontColor": "black"
 		},
 		"button": {
 			"font": "button",
-			"fontColor": "color"
+			"fontColor": "white"
 		},
 		"title": {
 			"font": "title",
-			"fontColor": "color"
+			"fontColor": "black"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
@@ -443,7 +443,7 @@
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
 		"default": {
-			"background": "window-w",
+			"background": "window",
 			"titleFont": "font",
 			"titleFontColor": "white"
 		}
