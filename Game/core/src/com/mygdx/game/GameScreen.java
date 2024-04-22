@@ -30,6 +30,10 @@ public class GameScreen implements Screen {
     private Skin skin;
     private ILevel currentLevel;
     private OrthographicCamera camera;
+    private Minimap minimap;
+    private Player player;
+    private Stage minimapStage;
+
 
 
     public GameScreen(MyGdxGame game) {
@@ -46,6 +50,9 @@ public class GameScreen implements Screen {
         this.game = game;
 
         // Delegate rendering to the current level
+
+        minimap = new Minimap();
+        minimapStage = new Stage();
 
 
 
@@ -106,6 +113,26 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         levelManager.getCurrentLevel().render();
+//
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+//            if (Minimap.MinimapDisplayed) {
+//                minimap.HideMinimap(stage); // Hide the minimap
+//            } else {
+//                minimap.DisplayMinimap(stage, player); // Display the minimap
+//            }
+//        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (Minimap.MinimapDisplayed) {
+                minimap.HideMinimap(minimapStage); // Hide the minimap
+            } else {
+                minimap.DisplayMinimap(minimapStage, player, levelManager.getCurrentLevel().getGemPosition()); // Display the minimap
+            }
+        }
+
+        System.out.println(levelManager.getCurrentLevel().getGemPosition());
+
+
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             togglePause();
@@ -119,6 +146,16 @@ public class GameScreen implements Screen {
 
         }
         levelManager.getCurrentLevel().render();
+
+
+//        if (minimap != null && Minimap.MinimapDisplayed) {
+//            System.out.println("Updating minimap...................................................");
+//            minimap.updateMinimap(stage);
+//        } else {
+//            System.out.println("Minimap not updated______________________________________________________");
+//            System.out.println("minimap: " + minimap + "______________________________________________________");
+//            System.out.println("Minimap.MinimapDisplayed: " + Minimap.MinimapDisplayed + "______________________________________________________");
+//        }
 
 
 

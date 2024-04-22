@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public interface ILevel {
 
@@ -16,5 +17,7 @@ public interface ILevel {
         void checkPlayerTransportInteraction(SpriteBatch spriteBatch);
         void updateBuses(float deltaTime);
         void spawnGem();
+        Vector2 getGemPosition();
+        Player getPlayer();
 
     }

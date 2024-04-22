@@ -31,9 +31,9 @@ public class TheProgressBars {
         if (value >= 0.8* progressBar.getMaxValue()) {
             knobColor = Color.GREEN;
         } else if (value >= 0.6*progressBar.getMaxValue()) {
-            knobColor = Color.ORANGE;
-        } else if (value >= 0.4*progressBar.getMaxValue()) {
             knobColor = Color.YELLOW;
+        } else if (value >= 0.4*progressBar.getMaxValue()) {
+            knobColor = Color.ORANGE;
         } else {
             knobColor = Color.RED;
         }
