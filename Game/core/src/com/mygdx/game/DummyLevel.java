@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class DummyLevel implements ILevel{
     @Override
@@ -61,5 +62,15 @@ public class DummyLevel implements ILevel{
     @Override
     public void spawnGem() {
 
+    }
+
+    @Override
+    public Vector2 getGemPosition() {
+        return null;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return null;
     }
 }
