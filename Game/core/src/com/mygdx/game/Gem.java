@@ -14,6 +14,9 @@ public class Gem {
         this.texture = new Texture("Tilesets/gem.png");
         this.isCollected = false;
     }
+    public Vector2 getPosition() {
+        return position;
+    }
     public void render(SpriteBatch spriteBatch) {
         if (!isCollected) {
             spriteBatch.draw(texture, position.x, position.y);

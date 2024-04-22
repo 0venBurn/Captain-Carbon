@@ -43,6 +43,7 @@ public class LevelTwo implements ILevel {
     public Scoring_System scoringSystem;
     private TheProgressBars timeBar, co2Bar;
     private float co2BarValue,timeBarValue;
+    private Minimap minimap;
 
 
     public LevelTwo(LevelCompletionListener listener) {
@@ -64,6 +65,9 @@ public class LevelTwo implements ILevel {
         transports = new ArrayList<>(BusStopLocations.defineBusLocations(BusStopLocations.Level.LEVEL_TWO));
 
         player = new Player(2290, 2750);
+
+        minimap = new Minimap();
+
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();
@@ -111,6 +115,11 @@ public class LevelTwo implements ILevel {
         stage.addActor(timeBar.getProgressBar());
         stage.addActor(co2Bar.getProgressBar());
 
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -200,6 +209,14 @@ public class LevelTwo implements ILevel {
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (Minimap.MinimapDisplayed) {
+                minimap.HideMinimap(stage); // Hide the minimap
+            } else {
+                minimap.DisplayMinimap(stage, player, getGemPosition()); // Display the minimap
+            }
+        }
 
     }
 
@@ -352,6 +369,12 @@ public class LevelTwo implements ILevel {
         Vector2 gemPosition = new Vector2(2373, 80);
         gem = new Gem(gemPosition);
 
+    }
+    public Vector2 getGemPosition() {
+        if (gem != null) {
+            return gem.getPosition();
+        }
+        return null;
     }
 
     public void checkEndCondition() {

@@ -33,6 +33,9 @@ public class Player {
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
     private Collision playercollision   ;
+
+    private TrainStation currentStation;
+
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
         TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
@@ -150,6 +153,14 @@ public class Player {
         if (!this.onBus) {
             popup.show(TransportMode.BUS, 3);
         }
+    }
+
+    public void setCurrentStation(TrainStation station) {
+        this.currentStation  = station;
+    }
+
+    public TrainStation getCurrentStation() {
+        return currentStation ;
     }
 
     public void setOnBike(boolean onBike) {

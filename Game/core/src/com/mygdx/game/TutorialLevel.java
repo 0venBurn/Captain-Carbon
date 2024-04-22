@@ -47,6 +47,7 @@ public class TutorialLevel implements ILevel {
     public Scoring_System scoringSystem;
     private TheProgressBars timeBar, co2Bar;
     private float co2BarValue,timeBarValue;
+    private Minimap minimap;
 
 
     public TutorialLevel(LevelCompletionListener listener) {
@@ -70,6 +71,9 @@ public class TutorialLevel implements ILevel {
       
         player = new Player(100, 150);
         player.setPopupCamera(camera);
+
+        minimap = new Minimap();
+
         spawnGem();
         // Define each train station and its coordinates
         trainStations = new ArrayList<>();
@@ -270,7 +274,26 @@ public class TutorialLevel implements ILevel {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
 
+
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+//                minimap.DisplayMinimap(stage, player); // Display the minimap
+//            }
+//
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            if (Minimap.MinimapDisplayed) {
+                minimap.HideMinimap(stage); // Hide the minimap
+            } else {
+                minimap.DisplayMinimap(stage, player, getGemPosition()); // Display the minimap
+            }
+        }
+
     }
+
+    @Override
+    public Player getPlayer(){
+        return player;
+    }
+
 
     @Override
     public void dispose() {
@@ -374,6 +397,7 @@ public class TutorialLevel implements ILevel {
                 if (playerBounds.overlaps(stationBounds)) {
                     font.draw(spriteBatch, "Press 'E' to interact with the station", player.getX(), player.getY() + 50);
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                        player.setCurrentStation(station);
                         player.enterMetro();
                         station.displayStationUI(stage);
                         Gdx.input.setInputProcessor(stage);
@@ -425,6 +449,12 @@ public class TutorialLevel implements ILevel {
         Vector2 gemPosition = new Vector2(4327, 1450); // tutorial spot
         gem = new Gem(gemPosition);
 
+    }
+    public Vector2 getGemPosition() {
+        if (gem != null) {
+            return gem.getPosition();
+        }
+        return null;
     }
     public void checkEndCondition() {
         if (timeBar.getValue() <= 0 || co2Bar.getValue() <= 0 ) {

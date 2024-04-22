@@ -51,11 +51,23 @@ public class TrainStation extends Transport {
         // Add minimap image
         stage.addActor(miniMapImage);
 
+        TrainStation currentStation = player.getCurrentStation();
+        Vector2 currentStationPosition = currentStation.getPosition();
+
+        Texture playerMarker = new Texture(Gdx.files.internal("head.png"));
+        Image playerMarkerImage = new Image(playerMarker);
+        playerMarkerImage.setSize(50, 50);
+
+        stage.addActor(playerMarkerImage);
+
         Texture stationButtonTexture = new Texture(Gdx.files.internal("stationButton.png"));
         for (TrainStation station : trainStations) {
             Image button = new Image(stationButtonTexture);
             float buttonX = 0;
             float buttonY = 0;
+
+            float playerMarkerX = 0;
+            float playerMarkerY = 0;
 
             if (station.getName().equals("Station A")) {
                 buttonX = 715;
@@ -70,6 +82,23 @@ public class TrainStation extends Transport {
                 buttonX = 400;
                 buttonY = 530;
             }
+
+
+            if (currentStation.getName().equals("Station A")) {
+                playerMarkerX = 790;
+                playerMarkerY = 300;
+            } else if (currentStation.getName().equals("Station B")) {
+                playerMarkerX = 1525;
+                playerMarkerY = 500;
+            } else if (currentStation.getName().equals("Station C")) {
+                playerMarkerX = 2;
+                playerMarkerY = 540;
+            } else if (currentStation.getName().equals("Station D")) {
+                playerMarkerX = 400;
+                playerMarkerY = 530;
+            }
+
+            playerMarkerImage.setPosition(playerMarkerX, playerMarkerY);
 
             button.setPosition(buttonX, buttonY);
             button.setSize(200, 133);
