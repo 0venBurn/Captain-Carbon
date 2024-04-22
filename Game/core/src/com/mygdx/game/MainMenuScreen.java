@@ -120,7 +120,7 @@ public class MainMenuScreen implements Screen {
 
         float xPosition = uiViewport.getWorldWidth()-1200 ;
         float yPosition = uiViewport.getWorldHeight() - 50;
-        bigFont.draw(batch, "HighScore: " +  scoreDisplay, xPosition, yPosition);
+        bigFont.draw(batch, "HighScore: " +  scoreDisplay , xPosition, yPosition);
         batch.end();
     }
 

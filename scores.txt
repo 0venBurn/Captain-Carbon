@@ -1,1 +1,12 @@
-9091.3125
+Level,1
+Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,177.36127
+
+Level,2
+Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,187.79153
+

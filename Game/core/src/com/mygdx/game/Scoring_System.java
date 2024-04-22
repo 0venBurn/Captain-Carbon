@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.badlogic.gdx.files.FileHandle;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class Scoring_System {
     private int busCount, trainCount;
-    private int CARBON_EMISSION_WALK  = 0, CARBON_EMISSION_BIKE  = 130, CARBON_EMISSION_BUS  = 500, CARBON_EMISSION_TRAIN  = 1800;
-    private int SPEED_WALK  = 1, SPEED_BIKE  = 5,SPEED_BUS  = 25,SPEED_TRAIN  = 40;
+    private int CARBON_EMISSION_WALK = 0, CARBON_EMISSION_BIKE = 130, CARBON_EMISSION_BUS = 500, CARBON_EMISSION_TRAIN = 1800;
+    private int SPEED_WALK = 1, SPEED_BIKE = 5, SPEED_BUS = 25, SPEED_TRAIN = 40;
     private float totalBikeDistanceTraveled = 0.0f, totalPlayerDistanceTraveled = 0.0f;
     private static Scoring_System instance;
     private boolean endOfLevel = false;
@@ -29,6 +30,7 @@ public class Scoring_System {
         }
         return instance;
     }
+
     public void reset() {
         busCount = 0;
         trainCount = 0;
@@ -36,11 +38,12 @@ public class Scoring_System {
         totalPlayerDistanceTraveled = 0.0f;
         endOfLevel = false;
     }
+
     public float calculateTotalCarbonEmissions() {
-        float busEmissions = busCount * CARBON_EMISSION_BUS ;
-        float trainEmissions = trainCount * CARBON_EMISSION_TRAIN ;
-        float bikeEmissions = totalBikeDistanceTraveled/100000 * CARBON_EMISSION_BIKE;
-        float walkEmissions = totalPlayerDistanceTraveled/10000 * CARBON_EMISSION_WALK;
+        float busEmissions = busCount * CARBON_EMISSION_BUS;
+        float trainEmissions = trainCount * CARBON_EMISSION_TRAIN;
+        float bikeEmissions = totalBikeDistanceTraveled / 100000 * CARBON_EMISSION_BIKE;
+        float walkEmissions = totalPlayerDistanceTraveled / 10000 * CARBON_EMISSION_WALK;
         float totalEmissions = busEmissions + trainEmissions + bikeEmissions + walkEmissions;
         return totalEmissions;
     }
@@ -49,7 +52,7 @@ public class Scoring_System {
         float busTime = (busCount * 1000) / (SPEED_BUS);
         float trainTime = (trainCount * 1000) / (SPEED_TRAIN);
         float bikeTime = (totalBikeDistanceTraveled) / (SPEED_BIKE);
-        float walkTime = (totalPlayerDistanceTraveled)/(SPEED_WALK) ;
+        float walkTime = (totalPlayerDistanceTraveled) / (SPEED_WALK);
         float totalTime = busTime + trainTime + bikeTime + walkTime;
         return totalTime;
     }
@@ -66,7 +69,7 @@ public class Scoring_System {
     public float getScore() {
         float totalEmissions = calculateTotalCarbonEmissions();
         float totalTime = calculateTotalTime();
-        float score = 100000 / (1 + totalTime + totalEmissions);
+        float score = 100000 / (1 + (totalTime / 10) + totalEmissions);
         return score;
     }
 
@@ -89,6 +92,7 @@ public class Scoring_System {
     public float getTotalBikeDistanceTraveled() {
         return this.totalBikeDistanceTraveled;
     }
+
     public float getTotalPlayerDistanceTraveled() {
         return this.totalPlayerDistanceTraveled;
     }
@@ -99,34 +103,49 @@ public class Scoring_System {
     }
 
 
-    public void outputToFile(String fileName) {
+    public void outputToFile(String fileName, int currentLevelIndex) {
         float currentScore = getScore();
         FileHandle file = Gdx.files.local(fileName);
-        float existingScore = -1;
 
-        if (file.exists() && !file.readString().isEmpty()) {
-            try {
-                existingScore = Float.parseFloat(file.readString().trim());
-            } catch (NumberFormatException e) {
-                System.err.println("Error parsing existing score from file: " + e.getMessage());
-            }
-        }
+        try {
+            FileWriter writer = new FileWriter(file.file(), true);
+            writer.write("Level," + currentLevelIndex + "\n");
+            writer.write("Bike," + (totalBikeDistanceTraveled / 100000 * CARBON_EMISSION_BIKE) / 10 + "g CO2e" + "\n");
+            writer.write("Train," + (trainCount * CARBON_EMISSION_TRAIN) / 10 + "g CO2e" + "\n");
+            writer.write("Bus," + (busCount * CARBON_EMISSION_BUS) / 10 + "g CO2e" + "\n");
+            writer.write("Score," + (getScore()) + "\n\n");
 
-        if (currentScore > existingScore) {
-            file.writeString(Float.toString(currentScore), false);
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
         }
     }
-
 
 
     public String readScoreFromFile(String fileName) {
-        FileHandle file = Gdx.files.internal(fileName);
+        FileHandle file = Gdx.files.local(fileName);
+        float maxScore = Float.MIN_VALUE;
+        String maxScoreString = "None";
+
         if (file.exists()) {
-            return file.readString();
-        } else {
-            return "None";
+            String[] lines = file.readString().split("\\r?\\n");
+            Pattern pattern = Pattern.compile("^Score,([0-9.]+)$");
+
+            for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    try {
+                        float score = Float.parseFloat(matcher.group(1));
+                        if (score > maxScore) {
+                            maxScore = score;
+                            maxScoreString = String.valueOf(maxScore);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing score: " + e.getMessage());
+                    }
+                }
+            }
         }
+        return maxScoreString;
     }
-
 }
-
