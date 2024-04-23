@@ -66,6 +66,7 @@ public class LevelOne implements ILevel {
         transports = new ArrayList<>(BusStopLocations.defineBusLocations(BusStopLocations.Level.LEVEL_ONE));
 
         player = new Player(3760, 50);
+        player.setPopupCamera(camera);
 
         minimap = new Minimap();
 

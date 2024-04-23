@@ -69,6 +69,7 @@ public class LevelTwo implements ILevel {
         player = new Player(2290, 2750);
 
         minimap = new Minimap();
+        player.setPopupCamera(camera);
 
         spawnGem();
         // Define each train station and its coordinates

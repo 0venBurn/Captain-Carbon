@@ -2,22 +2,22 @@
   "BIKE": [
     "Cycling can reduce emissions by up to 5% annually, providing a healthy option that emits zero CO2.",
     "Bikes require significantly less space than cars, reducing the need for large parking areas and lowering urban congestion",
-    " Biking is the most energy-efficient form of transportation, using less energy per kilometer than any motorized transport.",
+    "Biking is the most energy-efficient form of transportation, using less energy per kilometer than any motorized transport.",
     "Regular cycling can help reduce the reliance on automobiles, leading to lower urban air pollution levels",
     "The entire lifecycle of a bike (from manufacturing to disposal) generates 21 grams of CO2 per kilometer, far less than cars or public transit"
   ],
   "BUS": [
-    " Buses can reduce CO2 emissions by up to 82% per passenger kilometer compared to single-occupancy vehicles",
+    "Buses can reduce CO2 emissions by up to 82% per passenger kilometer compared to single-occupancy vehicles",
     "Traffic Reduction: Each full bus can take as many as 30 cars off the road, significantly reducing traffic congestion and associated emissions.",
-    "Energy Efficiency: Modern buses, especially those running on alternative fuels, are up to six times more energy-efficient per passenger mile than single-occupancy automobiles.",
-    "Promoting Car-Free Lifestyles: Reliable bus services support car-free lifestyles and urban planning, contributing to a substantial decrease in total urban emissions.",
-    "Electrification and Renewables: The shift towards electric buses powered by renewable energy sources presents a potential reduction in CO2 emissions of up to 95% compared to diesel buses."
+    "Modern buses, especially those running on alternative fuels, are up to six times more energy-efficient per passenger mile than single-occupancy automobiles.",
+    "Reliable bus services support car-free lifestyles and urban planning, contributing to a substantial decrease in total urban emissions.",
+    "The shift towards electric buses powered by renewable energy sources presents a potential reduction in CO2 emissions of up to 95% compared to diesel buses."
   ],
   "METRO": [
-    "High Capacity, Low Emission: Subways transport large numbers of people with minimal emissions, significantly reducing per capita CO2 emissions compared to cars.",
-    "Reduced Road Traffic: By providing a faster, reliable alternative to road-based transport, subways decrease the overall vehicle count, lowering urban CO2 emissions.",
-    "Energy Efficiency at Scale: Subways are among the most energy-efficient forms of mass transit, especially when integrated with renewable energy sources.",
-    "Lower Lifecycle Emissions: The construction, operation, and maintenance of subway systems produce lower lifecycle emissions per passenger kilometer compared to road vehicles.",
-    "Urban Heat Island Effect Reduction: Subways help mitigate the Urban Heat Island effect, indirectly reducing energy used for air conditioning and associated CO2 emissions in cities."
+    "Subways transport large numbers of people with minimal emissions, significantly reducing per capita CO2 emissions compared to cars.",
+    "By providing a faster, reliable alternative to road-based transport, subways decrease the overall vehicle count, lowering urban CO2 emissions.",
+    "Subways are among the most energy-efficient forms of mass transit, especially when integrated with renewable energy sources.",
+    "The construction, operation, and maintenance of subway systems produce lower lifecycle emissions per passenger kilometer compared to road vehicles.",
+    "Subways help mitigate the Urban Heat Island effect, indirectly reducing energy used for air conditioning and associated CO2 emissions in cities."
   ]
 }
