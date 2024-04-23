@@ -10,3 +10,9 @@ Train,180g CO2e
 Bus,0g CO2e
 Score,49.103043
 
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,25.164537
+

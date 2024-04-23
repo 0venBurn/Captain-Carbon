@@ -195,13 +195,7 @@ public class LevelOne implements ILevel {
         co2Bar.render();
         bigFont.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 20);
         bigFont.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 100);
-        font.draw(batch, "dist travelled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
-        font.draw(batch, "bike dist travelled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
-        font.draw(batch, "bus dist travelled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
-        font.draw(batch, "train dist travelled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
-        font.draw(batch, "co2barvalue: " + co2BarValue, 10, Gdx.graphics.getHeight() - 400);
-        font.draw(batch, "timebarvalue: " + timeBarValue, 10, Gdx.graphics.getHeight() - 450);
+
         batch.end();
 
 
