@@ -139,15 +139,15 @@ public class MainMenuScreen implements Screen {
 
         String text1 = "1. " + scoreDisplay[0];
         layout.setText(smallFont, text1);
-        smallFont.draw(batch, text1, centerX - layout.width / 2, centerY - 70);
+        smallFont.draw(batch, text1, centerX - layout.width / 2, centerY - 100);
 
         String text2 = "2. " + scoreDisplay[1];
         layout.setText(smallFont, text2);
-        smallFont.draw(batch, text2, centerX - layout.width / 2, centerY - 130);
+        smallFont.draw(batch, text2, centerX - layout.width / 2, centerY - 160);
 
         String text3 = "3. " + scoreDisplay[2];
         layout.setText(smallFont, text3);
-        smallFont.draw(batch, text3, centerX - layout.width / 2, centerY - 190);
+        smallFont.draw(batch, text3, centerX - layout.width / 2, centerY - 220);
 
         batch.end();
     }
