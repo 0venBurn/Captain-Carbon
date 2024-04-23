@@ -18,6 +18,78 @@ Score,187.79153
 
 Level,1
 Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,167.71002
+
+Level,2
+Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,170.04628
+
+Level,3
+Bike,0.24439606g CO2e
+Train,0g CO2e
+Bus,200g CO2e
+Score,41.06837
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,45.965977
+
+Level,2
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,47.02746
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,100g CO2e
+Score,31.579742
+
+Level,2
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,46.090366
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,43.586845
+
+Level,2
+Bike,0.11803745g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,47.982384
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,0g CO2e
+Score,46.895187
+
+Level,2
+Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,187.62442
+
+Level,3
+Bike,0.0g CO2e
+Train,0g CO2e
+Bus,0g CO2e
+Score,179.19212
+
+Level,1
+Bike,0.0g CO2e
 Train,180g CO2e
 Bus,200g CO2e
 Score,25.085451
@@ -141,4 +213,10 @@ Bike,0.22386274g CO2e
 Train,180g CO2e
 Bus,50g CO2e
 Score,40.92679
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,25.203207
 

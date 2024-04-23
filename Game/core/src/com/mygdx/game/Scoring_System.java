@@ -12,7 +12,6 @@ public class Scoring_System {
     private int SPEED_WALK = 1, SPEED_BIKE = 5, SPEED_BUS = 25, SPEED_TRAIN = 40;
     private float totalBikeDistanceTraveled = 0.0f, totalPlayerDistanceTraveled = 0.0f;
     private static Scoring_System instance;
-    private boolean endOfLevel = false;
 
     private Scoring_System() {
         this.totalPlayerDistanceTraveled = 0;
@@ -36,7 +35,6 @@ public class Scoring_System {
         trainCount = 0;
         totalBikeDistanceTraveled = 0.0f;
         totalPlayerDistanceTraveled = 0.0f;
-        endOfLevel = false;
     }
 
     public float calculateTotalCarbonEmissions() {
@@ -97,11 +95,6 @@ public class Scoring_System {
         return this.totalPlayerDistanceTraveled;
     }
 
-    // will need this for writing to file maybe unless i do in level manager class
-    public void setEndOfLevel(boolean endOfLevel) {
-        this.endOfLevel = endOfLevel;
-    }
-
 
     public void outputToFile(String fileName, int currentLevelIndex) {
         float currentScore = getScore();
@@ -122,10 +115,10 @@ public class Scoring_System {
     }
 
 
-    public String readScoreFromFile(String fileName) {
+    public String[] readScoreFromFile(String fileName) {
         FileHandle file = Gdx.files.local(fileName);
-        float maxScore = Float.MIN_VALUE;
-        String maxScoreString = "None";
+        float[] topScores = new float[3];
+        String[] topScoreStrings = {"None", "None", "None"};
 
         if (file.exists()) {
             String[] lines = file.readString().split("\\r?\\n");
@@ -136,9 +129,16 @@ public class Scoring_System {
                 if (matcher.find()) {
                     try {
                         float score = Float.parseFloat(matcher.group(1));
-                        if (score > maxScore) {
-                            maxScore = score;
-                            maxScoreString = String.valueOf(maxScore);
+                        for (int i = 0; i < topScores.length; i++) {
+                            if (score > topScores[i]) {
+                                for (int j = topScores.length - 1; j > i; j--) {
+                                    topScores[j] = topScores[j - 1];
+                                    topScoreStrings[j] = topScoreStrings[j - 1];
+                                }
+                                topScores[i] = score;
+                                topScoreStrings[i] = String.valueOf(score);
+                                break;
+                            }
                         }
                     } catch (NumberFormatException e) {
                         System.err.println("Error parsing score: " + e.getMessage());
@@ -146,6 +146,6 @@ public class Scoring_System {
                 }
             }
         }
-        return maxScoreString;
+        return topScoreStrings;
     }
 }

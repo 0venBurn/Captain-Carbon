@@ -94,7 +94,10 @@ public class LevelOne implements ILevel {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 25;
+        parameter.borderWidth = 2.5F;
+
         bigFont = generator.generateFont(parameter);
+
 
         batch = new SpriteBatch();
 
