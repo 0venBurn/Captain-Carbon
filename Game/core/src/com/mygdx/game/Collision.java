@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 public class Collision {
-    private Texture spriteSheet;
+    private final Texture spriteSheet;
     public Collision(boolean isPlayer) {
         if (isPlayer) {
             spriteSheet = new Texture("Tilesets/character.png");
@@ -42,8 +42,6 @@ public class Collision {
 
 
     public void dispose() {
-        if (spriteSheet != null) {
-            spriteSheet.dispose();
-        }
+        spriteSheet.dispose();
     }
 }

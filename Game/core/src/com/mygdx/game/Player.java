@@ -8,33 +8,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import static com.mygdx.game.EducationalPopup.TransportMode;
 
 public class Player {
+    // static
+    private static final int frameWidth = 16, frameHeight = 16;
+    private static final float playerSpeed = 60.0f;
+
+    // Private instance
     private final Texture spriteSheet;
     private final Game_Animations animations;
     private final Vector2 position;
-    private Game_Animations.Direction currentDirection;
+    private final Collision playercollision;
 
-    private static final int frameWidth = 16, frameHeight = 16;
+    private Game_Animations.Direction currentDirection;
     private boolean isMoving;
-    private static final float playerSpeed = 600.0f;
-    private boolean onBus = false,onBike = false;
+    private boolean onBus = false, onBike = false;
     private Transport currentBike;
     private float totalPlayerDistanceTraveled = 0.0f;
     private float totalBikeDistanceTraveled = 0.0f;
-
     private Transport mountedBike;
+    private TrainStation currentStation;
+
+    // Public instance
     public Scoring_System scoringSystem;
     public EducationalPopup popup;
-    private Collision playercollision   ;
-
-    private TrainStation currentStation;
 
     public Player(float x, float y) {
         spriteSheet = new Texture("Tilesets/character.png");
@@ -127,7 +126,7 @@ public class Player {
         mountedBike = bike;
         this.onBike = true;
         this.currentBike = bike;
-        bike.setActive(true);
+        bike.setActive();
         bike.setVisible();
         // Increment bike count
     }
@@ -139,7 +138,7 @@ public class Player {
     public void dismountBike() {
         if (onBike && currentBike != null) {
             this.mountedBike = null;
-            this.currentBike.setActive(false);
+            this.currentBike.setActive();
             this.currentBike.setVisible();
             this.currentBike.setPosition(position.x + 10, position.y);
             this.onBike = false;
