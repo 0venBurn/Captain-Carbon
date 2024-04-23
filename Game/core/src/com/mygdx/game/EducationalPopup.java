@@ -47,6 +47,8 @@ public class EducationalPopup {
         random = new Random();
         facts = loadFacts();
     }
+
+    // load educational emissions-related facts from assets into memory
     private Map<TransportMode, List<String>> loadFacts() {
         Map<TransportMode, List<String>> facts = new HashMap<>();
         JsonReader jsonReader = new JsonReader();
@@ -66,7 +68,7 @@ public class EducationalPopup {
         return facts;
     }
     public void setCamera(OrthographicCamera camera) {
-        this.camera = camera;  // Set the camera from Player
+        this.camera = camera;  // Set the camera from Player to keep consistent popup positioning
     }
 
     public void setVisible(boolean isVisible) {
@@ -79,11 +81,12 @@ public class EducationalPopup {
             float x = camera.position.x + camera.viewportWidth / 2 - window.getWidth() - 10;
             float y = camera.position.y + camera.viewportHeight / 2 - window.getHeight() - 10;
             window.setPosition(x, y);
-            messageLabel.setPosition(window.getX() + 5, window.getY() + 15);
+            messageLabel.setPosition(window.getX() + 5, window.getY() + (window.getHeight() - 100) + 15);
         }
     }
 
     public void show(TransportMode mode, float duration) {
+        // pull a random fact related to the chosen transport mode
         List<String> modeFacts = facts.get(mode);
         if (modeFacts == null || modeFacts.isEmpty()) {
             System.out.println("No facts available for this mode.");
@@ -91,14 +94,23 @@ public class EducationalPopup {
         }
         String fact = modeFacts.get(random.nextInt(modeFacts.size()));
         messageLabel.setText(fact);
+
+        // temporarily increase window size to incorporate larger messages
+        float additionalSpace = 0;
+        if (fact.length() > 100) {
+            additionalSpace = (float) (fact.length() - 100) / 2.5f;
+        }
+        window.setHeight(window.getHeight() + additionalSpace);
         setVisible(true);
         isVisible = true;
         // Add a delay to hide the popup
+        float finalAdditionalSpace = additionalSpace;
         Timer.schedule(new Timer.Task(){
             @Override
             public void run() {
                 setVisible(false);
                 isVisible = false;
+                window.setHeight(window.getHeight() - finalAdditionalSpace);
             }
         }, duration);
     }
@@ -107,12 +119,8 @@ public class EducationalPopup {
         return isVisible;
     }
 
-    public Window getWindow() {
-        return window;
-    }
-
     public void draw(SpriteBatch batch) {
-        if (isVisible && this.camera != null) {
+        if (isVisible() && this.camera != null) {
             updatePosition();  // Update position based on the camera
             this.window.draw(batch, 1);
             this.messageLabel.draw(batch, 1);
