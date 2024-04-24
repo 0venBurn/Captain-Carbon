@@ -215,6 +215,68 @@ public class TutorialLevel implements ILevel {
 
     }
 
+    public void renderMinimap(SpriteBatch minimapBatch){
+        Gdx.app.log("Render Method", "Start of render method");
+        // Clear the screen
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        float deltaTime = Gdx.graphics.getDeltaTime();
+
+        if (!TrainStation.isUiDisplayed()) {
+            player.updatePlayerMovement(deltaTime, collisionLayer);
+        }
+        updateBuses(deltaTime);
+
+        if (player.isOnBus() && currentBus != null) {
+            camera.position.set(currentBus.getPosition().x, currentBus.getPosition().y, 0);
+        } else {
+            camera.position.set(player.getX(), player.getY(), 0);
+        }
+        adjustCameraPosition();
+        camera.update();
+
+        renderer.setView(camera);
+        renderer.render();
+        renderer.getBatch().begin();
+
+        Gdx.app.log("Rendering", "Rendering player");
+        player.render((SpriteBatch) renderer.getBatch());
+
+        Gdx.app.log("Rendering", "Rendering transports");
+        for (Transport transport : transports) {
+            transport.render((SpriteBatch) renderer.getBatch());
+        }
+        for (Transport bike : bikes) {
+            bike.render((SpriteBatch) renderer.getBatch());
+        }
+
+        checkPlayerTransportInteraction((SpriteBatch) renderer.getBatch());
+
+        if (gem != null && gem.isCollected() && player.getBounds().overlaps(gem.getBounds())) {
+            gem.collect();
+        }
+
+        // Render the gem if it's not collected
+        if (gem != null && gem.isCollected()) {
+            gem.render((SpriteBatch) renderer.getBatch());
+        }
+        adjustCameraPosition();
+        updateBuses(deltaTime);
+
+        renderer.getBatch().end();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
+        adjustCameraPosition();
+        renderer.setView(camera);
+        batch.begin();
+        font.draw(batch, "Bikes: " + player.scoringSystem.getBikeCount(), 10, Gdx.graphics.getHeight() - 30);
+        font.draw(batch, "Buses: " + player.scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 10);
+
+        batch.end();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
+    }
+
     @Override
     public void dispose() {
         map.dispose();

@@ -21,4 +21,5 @@ public interface ILevel {
         Player getPlayer();
         int getMapWidth();
         int getMapHeight();
+        void renderMinimap(SpriteBatch minimapBatch);
     }

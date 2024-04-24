@@ -61,6 +61,7 @@ public class GameScreen implements Screen {
     private TiledMap map;
     private TiledMapRenderer renderer2;
     private Minimap minimap;
+    private SpriteBatch minimapBatch;
 
 
 
@@ -80,6 +81,7 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         this.game = game;
 
+
 //        TiledMap minimap = new TmxMapLoader().load("Game/assets/Map.tmx");
 //        minimapRenderer = new OrthogonalTiledMapRenderer(minimap, 1 / 24f);
 //
@@ -90,6 +92,10 @@ public class GameScreen implements Screen {
 //        player = levelManager.getCurrentLevel().getPlayer();
 //
 //
+
+        minimapCamera = new OrthographicCamera();
+        minimapCamera.zoom = 2;
+        minimapBatch = new SpriteBatch();
 
 
 
@@ -173,6 +179,13 @@ public class GameScreen implements Screen {
             System.out.println("minimap: " + minimap + "______________________________________________________");
             System.out.println("Minimap.MinimapDisplayed: " + Minimap.MinimapDisplayed + "______________________________________________________");
         }
+
+        minimapCamera.position.set(camera.position);
+        minimapCamera.update();
+        minimapBatch.setProjectionMatrix(minimapCamera.combined.cpy().translate(3, 3, 0));
+        minimapBatch.begin();
+        levelManager.loadCurrentLevel().renderMinimap(minimapBatch);
+        minimapBatch.end();
 
 
 //        if (isMinimapVisible) {

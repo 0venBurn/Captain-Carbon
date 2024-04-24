@@ -9,6 +9,8 @@ public class LevelOne implements ILevel{
     public LevelOne() {
         player = new Player(250, 150);
     }
+    @Override
+    public void renderMinimap(SpriteBatch minimapBatch) {}
 
     @Override
     public int getMapWidth() {
