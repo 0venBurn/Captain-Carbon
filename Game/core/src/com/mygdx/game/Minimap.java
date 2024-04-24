@@ -22,13 +22,14 @@ public class Minimap {
     private Player player;
     private Vector2 gemPosition;
     private float levelIndex;
+    private TiledMap map;
+    private static final Vector2 WORLD_SIZE;
     public static boolean MinimapDisplayed = false;
     public static boolean isMinimapDisplayed() {
         return MinimapDisplayed;
     }
     private Image playerMarkerImage;
     private Image gemMarkerImage;
-    private ArrayList<Image> busStationMarkers = new ArrayList<>();
 
     public void DisplayMinimap(Stage stage, Player player, Vector2 gemPosition, float levelIndex)  {
         this.player = player;
@@ -62,11 +63,11 @@ public class Minimap {
 
         Texture playerMarker = new Texture(Gdx.files.internal("head.png"));
         playerMarkerImage = new Image(playerMarker);
-        playerMarkerImage.setSize(40, 40);
+        playerMarkerImage.setSize(15, 15);
 
         Texture gemMarker = new Texture(Gdx.files.internal("Tilesets/gem.png"));
         gemMarkerImage = new Image(gemMarker);
-        gemMarkerImage.setSize(40, 40);
+        gemMarkerImage.setSize(15, 15);
 
 
         updateMinimap(stage);
@@ -78,9 +79,22 @@ public class Minimap {
         return this.gemPosition;
     }
 
+    static {
+        TiledMap map = new TmxMapLoader().load("Game/assets/Map.tmx");
+        int tileWidth = map.getProperties().get("tilewidth", Integer.class);
+        int tileHeight = map.getProperties().get("tileheight", Integer.class);
+        int mapWidth = map.getProperties().get("width", Integer.class) * tileWidth;
+        int mapHeight = map.getProperties().get("height", Integer.class) * tileHeight;
+        WORLD_SIZE = new Vector2(mapWidth, mapHeight);
+    }
+
+    public Vector2 getWorldSize() {
+        return WORLD_SIZE;
+    }
 
 
-    public void updateMinimap(Stage stage) {
+
+    public void updateMinimap2(Stage stage) {
 
         if (playerMarkerImage != null && player != null) {
             float playerX = (float) (player.getX() / 2.8);
@@ -98,18 +112,31 @@ public class Minimap {
             stage.addActor(gemMarkerImage);
         }
 
-//        if (playerMarkerImage != null && player != null) {
-//            playerMarkerImage.setPosition(
-//                    Gdx.graphics.getWidth() / 140f + player.getX() / 3,
-//                    Gdx.graphics.getHeight() / 9f + player.getY() / 4);
-//        }
-//        if (gemMarkerImage != null && gemPosition != null) {
-//            gemMarkerImage.setPosition(
-//                    Gdx.graphics.getWidth() / 140f + gemPosition.x / 3,
-//                    Gdx.graphics.getHeight() / 9f + gemPosition.y / 4);
-//            stage.addActor(gemMarkerImage);
-//        }
+    }
 
+    public void updateMinimap(Stage stage) {
+        Vector2 worldSize = getWorldSize();
+        float worldWidth = worldSize.x;
+        float worldHeight = worldSize.y;
+
+        float mapWidth = 1800;
+        float mapHeight = 800;
+
+        if (playerMarkerImage != null && player != null) {
+            float playerX = (player.getX() / worldWidth) * mapWidth;
+            float playerY = (player.getY() / worldHeight) * mapHeight;
+            playerMarkerImage.setPosition(
+                    (Gdx.graphics.getWidth() - mapWidth) / 2 + playerX,
+                    (Gdx.graphics.getHeight() - mapHeight) / 2 + playerY);
+        }
+        if (gemMarkerImage != null && gemPosition != null) {
+            float gemX = (gemPosition.x / worldWidth) * mapWidth;
+            float gemY = (gemPosition.y / worldHeight) * mapHeight;
+            gemMarkerImage.setPosition(
+                    (Gdx.graphics.getWidth() - mapWidth) / 2 + gemX,
+                    (Gdx.graphics.getHeight() - mapHeight) / 2 + gemY);
+            stage.addActor(gemMarkerImage);
+        }
     }
 
     public void HideMinimap(Stage stage) {
