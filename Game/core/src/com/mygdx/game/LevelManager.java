@@ -1,11 +1,12 @@
 package com.mygdx.game;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 public class LevelManager implements LevelCompletionListener {
     private final MyGdxGame game;
     private int currentLevelIndex;
     public Scoring_System scoringSystem;
-
+    private Music backgroundMusic;
     private final ILevel[] levels;
 
     public LevelManager(MyGdxGame game) {
@@ -21,7 +22,7 @@ public class LevelManager implements LevelCompletionListener {
     }
 
     public void loadCurrentLevel() {
-        levels[currentLevelIndex].load();
+        levels[currentLevelIndex].load(); DJspinThatShi();
     }
 
     public ILevel getCurrentLevel() {
@@ -40,11 +41,11 @@ public class LevelManager implements LevelCompletionListener {
             scoringSystem.outputToFile("scores.txt", currentLevelIndex);
             loadCurrentLevel();
             scoringSystem.reset();
-
         } else {
             scoringSystem.outputToFile("scores.txt", currentLevelIndex);
             game.setScreen(new MainMenuScreen(game));
             scoringSystem.reset();
+            disposeMusic();
         }
     }
 
@@ -52,5 +53,20 @@ public class LevelManager implements LevelCompletionListener {
         game.setScreen(new MainMenuScreen(game));
         scoringSystem.reset();
 
+    }
+
+    private void DJspinThatShi() {
+        if (backgroundMusic != null) {
+            backgroundMusic.dispose();
+        }
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("HOME DEPOT TYPE BEAT.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
+    }
+
+    public void disposeMusic() {
+        if (backgroundMusic != null) {
+            backgroundMusic.dispose();
+        }
     }
 }
