@@ -24,34 +24,33 @@ import java.util.ArrayList;
 
 
 public class LevelTwo implements ILevel {
-    private LevelCompletionListener completionListener;
+    private final LevelCompletionListener completionListener;
     private final OrthographicCamera camera;
-    private final Viewport viewport;
     private final BitmapFont font;
-    private TiledMap map;
-    private MapLayer collisionLayer;
-    private OrthogonalTiledMapRenderer renderer;
-    private Player player;
+    private final TiledMap map;
+    private final MapLayer collisionLayer;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final Player player;
     private Transport currentBus = null;
-    private ArrayList<Transport> transports,bikes;
-    private ArrayList <TrainStation> trainStations;
-    private Stage stage;
-    private Skin skin;
+    private final ArrayList<Transport> transports;
+    private final ArrayList<Transport> bikes;
+    private final ArrayList <TrainStation> trainStations;
+    private final Stage stage;
+    private final Skin skin;
     private final SpriteBatch batch;
     private BitmapFont pauseFont;
     private Gem gem;
-    private BitmapFont co2BarFont,timeBarFont;
     public Scoring_System scoringSystem;
-    private TheProgressBars timeBar, co2Bar;
-    private float co2BarValue,timeBarValue;
-    private Minimap minimap;
-    private BitmapFont bigFont;
+    private final TheProgressBars timeBar;
+    private final TheProgressBars co2Bar;
+    private final Minimap minimap;
+    private final BitmapFont bigFont;
 
 
     public LevelTwo(LevelCompletionListener listener) {
         this.completionListener = listener;
         camera = new OrthographicCamera();
-        viewport = new FitViewport(800, 600, camera);
+        Viewport viewport = new FitViewport(800, 600, camera);
         viewport.apply();
         camera.update();
         scoringSystem = Scoring_System.getInstance();
@@ -69,6 +68,7 @@ public class LevelTwo implements ILevel {
         player = new Player(2290, 2750);
 
         minimap = new Minimap();
+        player.setPopupCamera(camera);
 
         spawnGem();
         // Define each train station and its coordinates
@@ -102,6 +102,8 @@ public class LevelTwo implements ILevel {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 25;
+        parameter.borderWidth = 2.5F;
+
         bigFont = generator.generateFont(parameter);
 
         batch = new SpriteBatch();
@@ -139,7 +141,7 @@ public class LevelTwo implements ILevel {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        if (!TrainStation.isUiDisplayed()) {
+        if (TrainStation.isUiDisplayed()) {
             player.updatePlayerMovement(deltaTime, collisionLayer);
         }
         updateBuses(deltaTime);
@@ -187,21 +189,15 @@ public class LevelTwo implements ILevel {
         renderer.setView(camera);
 
         batch.begin();
-        co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
+        float co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 6000 - scoringSystem.calculateTotalTime();
+        float timeBarValue = 6000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
         bigFont.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 20);
         bigFont.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 100);
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
-        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
-        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
-        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
-        font.draw(batch, "co2barvalue: " + co2BarValue, 10, Gdx.graphics.getHeight() - 400);
-        font.draw(batch, "timebarvalue: " + timeBarValue, 10, Gdx.graphics.getHeight() - 450);
+
         batch.end();
 
 
@@ -352,13 +348,11 @@ public class LevelTwo implements ILevel {
         float cameraHalfWidth = camera.viewportWidth / 2f;
         float cameraHalfHeight = camera.viewportHeight / 2f;
 
-        float minX = cameraHalfWidth;
         float maxX = mapWidth - cameraHalfWidth;
-        float minY = cameraHalfHeight;
         float maxY = mapHeight - cameraHalfHeight;
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
-        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
+        camera.position.x = MathUtils.clamp(camera.position.x, cameraHalfWidth, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, cameraHalfHeight, maxY);
 
         camera.update();
     }

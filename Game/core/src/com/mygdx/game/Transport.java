@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.List;
@@ -34,7 +32,7 @@ public class Transport {
     private boolean isFinalStopReached = false;
     private boolean canLeaveBus = false;
     private float batteryCharge;
-    private Collision bikecollision   ;
+    private final Collision bikecollision   ;
     public Scoring_System scoringSystem;
 
     private float totalBusDistanceTraveled = 0.0f;
@@ -158,9 +156,8 @@ public class Transport {
             updateBus(deltaTime);
         } else if (mode == Mode.BIKE) {
             updateBikeMovement(deltaTime, collisionLayer);
-        } else if (mode == Mode.TRAIN) {
-            //updateTrain();
-        }
+        }  //updateTrain();
+
     }
 
 
@@ -250,7 +247,7 @@ public class Transport {
         return null;
     }
 
-    public void setActive(boolean active) {
+    public void setActive() {
     }
 
     public boolean hasBattery() {

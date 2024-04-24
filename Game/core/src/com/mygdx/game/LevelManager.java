@@ -2,11 +2,11 @@ package com.mygdx.game;
 
 
 public class LevelManager implements LevelCompletionListener {
-    private MyGdxGame game;
+    private final MyGdxGame game;
     private int currentLevelIndex;
     public Scoring_System scoringSystem;
 
-    private ILevel[] levels;
+    private final ILevel[] levels;
 
     public LevelManager(MyGdxGame game) {
         scoringSystem = Scoring_System.getInstance();

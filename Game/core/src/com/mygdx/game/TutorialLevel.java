@@ -17,44 +17,40 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 
 
 public class TutorialLevel implements ILevel {
-    private LevelCompletionListener completionListener;
+    private final LevelCompletionListener completionListener;
     private final OrthographicCamera camera;
-    private final Viewport viewport;
     private final BitmapFont font;
-    private BitmapFont tutorialFont;
-    private TiledMap map;
-    private MapLayer collisionLayer;
-    private OrthogonalTiledMapRenderer renderer;
-    private Player player;
+    private final BitmapFont tutorialFont;
+    private final TiledMap map;
+    private final MapLayer collisionLayer;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final Player player;
     private Transport currentBus = null;
-    private ArrayList<Transport> transports,bikes;
-    private ArrayList <TrainStation> trainStations;
-    private Stage stage;
-    private Skin skin;
+    private final ArrayList<Transport> transports;
+    private final ArrayList<Transport> bikes;
+    private final ArrayList <TrainStation> trainStations;
+    private final Stage stage;
+    private final Skin skin;
     private final SpriteBatch batch;
     private BitmapFont pauseFont;
     private Gem gem;
-    private BitmapFont co2BarFont,timeBarFont;
     public Scoring_System scoringSystem;
-    private TheProgressBars timeBar, co2Bar;
-    private float co2BarValue,timeBarValue;
-    private Minimap minimap;
-    private BitmapFont bigFont;
+    private final TheProgressBars timeBar;
+    private final TheProgressBars co2Bar;
+    private final Minimap minimap;
+    private final BitmapFont bigFont;
 
     public TutorialLevel(LevelCompletionListener listener) {
         this.completionListener = listener;
         camera = new OrthographicCamera();
-        viewport = new FitViewport(800, 600, camera);
+        Viewport viewport = new FitViewport(800, 600, camera);
         viewport.apply();
         camera.update();
         scoringSystem = Scoring_System.getInstance();
@@ -98,6 +94,8 @@ public class TutorialLevel implements ILevel {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 25;
+        parameter.borderWidth = 2.5F;
+
         bigFont = generator.generateFont(parameter);
 
 
@@ -138,7 +136,7 @@ public class TutorialLevel implements ILevel {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        if (!TrainStation.isUiDisplayed()) {
+        if (TrainStation.isUiDisplayed()) {
             player.updatePlayerMovement(deltaTime, collisionLayer);
         }
         updateBuses(deltaTime);
@@ -186,21 +184,14 @@ public class TutorialLevel implements ILevel {
         adjustCameraPosition();
         renderer.setView(camera);
         batch.begin();
-        co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
+        float co2BarValue = 6000 - scoringSystem.calculateTotalCarbonEmissions();
         co2Bar.setValue(co2BarValue);
-        timeBarValue = 6000 - scoringSystem.calculateTotalTime();
+        float timeBarValue = 6000 - scoringSystem.calculateTotalTime();
         timeBar.setValue(timeBarValue);
         timeBar.render();
         co2Bar.render();
         bigFont.draw(batch, "Time Bar" , 10, Gdx.graphics.getHeight() - 20);
         bigFont.draw(batch, "Co2 Bar", 10, Gdx.graphics.getHeight() - 100);
-        font.draw(batch, "dist travlled: " + scoringSystem.getTotalPlayerDistanceTraveled(), 10, Gdx.graphics.getHeight() - 150);
-        font.draw(batch, "bike dist travlled: " + scoringSystem.getTotalBikeDistanceTraveled(), 10, Gdx.graphics.getHeight() - 200);
-        font.draw(batch, "bus dist travlled: " + scoringSystem.getBusCount(), 10, Gdx.graphics.getHeight() - 250);
-        font.draw(batch, "train dist travlled: " + scoringSystem.getTrainCount(), 10, Gdx.graphics.getHeight() - 300);
-        font.draw(batch, "Score: " + scoringSystem.getScore(), 10, Gdx.graphics.getHeight() - 350);
-        font.draw(batch, "co2barvalue: " +  co2BarValue, 10, Gdx.graphics.getHeight() - 400);
-        font.draw(batch, "timebarvalue: " +  timeBarValue, 10, Gdx.graphics.getHeight() - 450);
 
 
         Rectangle playerBounds = player.getBounds();
@@ -215,6 +206,7 @@ public class TutorialLevel implements ILevel {
                 "The goal of this game is to learn about how we can\n travel more effectively and reduce our carbon footprint.",
                 "There are many different means of transport available\n to us that are more eco friendly than our own car",
                 "Like bikes! Take a bike out of the car park and \n find a bus!",
+                "Press M to see the bus routes on the minimap",
 
                 "EBikes produce less carbon!",
                 "But be careful,\n They run out of battery!",
@@ -223,22 +215,23 @@ public class TutorialLevel implements ILevel {
 
                 "Buses can be chained too!",
                 "Oh look a train station!\nUse these to quickly naviate using its map",
-                "Oh look a train station!\nUse these to quickly naviate using its map",
 
-                "Don't forget to keep an eye on your\ncarbon emissions and time!\nOr the game will end!",
-                "Don't forget to keep an eye on your\ncarbon emissions and time!\nOr the game will end!",
-                "Collect the gem to complete the level!",
 
+                "You have noticed you Co2\nand Time Bars...",
+                "Be Careful! If they run out\nyou will fail the level!",
+                "Oh look a gem!",
+                "\nCollect the gem before losing either bar to win!",
 
         };
 
         Vector2[] messagePositions = new Vector2[] {
                 new Vector2(140, 150),
                 new Vector2(220, 150),
-                new Vector2(300, 150),
+                new Vector2(300, 150), // "Check the car park for a bike!",
                 new Vector2(350, 250),
                 new Vector2(350, 350),
-                new Vector2(340, 450),// Bike message find a bus
+                new Vector2(340, 450),
+                new Vector2(330, 500),// Bike message find a bus
 
                 new Vector2(570, 150),
                 new Vector2(650, 150),
@@ -246,25 +239,21 @@ public class TutorialLevel implements ILevel {
                 new Vector2(830, 150),//"Get in and press SPACE to move to the next stop!",
 
                 new Vector2(890, 910), // "Buses can be chained too!",
-                new Vector2(2030, 840),
-                new Vector2(2050, 830),
-                new Vector2(2050, 830),
-
-                new Vector2(3860, 1550),
-                new Vector2(3920, 1400),
-                new Vector2(3860, 1500),
+                new Vector2(2030, 840),// "Oh look a train station!\nUse these to quickly naviate using its map",
 
 
+                new Vector2(3860, 1540),
+                new Vector2(3960, 1530),
+                new Vector2(4080, 1530),
+                new Vector2(4150, 1530) // "Collect the gem before losing either bar to win!",
         };
 
         // Iterate through each tutorial area
         for (int i = 0; i < messages.length; i++) {
             if (player.getBounds().overlaps(new Rectangle(messagePositions[i].x, messagePositions[i].y, 20, 20))) {
                 GlyphLayout layout = new GlyphLayout(tutorialFont, messages[i]);
-                float offsetFromRight = 150; // Increase this value to move text more to the right
-                float textX = MathUtils.clamp(player.getX() + offsetFromRight, 100, camera.viewportWidth - layout.width + 190);
+                float textX = MathUtils.clamp(player.getX() + 150, 100, camera.viewportWidth - layout.width + 290);
                 float textY = MathUtils.clamp(player.getY() + 100, layout.height, camera.viewportHeight - layout.height - 20);
-
                 tutorialFont.draw(batch, layout, textX, textY);
             }
         }
@@ -428,15 +417,13 @@ public class TutorialLevel implements ILevel {
         float cameraHalfWidth = camera.viewportWidth / 2f;
         float cameraHalfHeight = camera.viewportHeight / 2f;
 
-        float minX = cameraHalfWidth;
         float maxX = mapWidth - cameraHalfWidth;
-        float minY = cameraHalfHeight;
         float maxY = mapHeight - cameraHalfHeight;
 
 
 
-        camera.position.x = MathUtils.clamp(camera.position.x, minX, maxX);
-        camera.position.y = MathUtils.clamp(camera.position.y, minY, maxY);
+        camera.position.x = MathUtils.clamp(camera.position.x, cameraHalfWidth, maxX);
+        camera.position.y = MathUtils.clamp(camera.position.y, cameraHalfHeight, maxY);
 
         camera.update();
     }

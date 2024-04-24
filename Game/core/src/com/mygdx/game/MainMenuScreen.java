@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 public class MainMenuScreen implements Screen {
     private final MyGdxGame game;
     private Stage stage;
@@ -30,8 +31,8 @@ public class MainMenuScreen implements Screen {
     private Viewport backgroundViewport;
     private Viewport uiViewport;
 
-    private String scoreDisplay;
-    private BitmapFont bigFont;
+    private String[] scoreDisplay;
+    private BitmapFont bigFont,smallFont;
 
     public Scoring_System scoringSystem;
 
@@ -64,8 +65,16 @@ public class MainMenuScreen implements Screen {
         // stuff for scoreboard font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("flat-earth/skin/LVDCGO__.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 40;
+        FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+        parameter.size = 50;
+        parameter.borderWidth = 3.0F;
+
         bigFont = generator.generateFont(parameter);
+        parameter2.borderWidth = 3.0F;
+
+        parameter2.size = 35;
+
+        smallFont = generator.generateFont(parameter2);
 
 
     }
@@ -118,9 +127,28 @@ public class MainMenuScreen implements Screen {
         batch.setProjectionMatrix(uiViewport.getCamera().combined);
         batch.begin();
 
-        float xPosition = uiViewport.getWorldWidth()-1200 ;
-        float yPosition = uiViewport.getWorldHeight() - 50;
-        bigFont.draw(batch, "HighScore: " +  scoreDisplay , xPosition, yPosition);
+
+
+        GlyphLayout layout = new GlyphLayout();
+        float centerX = 750;
+        float centerY = 800;
+
+        String text0 = "HighScores" ;
+        layout.setText(bigFont, text0);
+        bigFont.draw(batch, text0, centerX - layout.width / 2, centerY );
+
+        String text1 = "1. " + scoreDisplay[0];
+        layout.setText(smallFont, text1);
+        smallFont.draw(batch, text1, centerX - layout.width / 2, centerY - 100);
+
+        String text2 = "2. " + scoreDisplay[1];
+        layout.setText(smallFont, text2);
+        smallFont.draw(batch, text2, centerX - layout.width / 2, centerY - 160);
+
+        String text3 = "3. " + scoreDisplay[2];
+        layout.setText(smallFont, text3);
+        smallFont.draw(batch, text3, centerX - layout.width / 2, centerY - 220);
+
         batch.end();
     }
 

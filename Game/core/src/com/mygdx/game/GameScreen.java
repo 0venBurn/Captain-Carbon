@@ -33,6 +33,7 @@ public class GameScreen implements Screen {
     private Minimap minimap;
     private Player player;
     private Stage minimapStage;
+    public Scoring_System scoringSystem;
 
 
 
@@ -48,6 +49,8 @@ public class GameScreen implements Screen {
         isPaused = false;
         skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
         this.game = game;
+        scoringSystem = Scoring_System.getInstance();
+
 
         // Delegate rendering to the current level
 
@@ -97,6 +100,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
+                scoringSystem.reset();
                 gameState = com.mygdx.game.GameState.RUNNING;
             }
         });

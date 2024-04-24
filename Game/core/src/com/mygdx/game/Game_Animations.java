@@ -8,7 +8,6 @@ public class Game_Animations {
         UP, DOWN, LEFT, RIGHT
     }
     private  Animation<TextureRegion> walkLeftAnimation,walkRightAnimation,walkUpAnimation,walkDownAnimation;
-
     private Direction currentDirection;
     private float stateTime;
     public Game_Animations() {
