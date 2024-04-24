@@ -59,7 +59,7 @@ public class LevelManager implements LevelCompletionListener {
         if (backgroundMusic != null) {
             backgroundMusic.dispose();
         }
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("HOME DEPOT TYPE BEAT.mp3"));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }
