@@ -22,3 +22,39 @@ Train,180g CO2e
 Bus,200g CO2e
 Score,25.156626
 
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,25.163998
+
+Level,1
+Bike,0.158294g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,24.887054
+
+Level,2
+Bike,0.15656845g CO2e
+Train,180g CO2e
+Bus,50g CO2e
+Score,41.47438
+
+Level,3
+Bike,0.21987148g CO2e
+Train,180g CO2e
+Bus,100g CO2e
+Score,33.435272
+
+Level,1
+Bike,0.12570955g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,24.934881
+
+Level,1
+Bike,0.0g CO2e
+Train,180g CO2e
+Bus,200g CO2e
+Score,25.131456
+
