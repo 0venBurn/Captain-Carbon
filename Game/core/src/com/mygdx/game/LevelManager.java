@@ -39,7 +39,6 @@ public class LevelManager implements LevelCompletionListener {
             return levels[currentLevelIndex];
         } else {
             game.setScreen(new MainMenuScreen(game));
-            backgroundMusic.pause();
             return new DummyLevel();
         }
     }
