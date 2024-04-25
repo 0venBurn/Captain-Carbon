@@ -6,7 +6,7 @@ public class LevelManager implements LevelCompletionListener {
     private final MyGdxGame game;
     private int currentLevelIndex;
     public Scoring_System scoringSystem;
-    private Music backgroundMusic;
+    private static Music backgroundMusic;
     private final ILevel[] levels;
 
     public LevelManager(MyGdxGame game) {
@@ -14,6 +14,12 @@ public class LevelManager implements LevelCompletionListener {
         this.game = game;
         levels = new ILevel[]{new TutorialLevel(this), new LevelOne(this), new LevelTwo(this)};
         currentLevelIndex = 0;
+
+        if (backgroundMusic == null) {
+            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music.mp3"));
+
+        }
+        djSpinThatShi();
         loadCurrentLevel();
     }
 
@@ -22,7 +28,10 @@ public class LevelManager implements LevelCompletionListener {
     }
 
     public void loadCurrentLevel() {
-        levels[currentLevelIndex].load(); DJspinThatShi();
+        levels[currentLevelIndex].load();
+        if (!backgroundMusic.isPlaying()) {
+            backgroundMusic.play();
+        }
     }
 
     public ILevel getCurrentLevel() {
@@ -30,9 +39,9 @@ public class LevelManager implements LevelCompletionListener {
             return levels[currentLevelIndex];
         } else {
             game.setScreen(new MainMenuScreen(game));
+            backgroundMusic.pause();
             return new DummyLevel();
         }
-
     }
 
     public void onLevelCompleted() {
@@ -52,21 +61,20 @@ public class LevelManager implements LevelCompletionListener {
     public void onLevelFailed() {
         game.setScreen(new MainMenuScreen(game));
         scoringSystem.reset();
-
+        backgroundMusic.pause();
     }
 
-    private void DJspinThatShi() {
-        if (backgroundMusic != null) {
-            backgroundMusic.dispose();
+
+    private void djSpinThatShi() {
+        if (!backgroundMusic.isPlaying()) {
+            backgroundMusic.play();
         }
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
     }
 
     public void disposeMusic() {
         if (backgroundMusic != null) {
             backgroundMusic.dispose();
+            backgroundMusic = null;
         }
     }
 }
