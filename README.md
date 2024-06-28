@@ -1,7 +1,5 @@
 # Captain Carbon
 
-Certainly! Here's a README template for your educational game about carbon using Java and libGDX:
-
 ## Overview
 Carbon World Explorer is an educational game designed to teach children about the world of carbon in a fun and interactive way. Players navigate through a 2D linear environment, collecting gems while managing their carbon allowance and time constraints.
 
