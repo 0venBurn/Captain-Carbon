@@ -15,6 +15,7 @@ Carbon World Explorer is an educational game designed to teach children about th
 - Java Development Kit (JDK) 8 or higher
 - libGDX framework 
 - Compatible operating system (Windows, macOS, Linux)
+- Gradle
 
 ## Installation
 1. Clone the repository:
