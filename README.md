@@ -41,7 +41,7 @@ Carbon World Explorer is an educational game designed to teach children about th
 - Built using the libGDX framework, which made development efficient and enjoyable.
 
 ## Contact
-For questions or feedback, please contact [Evan] at [evanbyrnecode@gmail.com].
+For questions or feedback, please contact Evan at evanbyrnecode@gmail.com.
 
 ---
 
